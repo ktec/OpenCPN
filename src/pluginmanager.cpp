@@ -184,10 +184,9 @@ bool PlugInManager::LoadAllPlugIns(wxString &plugin_dir)
                               case 103:
                               case 104:
                               case 105:   // New PlugIn class definition in Version 2.4 Beta,
-                              case 106:
                                           break;      // incompatible
 
-                              case 107:   // New PlugIn class definition in Version 2.6 Beta,
+                              case 106:   // New PlugIn class definition in Version 2.4 Beta,
                                     bver_ok = true;
                                     break;
                               default:
@@ -470,7 +469,32 @@ bool PlugInManager::RenderAllCanvasOverlayPlugIns( ocpnDC &dc, const ViewPort &v
                   {
                         PlugIn_ViewPort pivp = CreatePlugInViewport( vp );
 
-                        pic->m_pplugin->RenderOverlay(dc, &pivp);
+                        wxDC *pdc = dc.GetDC();
+                        if(pdc)                       // not in OpenGL mode
+                        {
+                             pic->m_pplugin->RenderOverlay(*pdc, &pivp);
+                        }
+                        else
+                        {
+                              if((m_cached_overlay_bm.GetWidth() != vp.pix_width) || (m_cached_overlay_bm.GetHeight() != vp.pix_height))
+                                    m_cached_overlay_bm.Create(vp.pix_width, vp.pix_height, -1);
+
+                              wxMemoryDC mdc;
+                              mdc.SelectObject ( m_cached_overlay_bm );
+                              mdc.SetBackground ( *wxBLACK_BRUSH );
+                              mdc.Clear();
+
+                              bool b_rendered = pic->m_pplugin->RenderOverlay(mdc, &pivp);
+                              mdc.SelectObject(wxNullBitmap);
+
+                              if(b_rendered)
+                              {
+                                    wxMask *p_msk = new wxMask(m_cached_overlay_bm, wxColour(0,0,0));
+                                    m_cached_overlay_bm.SetMask(p_msk);
+
+                                    dc.DrawBitmap(m_cached_overlay_bm, 0, 0, true);
+                              }
+                        }
                   }
             }
       }
@@ -1204,7 +1228,7 @@ void opencpn_plugin::OnToolbarToolCallback(int id)
 void opencpn_plugin::OnContextMenuItemCallback(int id)
 {}
 
-bool opencpn_plugin::RenderOverlay(ocpnDC &dc, PlugIn_ViewPort *vp)
+bool opencpn_plugin::RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp)
 {  return false; }
 
 void opencpn_plugin::SetCursorLatLon(double lat, double lon)

@@ -44,14 +44,13 @@
 #endif
 
 #include <wx/xml/xml.h>
-#include "ocpndc.h"
 
 //    This is the most modern API Version number
 //    It is expected that the API will remain downward compatible, meaning that
 //    PlugIns conforming to API Version less then the most modern will also
 //    be correctly supported.
 #define API_VERSION_MAJOR           1
-#define API_VERSION_MINOR           7
+#define API_VERSION_MINOR           6
 
 //    Fwd Definitions
 class       wxFileConfig;
@@ -369,7 +368,7 @@ public:
 
       virtual void ShowPreferencesDialog( wxWindow* parent );
 
-      virtual bool RenderOverlay(ocpnDC &dc, PlugIn_ViewPort *vp);
+      virtual bool RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp);
       virtual void SetCursorLatLon(double lat, double lon);
       virtual void SetCurrentViewPort(PlugIn_ViewPort &vp);
 

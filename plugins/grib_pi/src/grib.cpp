@@ -67,7 +67,7 @@ WX_DEFINE_OBJARRAY ( ArrayOfGribRecordPtrs );
 
 //static GRIBOverlayFactory   *s_pGRIBOverlayFactory;
 /*
-static bool GRIBOverlayFactory_RenderGribOverlay_Static_Wrapper ( ocpnDC *dc, PlugIn_ViewPort *vp )
+static bool GRIBOverlayFactory_RenderGribOverlay_Static_Wrapper ( wxDC *dc, PlugIn_ViewPort *vp )
 {
       return s_pGRIBOverlayFactory->RenderGribOverlay ( dc, vp );
 
@@ -853,7 +853,7 @@ void GRIBOverlayFactory::ClearCachedData(void)
       m_pbm_current = NULL;
 }
 
-bool GRIBOverlayFactory::RenderGribOverlay ( ocpnDC &dc, PlugIn_ViewPort *vp )
+bool GRIBOverlayFactory::RenderGribOverlay ( wxDC &dc, PlugIn_ViewPort *vp )
 {
 //      printf("GRIBOverlayFactory::Render\n");
 
@@ -970,7 +970,7 @@ bool GRIBOverlayFactory::RenderGribOverlay ( ocpnDC &dc, PlugIn_ViewPort *vp )
       return true;
 }
 
-bool GRIBOverlayFactory::RenderGribWind(GribRecord *pGRX, GribRecord *pGRY, ocpnDC &dc, PlugIn_ViewPort *vp)
+bool GRIBOverlayFactory::RenderGribWind(GribRecord *pGRX, GribRecord *pGRY, wxDC &dc, PlugIn_ViewPort *vp)
 {
 //      printf("renderGRIBWind\n");
 
@@ -1031,7 +1031,7 @@ bool GRIBOverlayFactory::RenderGribWind(GribRecord *pGRX, GribRecord *pGRY, ocpn
       return true;
 }
 
-bool GRIBOverlayFactory::RenderGribScatWind(GribRecord *pGRX, GribRecord *pGRY, ocpnDC &dc, PlugIn_ViewPort *vp)
+bool GRIBOverlayFactory::RenderGribScatWind(GribRecord *pGRX, GribRecord *pGRY, wxDC &dc, PlugIn_ViewPort *vp)
 {
 
       wxDateTime t ( m_pGribRecordSet->m_Reference_Time );
@@ -1111,7 +1111,7 @@ bool GRIBOverlayFactory::RenderGribScatWind(GribRecord *pGRX, GribRecord *pGRY, 
 }
 
 
-bool GRIBOverlayFactory::RenderGribSigWh(GribRecord *pGR, ocpnDC &dc, PlugIn_ViewPort *vp)
+bool GRIBOverlayFactory::RenderGribSigWh(GribRecord *pGR, wxDC &dc, PlugIn_ViewPort *vp)
 {
 //      printf("renderGRIBSigWh\n");
 
@@ -1234,7 +1234,7 @@ bool GRIBOverlayFactory::RenderGribSigWh(GribRecord *pGR, ocpnDC &dc, PlugIn_Vie
       return true;
 }
 
-bool GRIBOverlayFactory::RenderGribWvDir(GribRecord *pGR, ocpnDC &dc, PlugIn_ViewPort *vp)
+bool GRIBOverlayFactory::RenderGribWvDir(GribRecord *pGR, wxDC &dc, PlugIn_ViewPort *vp)
 {
 //      printf("renderGRIBWvDir\n");
 
@@ -1289,7 +1289,7 @@ bool GRIBOverlayFactory::RenderGribWvDir(GribRecord *pGR, ocpnDC &dc, PlugIn_Vie
 }
 
 
-bool GRIBOverlayFactory::RenderGribCRAIN(GribRecord *pGR, ocpnDC &dc, PlugIn_ViewPort *vp)
+bool GRIBOverlayFactory::RenderGribCRAIN(GribRecord *pGR, wxDC &dc, PlugIn_ViewPort *vp)
 {
 //      printf("renderGRIBCRAIN\n");
 
@@ -1407,7 +1407,7 @@ bool GRIBOverlayFactory::RenderGribCRAIN(GribRecord *pGR, ocpnDC &dc, PlugIn_Vie
       return true;
 }
 
-bool GRIBOverlayFactory::RenderGribSeaTemp(GribRecord *pGR, ocpnDC &dc, PlugIn_ViewPort *vp)
+bool GRIBOverlayFactory::RenderGribSeaTemp(GribRecord *pGR, wxDC &dc, PlugIn_ViewPort *vp)
 {
 //      printf("renderGRIBSeaTemp\n");
 
@@ -1526,7 +1526,7 @@ bool GRIBOverlayFactory::RenderGribSeaTemp(GribRecord *pGR, ocpnDC &dc, PlugIn_V
 }
 
 
-bool GRIBOverlayFactory::RenderGribCurrent(GribRecord *pGRX, GribRecord *pGRY, ocpnDC &dc, PlugIn_ViewPort *vp)
+bool GRIBOverlayFactory::RenderGribCurrent(GribRecord *pGRX, GribRecord *pGRY, wxDC &dc, PlugIn_ViewPort *vp)
 {
 //      printf("renderGRIBCurrent\n");
 
@@ -1780,7 +1780,7 @@ wxColour GRIBOverlayFactory::GetSeaCurrentGraphicColor(double val_in)
       return c;
 }
 
-bool GRIBOverlayFactory::RenderGribPressure(GribRecord *pGR, ocpnDC &dc, PlugIn_ViewPort *vp)
+bool GRIBOverlayFactory::RenderGribPressure(GribRecord *pGR, wxDC &dc, PlugIn_ViewPort *vp)
 {
 //#if 0
       //    Initialize the array of Isobars if necessary
@@ -1817,7 +1817,7 @@ bool GRIBOverlayFactory::RenderGribPressure(GribRecord *pGR, ocpnDC &dc, PlugIn_
 
 
 
-void GRIBOverlayFactory::drawWaveArrow(ocpnDC &dc, int i, int j, double ang, wxColour arrowColor)
+void GRIBOverlayFactory::drawWaveArrow(wxDC &dc, int i, int j, double ang, wxColour arrowColor)
 {
       double si=sin(ang * PI / 180.),  co=cos(ang * PI/ 180.);
 
@@ -1840,7 +1840,7 @@ void GRIBOverlayFactory::drawWaveArrow(ocpnDC &dc, int i, int j, double ang, wxC
 
 
 
-void GRIBOverlayFactory::drawWindArrowWithBarbs(ocpnDC &dc,
+void GRIBOverlayFactory::drawWindArrowWithBarbs(wxDC &dc,
                                       int i, int j, double vx, double vy,
                                       bool south,
                                       wxColour arrowColor
@@ -1934,7 +1934,7 @@ void GRIBOverlayFactory::drawWindArrowWithBarbs(ocpnDC &dc,
       }
 }
 
-void GRIBOverlayFactory::drawTransformedLine( ocpnDC &dc, wxPen pen,
+void GRIBOverlayFactory::drawTransformedLine( wxDC &dc, wxPen pen,
                                     double si, double co,int di, int dj, int i,int j, int k,int l)
 {
       int ii, jj, kk, ll;
@@ -1950,7 +1950,7 @@ void GRIBOverlayFactory::drawTransformedLine( ocpnDC &dc, wxPen pen,
 }
 
 
-void GRIBOverlayFactory::drawPetiteBarbule(ocpnDC &dc, wxPen pen, bool south,
+void GRIBOverlayFactory::drawPetiteBarbule(wxDC &dc, wxPen pen, bool south,
                                  double si, double co, int di, int dj, int b)
 {
       if (south)
@@ -1959,7 +1959,7 @@ void GRIBOverlayFactory::drawPetiteBarbule(ocpnDC &dc, wxPen pen, bool south,
             drawTransformedLine(dc, pen, si,co, di,dj,  b,0,  b+2, 5);
 }
 
-void GRIBOverlayFactory::drawGrandeBarbule(ocpnDC &dc, wxPen pen, bool south,
+void GRIBOverlayFactory::drawGrandeBarbule(wxDC &dc, wxPen pen, bool south,
                                  double si, double co, int di, int dj, int b)
 {
       if (south)
@@ -1969,7 +1969,7 @@ void GRIBOverlayFactory::drawGrandeBarbule(ocpnDC &dc, wxPen pen, bool south,
 }
 
 
-void GRIBOverlayFactory::drawTriangle(ocpnDC &dc, wxPen pen, bool south,
+void GRIBOverlayFactory::drawTriangle(wxDC &dc, wxPen pen, bool south,
                             double si, double co, int di, int dj, int b)
 {
       if (south) {
