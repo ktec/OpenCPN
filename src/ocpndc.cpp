@@ -427,10 +427,29 @@ void ocpnDC::StrokePolygon(int n, wxPoint points[], wxCoord xoffset, wxCoord yof
 
 void ocpnDC::DrawBitmap(const wxBitmap &bitmap, wxCoord x, wxCoord y, bool usemask)
 {
+      wxBitmap bmp;
+      if (x < 0 || y < 0) {
+            int dx = (x < 0 ? -x : 0);
+            int dy = (y < 0 ? -y : 0);
+            int w = bitmap.GetWidth()-dx;
+            int h = bitmap.GetHeight()-dy;
+            /* picture is out of viewport */
+            if (w<0 || h<0)
+                  return;
+            wxBitmap newBitmap = bitmap.GetSubBitmap(
+                             wxRect(dx, dy, w, h));
+            x += dx;
+            y += dy;
+            bmp = newBitmap;
+      }
+      else
+      {
+            bmp = bitmap;
+      }
      if(dc)
-          dc->DrawBitmap(bitmap, x, y, usemask);
+          dc->DrawBitmap(bmp, x, y, usemask);
      else {
-          wxImage image = bitmap.ConvertToImage();
+          wxImage image = bmp.ConvertToImage();
           int w = image.GetWidth(), h = image.GetHeight();
 
           if(usemask) {
