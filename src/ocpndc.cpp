@@ -188,6 +188,13 @@ void ocpnDC::DrawLines( int n, wxPoint points[], wxCoord xoffset, wxCoord yoffse
           dc->DrawLines(n, points, xoffset, yoffset);
      else if(ConfigurePen()) {
 
+           glPushAttrib(GL_COLOR_BUFFER_BIT | GL_LINE_BIT | GL_HINT_BIT);      //Save state
+
+           glEnable(GL_LINE_SMOOTH);
+           glEnable(GL_BLEND);
+           glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+           glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+
            if(m_pen.GetWidth() > 1)
            {
               wxPoint p0 = points[0];
@@ -204,6 +211,7 @@ void ocpnDC::DrawLines( int n, wxPoint points[], wxCoord xoffset, wxCoord yoffse
                        glVertex2i(points[i].x + xoffset, points[i].y + yoffset);
                  glEnd();
            }
+           glPopAttrib();            // restore state
      }
 }
 
