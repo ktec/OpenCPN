@@ -329,7 +329,7 @@ void grib_pi::OnGribDialogClose()
       SaveConfig();
 }
 
-bool grib_pi::RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp)
+bool grib_pi::RenderOverlay(ocpnDC &dc, PlugIn_ViewPort *vp)
 {
       if(m_pGribDialog && m_pGRIBOverlayFactory)
       {
