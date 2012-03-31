@@ -21,7 +21,7 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
  ***************************************************************************
  *
  */
@@ -122,6 +122,8 @@ WX_DEFINE_OBJARRAY(ArrayOfRect);
 
 class ocpnFloatingCompassWindow;
 
+extern void EmptyChartGroupArray(ChartGroupArray *s);
+
 
 //------------------------------------------------------------------------------
 //      Static variable definition
@@ -168,9 +170,9 @@ Select          *pSelectAIS;
 
 Routeman        *g_pRouteMan;
 WayPointman     *pWayPointMan;
-MarkProp        *pMarkPropDialog;
+MarkInfoImpl    *pMarkPropDialog;
 RouteProp       *pRoutePropDialog;
-MarkInfo        *pMarkInfoDialog;
+MarkInfoImpl    *pMarkInfoDialog;
 RouteManagerDialog *pRouteManagerDialog;
 GoToPositionDialog *pGoToPositionDialog;
 
@@ -413,6 +415,9 @@ bool             g_bQuiltEnable;
 bool             g_bQuiltStart;
 
 bool             g_bportable;
+
+ChartGroupArray  *g_pGroupArray;
+int              g_GroupIndex;
 
 wxProgressDialog *s_ProgDialog;
 
@@ -721,7 +726,9 @@ paper charts and traditional methods of navigation.\n\n\
 DO NOT rely upon OpenCPN for safety of life or property.\n\n\
 Please click \"OK\" to agree and proceed, \"Cancel\" to quit.\n"));
 
-      wxMessageDialog odlg(gFrame, msg0, _("Welcome to OpenCPN"), wxCANCEL | wxOK );
+      wxString vs = wxT(" .. Version ") + str_version_major + wxT(".") + str_version_minor + wxT(".") + str_version_patch;
+
+      wxMessageDialog odlg(gFrame, msg0, _("Welcome to OpenCPN") + vs, wxCANCEL | wxOK );
 
       return(odlg.ShowModal());
 }
@@ -1972,6 +1979,9 @@ bool MyApp::OnInit()
         g_pcsv_locn = new wxString();
         pInit_Chart_Dir = new wxString();
 
+        //  Establish an empty ChartCroupArray
+        g_pGroupArray = new ChartGroupArray;
+
         //      Establish the prefix of the location of user specific data files
 #ifdef __WXMSW__
         g_PrivateDataDir = *pHome_Locn;                     // should be {Documents and Settings}\......
@@ -2641,7 +2651,7 @@ bool MyApp::OnInit()
         pWIFI = new WIFIWindow(gFrame, *pWIFIServerName );
 #endif
 
-        pthumbwin = new ThumbWin(gFrame);
+        pthumbwin = new ThumbWin(cc1);
 
         gFrame->ApplyGlobalSettings(1, false);               // done once on init with resize
 
@@ -2879,6 +2889,13 @@ bool MyApp::OnInit()
 
         }
 
+        //  Apply the inital Group Array structure to the chart data base
+        ChartData->ApplyGroupArray(g_pGroupArray);
+
+        //  Make sure that the Selected Group is sensible...
+        if(g_GroupIndex > (int)g_pGroupArray->GetCount())
+              g_GroupIndex = 0;
+
         //  Delete any stack built by no-chart startup case
         if (pCurrentStack)
               delete pCurrentStack;
@@ -3025,8 +3042,24 @@ int MyApp::OnExit()
       if (bGPSValid)
       {
             wxString data;
-            data.Printf(_T("OFF: Lat %10.5f Lon %10.5f COG %10.5f SOG %6.2f"), gLat, gLon, gCog, gSog);
+            data.Printf(_T("OFF: Lat %10.5f Lon %10.5f "), gLat, gLon);
             navmsg += data;
+
+            wxString cog;
+            if(wxIsNaN(gCog))
+                  cog.Printf(_T("COG ----- "));
+            else
+                  cog.Printf(_T("COG %10.5f "), gCog);
+
+            wxString sog;
+            if(wxIsNaN(gSog))
+                  sog.Printf(_T("SOG -----  "));
+            else
+                  sog.Printf(_T("SOG %6.2f"), gSog);
+
+            navmsg += cog;
+            navmsg += sog;
+
       }
       else
       {
@@ -3086,6 +3119,13 @@ int MyApp::OnExit()
         delete g_pCommMan;
 
         delete pLayerList;
+
+        if(g_pGroupArray)
+        {
+              EmptyChartGroupArray(g_pGroupArray);
+//              g_pGroupArray->Clear();
+              delete g_pGroupArray;
+        }
 
 #ifdef USE_S57
         delete s_pcm93mgr;
@@ -3419,10 +3459,6 @@ void MyFrame::SetAndApplyColorScheme(ColorScheme cs)
       if(pMarkPropDialog)
             pMarkPropDialog->SetColorScheme(cs);
 
-      if(pRoutePropDialog)
-            pRoutePropDialog->SetColorScheme(cs);
-
-            // toh, 2009.02.08
       if(pMarkInfoDialog)
             pMarkInfoDialog->SetColorScheme(cs);
 
@@ -4410,7 +4446,7 @@ void MyFrame::OnCloseWindow(wxCloseEvent& event)
     stats->Destroy();
     stats = NULL;
 
-    delete pthumbwin;
+//    delete pthumbwin;
     pthumbwin = NULL;
 
     if(pAPilot)
@@ -4650,6 +4686,24 @@ void MyFrame::UpdateAllFonts()
             pWayPointMan->ClearRoutePointFonts();
 
       cc1->Refresh();
+}
+
+void MyFrame::SetGroupIndex(int index)
+{
+      int new_index = index;
+      if(index > (int)g_pGroupArray->GetCount())
+            new_index = 0;
+
+      //    Get the currently displayed chart native scale, and the current ViewPort
+      int current_chart_native_scale = cc1->GetCanvasChartNativeScale();
+      ViewPort vp = cc1->GetVP();
+
+      g_GroupIndex = new_index;
+      cc1->UpdateCanvasOnGroupChange();
+
+      //    Refresh the canvas, selecting the "best" chart,
+      //    applying the prior ViewPort exactly
+      ChartsRefresh(cc1->FindClosestCanvasChartdbIndex(current_chart_native_scale), vp);
 }
 
 void MyFrame::OnToolLeftClick(wxCommandEvent& event)
@@ -5333,7 +5387,7 @@ int MyFrame::DoOptionsDialog()
 
                   //    Re-open the last open chart
                   int dbii = ChartData->FinddbIndex(chart_file_name);
-                  ChartsRefresh(dbii);
+                  ChartsRefresh(dbii, cc1->GetVP());
             }
 
             if((*pNMEADataSource != previous_NMEA_source) || ( previous_bGarminHost != g_bGarminHost))
@@ -5392,6 +5446,22 @@ int MyFrame::DoOptionsDialog()
 
             if(bPrevOGL != g_bopengl)
                   b_refresh_after_options = true;
+
+            if(rr & GROUPS_CHANGED)
+            {
+                  pConfig->DestroyConfigGroups();
+                  pConfig->CreateConfigGroups(pSetDlg->GetGroupArray());
+            }
+
+            if( ((rr & VISIT_CHARTS) && ((rr & CHANGE_CHARTS) || (rr & FORCE_UPDATE) || (rr & SCAN_UPDATE))) ||
+                  (rr & GROUPS_CHANGED) )
+            {
+                  ChartData->ApplyGroupArray(g_pGroupArray);
+                  if(g_GroupIndex > (int)g_pGroupArray->GetCount())
+                        SetGroupIndex(0);
+                  else
+                        SetGroupIndex(g_GroupIndex);
+            }
 
             pConfig->UpdateSettings();
 
@@ -5481,8 +5551,11 @@ int MyFrame::DoOptionsDialog()
 }
 
 // Flav: This method reloads all charts for convenience
-void MyFrame::ChartsRefresh(int dbi_hint)
+void MyFrame::ChartsRefresh(int dbi_hint, ViewPort &vp)
 {
+      if(!ChartData)
+            return;
+
       ::wxBeginBusyCursor();
 
       bool b_run = FrameTimer1.IsRunning();
@@ -5554,7 +5627,10 @@ void MyFrame::ChartsRefresh(int dbi_hint)
       //    Validate the correct single chart, or set the quilt mode as appropriate
       SetupQuiltMode();
 
-      cc1->ReloadVP();
+      if(vp.IsValid())
+            cc1->LoadVP(vp);
+      else
+            cc1->ReloadVP();
 
       UpdateControlBar();
 
@@ -6132,8 +6208,23 @@ void MyFrame::OnFrameTimer1(wxTimerEvent& event)
             if (bGPSValid)
             {
                   wxString data;
-                  data.Printf(_T(" GPS Lat %10.5f Lon %10.5f COG %10.5f SOG %6.2f"), gLat, gLon, gCog, gSog);
+                  data.Printf(_T(" GPS Lat %10.5f Lon %10.5f "), gLat, gLon);
                   navmsg += data;
+
+                  wxString cog;
+                  if(wxIsNaN(gCog))
+                        cog.Printf(_T("COG ----- "));
+                  else
+                        cog.Printf(_T("COG %10.5f "), gCog);
+
+                  wxString sog;
+                  if(wxIsNaN(gSog))
+                        sog.Printf(_T("SOG -----  "));
+                  else
+                        sog.Printf(_T("SOG %6.2f"), gSog);
+
+                  navmsg += cog;
+                  navmsg += sog;
             }
             else
             {
@@ -6259,6 +6350,32 @@ void MyFrame::OnFrameTimer1(wxTimerEvent& event)
              m_last_bGPSValid = bGPSValid;
       }
 
+      //    If any PlugIn requested dynamic overlay callbacks, force a full canvas refresh
+      //    thus, ensuring at least 1 Hz. callback.
+      bool brq_dynamic = false;
+      if(g_pi_manager)
+      {
+            ArrayOfPlugIns *pplugin_array = g_pi_manager->GetPlugInArray();
+            for(unsigned int i = 0 ; i < pplugin_array->GetCount() ; i++)
+            {
+                  PlugInContainer *pic = pplugin_array->Item(i);
+                  if(pic->m_bEnabled && pic->m_bInitState)
+                  {
+                        if(pic->m_cap_flag & WANTS_DYNAMIC_OPENGL_OVERLAY_CALLBACK)
+                        {
+                              brq_dynamic = true;
+                              break;
+                        }
+                  }
+            }
+      }
+
+      if(brq_dynamic)
+      {
+            cc1->Refresh();
+            bnew_view = true;
+      }
+
 
         FrameTimer1.Start(TIMER_GFRAME_1, wxTIMER_CONTINUOUS);
 
@@ -6274,7 +6391,7 @@ void MyFrame::OnFrameTimer1(wxTimerEvent& event)
         }
         else
         {
-              if(!bnew_view)                    // There has not been a Refres() yet.....
+              if(!bnew_view)                    // There has not been a Refresh() yet.....
               {
                   cc1->UpdateAIS();
                   cc1->UpdateAlerts();

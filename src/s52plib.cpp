@@ -20,7 +20,7 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
  ***************************************************************************
  *
  *
@@ -117,6 +117,8 @@ s52plib::s52plib ( const wxString& PLib )
       pointPaperLUPArray = NULL;      // points: PAPER_CHART
       condSymbolLUPArray = NULL;      // Dynamic Conditional Symbology
 
+      _symb_sym = NULL;
+
       m_txf_ready = false;
       m_txf = NULL;
 
@@ -128,6 +130,7 @@ s52plib::s52plib ( const wxString& PLib )
 
       _symb_symR = NULL;
       bUseRasterSym = false;
+
 
       //      Sensible defaults
       m_nSymbolStyle = PAPER_CHART;
@@ -2015,21 +2018,27 @@ void s52plib::DestroyLUP ( LUPrec *pLUP )
 
 void s52plib::DestroyLUPArray ( wxArrayOfLUPrec *pLUPArray )
 {
-      for ( unsigned int il = 0 ; il < pLUPArray->GetCount() ; il++ )
-            DestroyLUP ( pLUPArray->Item ( il ) );
+      if(pLUPArray)
+      {
+            for ( unsigned int il = 0 ; il < pLUPArray->GetCount() ; il++ )
+                  DestroyLUP ( pLUPArray->Item ( il ) );
 
-      pLUPArray->Clear();
+            pLUPArray->Clear();
 
-      delete pLUPArray;
+            delete pLUPArray;
+      }
 }
 
 
 void s52plib::ClearCNSYLUPArray ( void )
 {
-      for ( unsigned int i = 0 ; i < condSymbolLUPArray->GetCount() ; i++ )
-            DestroyLUP ( condSymbolLUPArray->Item ( i ) );
+      if(condSymbolLUPArray)
+      {
+            for ( unsigned int i = 0 ; i < condSymbolLUPArray->GetCount() ; i++ )
+                  DestroyLUP ( condSymbolLUPArray->Item ( i ) );
 
-      condSymbolLUPArray->Clear();
+            condSymbolLUPArray->Clear();
+      }
 }
 
 
@@ -2299,7 +2308,7 @@ wxColour s52plib::S52_getwxColour ( const wxString &colorName )
 //
 //-----------------------------
 #define APOS   '\047'
-#define MAXL       256
+#define MAXL       512
 
 #if 0
 wxString GetGenericAttr ( S57Obj *obj, char *AttrName )
@@ -2481,14 +2490,14 @@ char      *_getParamVal ( ObjRazRules *rzRules, char *str, char *buf, int bsz )
                   return str;
             }
 
-            while ( *str!=',' && *str!=')' && *str!='\0' /*&& len<bsz*/ )
+            while ( *str!=',' && *str!=')' && *str!='\0' && len<(bsz-1) )
             {
                   *tmp++ = *str++;
                   ++len;
             }
 
-            //if (len > bsz)
-            //    printf("ERROR: chopping input S52 line !? \n");
+            if (len >= bsz)
+                printf("ERROR: chopping input S52 line !? \n");
 
             *tmp = '\0';
             str++;        // skip ',' or ')'
@@ -2521,7 +2530,7 @@ char      *_getParamVal ( ObjRazRules *rzRules, char *str, char *buf, int bsz )
 
             if ( vallen >= bsz )
             {
-                  vallen =  bsz;
+                  vallen =  bsz-1;
 //            PRINTF("ERROR: chopping attribut value !? \n");
             }
 
@@ -2598,9 +2607,9 @@ char *_parseTEXT ( ObjRazRules *rzRules, S52_TextC *text, char *str0 )
 
       if(text)
       {
-            str = _getParamVal ( rzRules, str, &text->hjust, 1 );   // HJUST
-            str = _getParamVal ( rzRules, str, &text->vjust, 1 );   // VJUST
-            str = _getParamVal ( rzRules, str, &text->space, 1 );   // SPACE
+            str = _getParamVal ( rzRules, str, &text->hjust, MAXL );   // HJUST
+            str = _getParamVal ( rzRules, str, &text->vjust, MAXL );   // VJUST
+            str = _getParamVal ( rzRules, str, &text->space, MAXL );   // SPACE
 
             // CHARS
             str         = _getParamVal ( rzRules, str, buf, 5 );
@@ -2626,10 +2635,7 @@ S52_TextC   *S52_PL_parseTX ( ObjRazRules *rzRules, Rules *rules, char *cmd )
 {
       S52_TextC *text = NULL;
       char *str      = NULL;
-      char buf[MAXL] = {'\0'};   // output string
       char val[MAXL] = {'\0'};   // value of arg
-      char *b    = buf;
-
 
       str = ( char* ) rules->INSTstr;
 
@@ -2638,7 +2644,6 @@ S52_TextC   *S52_PL_parseTX ( ObjRazRules *rzRules, Rules *rules, char *cmd )
             return 0;   // abort this command word if mandatory param absent
 
       val[MAXL - 1] = '\0';                               // make sure the string terminates
-      sprintf ( b, "%s", val );
 
       text = new S52_TextC;
       str = _parseTEXT ( rzRules, text, str );
@@ -2735,6 +2740,139 @@ bool s52plib::RenderText ( wxDC *pdc, S52_TextC *ptext, int x, int y, wxRect *pR
 
       if(!pdc)                // OpenGL
       {
+#if 1
+            if(1)
+            {
+                  if(!ptext->m_pRGBA)            // is RGBA bitmap ready?
+                  {
+                        wxMemoryDC mdc;
+
+                        mdc.SetFont ( * ( ptext->pFont ) );
+
+                        wxCoord w, h, descent, exlead;
+                        mdc.GetTextExtent ( ptext->frmtd, &w, &h, &descent, &exlead ); // measure the text
+                        ptext->rendered_char_height = h - descent;
+
+                        wxBitmap bmp(w,h);
+                        mdc.SelectObject(bmp);
+
+                        if(mdc.IsOk())
+                        {
+                              //  Render the text as white on black, so that underlying anti-aliasing of
+                              //  wxDC text rendering can be extracted and converted to alpha-channel values.
+
+                              mdc.SetBackground(wxBrush(wxColour(0,0,0)));
+                              mdc.SetBackgroundMode ( wxTRANSPARENT );
+
+                              mdc.SetTextForeground ( wxColour(255,255,255) );
+
+                              mdc.Clear();
+
+                              mdc.DrawText (   ptext->frmtd, 0, 0 );
+
+                              wxImage image = bmp.ConvertToImage();
+                              int ws = image.GetWidth(), hs = image.GetHeight();
+
+                              ptext->RGBA_width = ws;
+                              ptext->RGBA_height = hs;
+                              ptext->m_pRGBA = (unsigned char *)malloc(4*ws*hs);
+
+                              unsigned char *d = image.GetData();
+                              unsigned char *pdest = ptext->m_pRGBA;
+                              S52color *ccolor = ptext->pcol;
+
+                              for(int y=0; y<hs; y++)
+                                    for(int x=0; x<ws; x++)
+                                    {
+                                          unsigned char r, g, b;
+                                          int off = (y*ws+x);
+                                          r = d[off*3 + 0];
+                                          g = d[off*3 + 1];
+                                          b = d[off*3 + 2];
+
+                                          pdest[off*4 + 0] = ccolor->R;
+                                          pdest[off*4 + 1] = ccolor->G;
+                                          pdest[off*4 + 2] = ccolor->B;
+
+                                          int alpha = (r + g + b)/3;
+                                          pdest[off*4 + 3] = (unsigned char)(alpha & 0xff);
+                                    }
+
+                              mdc.SelectObject(wxNullBitmap);
+                        }     // mdc OK
+
+                  }    // Building m_RGBA
+
+                  //    Render the bitmap
+                  if(ptext->m_pRGBA)
+                  {
+                        //  Adjust the y position to account for the convention that S52 text is drawn
+                        //  with the lower left corner at the specified point, instead of the wx convention
+                        //  using upper right corner
+                        int yp = y  - ( ptext->rendered_char_height );
+                        int xp = x;
+
+                        //  Add in the offsets, specified in units of nominal font height
+                        yp += ptext->yoffs * ( ptext->rendered_char_height );
+                        xp += ptext->xoffs * ( ptext->rendered_char_height );
+
+                        pRectDrawn->SetX ( xp );
+                        pRectDrawn->SetY ( yp );
+                        pRectDrawn->SetWidth ( ptext->RGBA_width );
+                        pRectDrawn->SetHeight ( ptext->RGBA_height );
+
+                        if ( bCheckOverlap )
+                        {
+                              if ( CheckTextRectList ( *pRectDrawn, pobj ) )
+                                    bdraw = false;
+                        }
+
+                        if(bdraw)
+                        {
+                              int x_offset = 0;
+                              int y_offset = 0;
+                              int draw_width = ptext->RGBA_width;
+                              int draw_height = ptext->RGBA_height;
+
+                              if(xp < 0)
+                              {
+                                    x_offset = -xp;
+                                    draw_width += xp;
+                              }
+                              if(yp < 0)
+                              {
+                                    y_offset = -yp;
+                                    draw_height += yp;
+                              }
+
+                              glColor4f(1, 1, 1, 1);
+
+                              glEnable(GL_BLEND);
+                              glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                              glPixelZoom(1, -1);
+
+                              glPushClientAttrib(GL_CLIENT_PIXEL_STORE_BIT);
+
+                              glPixelStorei(GL_UNPACK_ROW_LENGTH, ptext->RGBA_width);
+
+                              glRasterPos2i(xp + x_offset, yp + y_offset);
+
+                              glPixelStorei(GL_UNPACK_SKIP_PIXELS, x_offset);
+                              glPixelStorei(GL_UNPACK_SKIP_ROWS, y_offset);
+
+                              glDrawPixels(draw_width, draw_height, GL_RGBA, GL_UNSIGNED_BYTE, ptext->m_pRGBA);
+                              glPixelZoom(1, 1);
+                              glDisable(GL_BLEND);
+
+                              glPopClientAttrib();
+                        }     // bdraw
+
+                  }
+
+            } // 1
+
+#endif
+#if 0
             if(!m_txf_ready)
                   PrepareTxfRenderer();
 
@@ -2811,6 +2949,7 @@ bool s52plib::RenderText ( wxDC *pdc, S52_TextC *ptext, int x, int y, wxRect *pR
             }
             else
                   bdraw = false;
+#endif
       }
       else
       {
@@ -3811,6 +3950,9 @@ bool s52plib::RenderHPGL ( ObjRazRules *rzRules,  Rule *prule, wxDC *pdc, wxPoin
                   }
             }
 
+//            if((width == 0) || (height == 0))
+//                  int yyp = 4;
+
             wxBitmap *pbm = new wxBitmap ( width, height );
             wxMemoryDC mdc;
             mdc.SelectObject ( *pbm );
@@ -4430,6 +4572,15 @@ int s52plib::RenderLS ( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
 
       }
 
+      //    Get a true pixel clipping/bounding box from the vp
+      wxPoint pbb = vp->GetPixFromLL(vp->clat, vp->clon);
+      int xmin_ = pbb.x - vp->rv_rect.width/2;
+      int xmax_ = xmin_ + vp->rv_rect.width;
+      int ymin_ = pbb.y - vp->rv_rect.height/2;
+      int ymax_ = ymin_ + vp->rv_rect.height;
+
+      int x0, y0, x1, y1;
+
       //  Get the current display priority from the LUP
       int priority_current = rzRules->LUP->DPRI - '0';          //TODO fix this hack by putting priority into object during _insertRules
 
@@ -4463,16 +4614,10 @@ int s52plib::RenderLS ( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
             //  Allocate some storage for converted points
             wxPoint *ptp = ( wxPoint * ) malloc ( ( nls_max + 2 ) * sizeof ( wxPoint ) );   // + 2 allows for end nodes
 
-
-            int xmin_ = 0;
-            int xmax_ = vp->pix_width;
-            int ymin_ = 0;
-            int ymax_ = vp->pix_height;
-            int x0, y0, x1, y1;
-
             int *index_run;
             double *ppt;
             double easting, northing;
+
             wxPoint pra(0,0);
             VC_Element *pnode;
 
@@ -4584,12 +4729,6 @@ int s52plib::RenderLS ( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
             if(!rzRules->obj->pPolyTessGeo->IsOk())               // perform deferred tesselation
                   rzRules->obj->pPolyTessGeo->BuildTessGL();
 
-            int xmin_ = 0;
-            int xmax_ = vp->pix_width;
-            int ymin_ = 0;
-            int ymax_ = vp->pix_height;
-            int x0, y0, x1, y1;
-
             PolyTriGroup *pptg = rzRules->obj->pPolyTessGeo->Get_PolyTriGroup_head();
 
             float *ppolygeo = pptg->pgroup_geom;
@@ -4654,12 +4793,6 @@ int s52plib::RenderLS ( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
       {
             if(!rzRules->obj->pPolyTrapGeo->IsOk())
                   rzRules->obj->pPolyTrapGeo->BuildTess();
-
-            int xmin_ = 0;
-            int xmax_ = vp->pix_width;
-            int ymin_ = 0;
-            int ymax_ = vp->pix_height;
-            int x0, y0, x1, y1;
 
             PolyTrapGroup *pptg = rzRules->obj->pPolyTrapGeo->Get_PolyTrapGroup_head();
 
@@ -4989,11 +5122,15 @@ void s52plib::draw_lc_poly ( wxDC *pdc, wxColor &color, int width, wxPoint *ptp,
                              float sym_len, float sym_factor, Rule *draw_rule, ViewPort *vp )
 {
       wxPoint   r;
+
+      //    Get a true pixel clipping/bounding box from the vp
+      wxPoint pbb = vp->GetPixFromLL(vp->clat, vp->clon);
+      int xmin_ = pbb.x - vp->rv_rect.width/2;
+      int xmax_ = xmin_ + vp->rv_rect.width;
+      int ymin_ = pbb.y - vp->rv_rect.height/2;
+      int ymax_ = ymin_ + vp->rv_rect.height;
+
       int x0, y0, x1, y1;
-      int xmin_ = 0;
-      int xmax_ = vp->pix_width;
-      int ymin_ = 0;
-      int ymax_ = vp->pix_height;
 
       if(pdc)
       {
@@ -7554,6 +7691,24 @@ int s52plib::RenderToGLAP ( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
       double z_clip_geom = 1.0;
       double z_tex_geom = 0.;
 
+      GLuint clip_list;
+
+      wxBoundingBox BBView = vp->GetBBox();
+            //  Allow a little slop in calculating whether a triangle
+            //  is within the requested Viewport
+      double margin = BBView.GetWidth() * .05;
+
+      wxPoint *ptp;
+      if ( rzRules->obj->pPolyTessGeo )
+      {
+            if(!rzRules->obj->pPolyTessGeo->IsOk())               // perform deferred tesselation
+                  rzRules->obj->pPolyTessGeo->BuildTessGL();
+
+            ptp = ( wxPoint * ) malloc ( ( rzRules->obj->pPolyTessGeo->GetnVertexMax() + 1 ) * sizeof ( wxPoint ) );
+      }
+      else
+            return 0;
+
       if(g_b_useStencil)
       {
             glPushAttrib(GL_STENCIL_BUFFER_BIT);
@@ -7576,7 +7731,7 @@ int s52plib::RenderToGLAP ( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
       {
             glPushAttrib(GL_DEPTH_BUFFER_BIT);
 
-            glEnable(GL_DEPTH_TEST); // to enable writing to the depth buffer
+            glEnable(GL_DEPTH_TEST); // to use the depth test
             glDepthFunc(GL_GREATER); // Respect global render mask in depth buffer
             glDepthMask(GL_TRUE);    // to allow writes to the depth buffer
             glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);   // disable color buffer
@@ -7594,17 +7749,14 @@ int s52plib::RenderToGLAP ( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
       }
 
       //  Render the geometry
-      wxBoundingBox BBView = vp->GetBBox();
-      if ( rzRules->obj->pPolyTessGeo )
       {
-            if(!rzRules->obj->pPolyTessGeo->IsOk())               // perform deferred tesselation
-                  rzRules->obj->pPolyTessGeo->BuildTessGL();
+            // Generate a Display list if using Depth Buffer clipping, for use later
+            if(!g_b_useStencil)
+            {
+                  clip_list = glGenLists (1);
+                  glNewList(clip_list, GL_COMPILE);
+            }
 
-            wxPoint *ptp = ( wxPoint * ) malloc ( ( rzRules->obj->pPolyTessGeo->GetnVertexMax() + 1 ) * sizeof ( wxPoint ) );
-
-            //  Allow a little slop in calculating whether a triangle
-            //  is within the requested Viewport
-            double margin = BBView.GetWidth() * .05;
 
             PolyTriGroup *ppg = rzRules->obj->pPolyTessGeo->Get_PolyTriGroup_head();
 
@@ -7688,7 +7840,12 @@ int s52plib::RenderToGLAP ( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
                   }   // if bbox
                   p_tp = p_tp->p_next;                // pick up the next in chain
             }       // while
-            free ( ptp );
+
+            if(!g_b_useStencil)
+            {
+                  glEndList();
+                  glCallList(clip_list);
+            }
 
             if(g_b_useStencil)
             {
@@ -7770,12 +7927,46 @@ int s52plib::RenderToGLAP ( ObjRazRules *rzRules, Rules *rules, ViewPort *vp )
             glDisable(GL_TEXTURE_2D);
             glDisable(GL_BLEND);
 
+
+            //    If using DepthBuffer clipping, we need to
+            //    undo the sub-clip area for this feature render.
+            //    Otherwise, subsequent AP renders with also honor this sub-clip region.
+
+            //    We do this by rendering the geometry again with the depth(Z) value
+            //    set to the global clipping value.
+            //    For efficiency, we use the display list created above,
+            //    translated appropriately in z direction
+
+            //    Note that this is not required for stencil buffer clipping,
+            //    since the relevent bit (2) is cleared on any subsequent AP renders.
+
+            if(!g_b_useStencil)
+            {
+
+                  glEnable(GL_DEPTH_TEST); // to use the depth test
+                  glDepthFunc(GL_LEQUAL); // Respect global render mask in depth buffer
+                  glDepthMask(GL_TRUE);    // to allow writes to the depth buffer
+                  glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);   // disable color buffer
+
+                  glColor3f(1,1,0);
+
+                  glTranslatef(0, 0, .25);      // Cause depth buffer rending at z = 0.5
+                  glCallList(clip_list);        // Re-Render the clip geometry
+                  glTranslatef(0, 0, -.25);     // undo translation (may not be required....)
+
+
+                  glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);  // re-enable color buffer
+                  glDepthMask(GL_FALSE);                            // disable depth buffer
+
+                  glDeleteLists(clip_list, 1);
+            }
+
             //    Restore the previous state
             glPopAttrib();
 
       }
 
-
+      free ( ptp );
 
 
 #if 0
@@ -9571,22 +9762,25 @@ void  txfGetStringMetrics(
 
 void txfRenderGlyph(TexFont * txf, int c)
 {
-      TexGlyphVertexInfo *tgvi;
+      if(c > 0)
+      {
+            TexGlyphVertexInfo *tgvi;
 
-      tgvi = getTCVI(txf, c);
-      glBegin(GL_QUADS);
+            tgvi = getTCVI(txf, c);
+            glBegin(GL_QUADS);
 
-      glTexCoord2fv(tgvi->t0);
-      glVertex2sv(tgvi->v0);
-      glTexCoord2fv(tgvi->t1);
-      glVertex2sv(tgvi->v1);
-      glTexCoord2fv(tgvi->t2);
-      glVertex2sv(tgvi->v2);
-      glTexCoord2fv(tgvi->t3);
-      glVertex2sv(tgvi->v3);
+            glTexCoord2fv(tgvi->t0);
+            glVertex2sv(tgvi->v0);
+            glTexCoord2fv(tgvi->t1);
+            glVertex2sv(tgvi->v1);
+            glTexCoord2fv(tgvi->t2);
+            glVertex2sv(tgvi->v2);
+            glTexCoord2fv(tgvi->t3);
+            glVertex2sv(tgvi->v3);
 
-      glEnd();
-      glTranslatef(tgvi->advance, 0.0, 0.0);
+            glEnd();
+            glTranslatef(tgvi->advance, 0.0, 0.0);
+      }
 }
 
 void

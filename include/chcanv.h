@@ -21,7 +21,7 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
  ***************************************************************************
  *
  *f
@@ -179,6 +179,7 @@ public:
       bool SetVPScale(double sc);
       bool SetViewPoint ( double lat, double lon);
       void ReloadVP ( bool b_adjust = true );
+      void LoadVP ( ViewPort &vp, bool b_adjust = true );
       void SetVPRotation(double angle){ VPoint.rotation = angle; }
       double GetVPRotation(void) { return GetVP().rotation; }
       double GetVPSkew(void) { return GetVP().skew; }
@@ -247,6 +248,11 @@ public:
       void InvalidateQuilt(void);
       double GetQuiltMaxErrorFactor();
       bool IsChartQuiltableRef(int db_index);
+
+      int GetCanvasChartNativeScale();
+      int FindClosestCanvasChartdbIndex(int scale);
+      void UpdateCanvasOnGroupChange(void);
+
 
       void ShowChartInfoWindow(int x, int y, int dbIndex);
       void HideChartInfoWindow(void);
@@ -364,6 +370,7 @@ private:
       void TargetFrame(ocpnDC &dc, wxPen pen, int x, int y, int radius);   // pjotrc 2010.02.01
       void AtoN_Diamond(ocpnDC &dc, wxPen pen, int x, int y, int radius, bool b_virtual);  // pjotrc 2010.02.01
       void Base_Square(ocpnDC &dc, wxPen pen, int x, int y, int radius);
+      void SART_Render(ocpnDC &dc, wxPen pen, int x, int y, int radius);
 
       void GridDraw(ocpnDC& dc); // Display lat/lon Grid in chart display
       void ScaleBarDraw( ocpnDC& dc );
@@ -555,9 +562,10 @@ public:
       wxString GetRendererString(){ return m_renderer; }
 
       void Invalidate() {m_cache_vp.Invalidate(); }
-      void RenderChartRegion(ChartBaseBSB *chart, ViewPort &vp, wxRegion &region);
+      void RenderRasterChartRegionGL(ChartBase *chart, ViewPort &vp, wxRegion &region);
       bool PurgeChartTextures(ChartBase *pc);
       void ClearAllRasterTextures(void);
+      void DrawGLOverLayObjects(void);
 
 protected:
       void RenderQuiltViewGL(ViewPort &vp, wxRegion Region);

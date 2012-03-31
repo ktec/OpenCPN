@@ -21,7 +21,7 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
  ***************************************************************************
  *
  * $Log: thumbwin.cpp,v $
@@ -107,8 +107,8 @@ END_EVENT_TABLE()
 
 // Define a constructor
 
-ThumbWin::ThumbWin(wxFrame *frame):
-                   wxWindow(frame, wxID_ANY,    wxPoint(20,20), wxSize(5,5), wxSIMPLE_BORDER)
+ThumbWin::ThumbWin(wxWindow *parent):
+                   wxWindow(parent, wxID_ANY,    wxPoint(20,20), wxSize(5,5), wxSIMPLE_BORDER)
 {
       pThumbChart = NULL;
       m_max_size.x = m_max_size.y = 100;

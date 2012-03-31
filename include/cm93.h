@@ -20,7 +20,7 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
  ***************************************************************************
  */
 
@@ -445,6 +445,7 @@ class cm93compchart : public s57chart
 
             virtual bool RenderRegionViewOnGL(const wxGLContext &glc, const ViewPort& VPoint,
                                               const wxRegion &Region);
+            void SetColorScheme(ColorScheme cs, bool bApplyImmediate);
 
             bool RenderNextSmallerCellOutlines( ocpnDC &dc, ViewPort& vp);
 
@@ -475,6 +476,7 @@ class cm93compchart : public s57chart
 
             void InvalidateCache();
       private:
+            wxRegion GetValidScreenCanvasRegion(const ViewPort& VPoint, const wxRegion &ScreenRegion);
             bool RenderViewOnDC(wxMemoryDC& dc, const ViewPort& VPoint);
 
             InitReturn CreateHeaderData();

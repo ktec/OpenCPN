@@ -21,7 +21,7 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
  ***************************************************************************
  *
  *f
@@ -71,8 +71,8 @@ public:
 
      void GetSize(wxCoord *width, wxCoord *height) const;
 
-     void DrawLine( wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2);
-     void DrawLines( int n, wxPoint points[], wxCoord xoffset = 0, wxCoord yoffset = 0);
+     void DrawLine( wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2, bool b_hiqual = true);
+     void DrawLines( int n, wxPoint points[], wxCoord xoffset = 0, wxCoord yoffset = 0, bool b_hiqual = true);
 
      void StrokeLine( wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2);
      void StrokeLine( wxPoint a, wxPoint b) { StrokeLine(a.x, a.y, b.x, b.y); }

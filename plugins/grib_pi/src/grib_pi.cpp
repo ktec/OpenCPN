@@ -22,7 +22,7 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
  ***************************************************************************
  */
 
@@ -74,11 +74,17 @@ extern "C" DECL_EXP void destroy_pi(opencpn_plugin* p)
 //---------------------------------------------------------------------------------------------------------
 
 grib_pi::grib_pi(void *ppimgr)
-      :opencpn_plugin(ppimgr)
+      :opencpn_plugin_17(ppimgr)
 {
       // Create the PlugIn icons
       initialize_images();
 
+}
+
+grib_pi::~grib_pi(void)
+{
+      delete _img_grib_pi;
+      delete _img_grib;
 }
 
 int grib_pi::Init(void)
@@ -119,6 +125,7 @@ int grib_pi::Init(void)
 //      SetCanvasContextMenuItemViz(miid, true);
 
       return (WANTS_OVERLAY_CALLBACK |
+           WANTS_OPENGL_OVERLAY_CALLBACK |
            WANTS_CURSOR_LATLON       |
            WANTS_TOOLBAR_CALLBACK    |
            INSTALLS_TOOLBAR_TOOL     |
@@ -133,10 +140,9 @@ bool grib_pi::DeInit(void)
       if(m_pGribDialog)
             m_pGribDialog->Close();
 
-      delete _img_grib_pi;
-      delete _img_grib;
-
       delete m_pGRIBOverlayFactory;
+      m_pGRIBOverlayFactory = NULL;
+
       return true;
 }
 
@@ -344,6 +350,26 @@ bool grib_pi::RenderOverlay(wxDC &dc, PlugIn_ViewPort *vp)
       else
             return false;
 }
+
+bool grib_pi::RenderGLOverlay(wxGLContext *pcontext, PlugIn_ViewPort *vp)
+{
+      if(m_pGribDialog && m_pGRIBOverlayFactory)
+      {
+            if(m_pGRIBOverlayFactory->IsReadyToRender())
+            {
+                  m_pGRIBOverlayFactory->RenderGLGribOverlay ( pcontext, vp );
+                  return true;
+            }
+            else
+                  return false;
+      }
+      else
+            return false;
+
+}
+
+
+
 
 void grib_pi::SetCursorLatLon(double lat, double lon)
 {

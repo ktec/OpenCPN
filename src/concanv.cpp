@@ -21,7 +21,7 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
  ***************************************************************************
  *
  *
@@ -223,7 +223,7 @@ void ConsoleCanvas::OnPaint(wxPaintEvent& event)
 //    VMG
                   // VMG is always to next waypoint, not to end of route
                   // VMG is SOG x cosine (difference between COG and BRG to Waypoint)
-                  double VMG;
+                  double VMG = 0.;
                   if(!wxIsNaN(gCog) && !wxIsNaN(gSog))
                   {
                         double BRG;
@@ -241,7 +241,8 @@ void ConsoleCanvas::OnPaint(wxPaintEvent& event)
 
                   // If showing only "this leg", use VMG for calculation of ttg
                   wxString ttg_s;
-                  if(VMG > 0.)
+                  if((VMG > 0.) && !wxIsNaN(gCog) && !wxIsNaN(gSog))
+
                   {
                         float ttg_sec = (rng / VMG) * 3600.;
                         wxTimeSpan ttg_span(0, 0, long(ttg_sec), 0);
