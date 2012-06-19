@@ -7,7 +7,6 @@
  *
  ***************************************************************************
  *   Copyright (C) 2010 by David S. Register   *
- *   bdbcat@yahoo.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -40,8 +39,8 @@
 #include "chartbase.h"        // for ChartPlugInWrapper
 #include "chartdb.h"
 #include "chartdbs.h"
-#include "bitmaps/default_pi.xpm"
 #include "ocpndc.h"
+#include "styles.h"
 
 extern MyConfig        *pConfig;
 extern FontMgr         *pFontMgr;
@@ -51,6 +50,7 @@ extern wxAuiManager    *g_pauimgr;
 extern wxLocale        *plocale_def_lang;
 extern ChartDB         *ChartData;
 extern MyFrame         *gFrame;
+extern ocpnStyle::StyleManager* g_StyleManager;
 
 //    Some static helper funtions
 //    Scope is local to this module
@@ -647,6 +647,13 @@ bool PlugInManager::RenderAllGLCanvasOverlayPlugIns( wxGLContext *pcontext, cons
                                     break;
                               }
 
+                              case 108:
+                              {
+                                    opencpn_plugin_18 *ppi = dynamic_cast<opencpn_plugin_18 *>(pic->m_pplugin);
+                                    if(ppi)
+                                          ppi->RenderGLOverlay(pcontext, &pivp);
+                                    break;
+                              }
                               default:
                                     break;
                         }
@@ -1408,6 +1415,11 @@ void DimeWindow(wxWindow *win)
       DimeControl(win);
 }
 
+void JumpToPosition(double lat, double lon, double scale)
+{
+      gFrame->JumpToPosition(lat, lon, scale);
+}
+
 //-----------------------------------------------------------------------------------------
 //    The opencpn_plugin base class implementation
 //-----------------------------------------------------------------------------------------
@@ -1435,7 +1447,10 @@ int opencpn_plugin::GetPlugInVersionMinor()
 {  return 0; }
 
 wxBitmap *opencpn_plugin::GetPlugInBitmap()
-{  return new wxBitmap(default_pi); }
+{
+    ocpnStyle::Style* style = g_StyleManager->GetCurrentStyle();
+	return new wxBitmap(style->GetIcon( _T("default_pi") ) );
+}
 
 wxString opencpn_plugin::GetCommonName()
 {

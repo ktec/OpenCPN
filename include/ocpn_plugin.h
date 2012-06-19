@@ -6,7 +6,6 @@
  *
  ***************************************************************************
  *   Copyright (C) 2010 by David S. Register   *
- *   bdbcat@yahoo.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -511,6 +510,8 @@ extern  DECL_EXP wxArrayString GetChartDBDirArrayString();
 extern "C"  DECL_EXP void SendPluginMessage( wxString message_id, wxString message_body );
 
 extern "C"  DECL_EXP void DimeWindow(wxWindow *);
+
+extern "C"  DECL_EXP void JumpToPosition(double lat, double lon, double scale);
 
 #endif            // _PLUGIN_H_
 

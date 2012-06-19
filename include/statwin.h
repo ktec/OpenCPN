@@ -6,7 +6,6 @@
  *
  ***************************************************************************
  *   Copyright (C) 2010 by David S. Register   *
- *   bdbcat@yahoo.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,24 +22,6 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
  ***************************************************************************
- *
- * $Log: statwin.h,v $
- * Revision 1.15  2010/06/13 21:03:07  bdbcat
- * 613a
- *
- * Revision 1.14  2010/05/15 03:55:52  bdbcat
- * Build 514
- *
- * Revision 1.13  2010/05/04 01:34:04  bdbcat
- * Build 503
- *
- * Revision 1.12  2010/05/02 03:05:37  bdbcat
- * Build 501
- *
- * Revision 1.11  2010/04/27 01:45:32  bdbcat
- * Build 426
- *
- *
  */
 
 
@@ -102,11 +83,11 @@ public:
       void SetTmercIndexArray(ArrayOfInts array);
       void SetPolyIndexArray(ArrayOfInts array);
 
-      void SetVizIcon(wxBitmap *picon_bmp){ m_pVizIconBmp = picon_bmp; }
-      void SetInVizIcon(wxBitmap *picon_bmp){ m_pInVizIconBmp = picon_bmp; }
-      void SetSkewIcon(wxBitmap *picon_bmp){ m_pSkewIconBmp = picon_bmp; }
-      void SetTMercIcon(wxBitmap *picon_bmp){ m_pTmercIconBmp = picon_bmp; }
-      void SetPolyIcon(wxBitmap *picon_bmp){ m_pPolyIconBmp = picon_bmp; }
+      void SetVizIcon(wxBitmap *picon_bmp){ if( m_pVizIconBmp ) delete m_pVizIconBmp; m_pVizIconBmp = picon_bmp; }
+      void SetInVizIcon(wxBitmap *picon_bmp){ if( m_pInVizIconBmp ) delete m_pInVizIconBmp; m_pInVizIconBmp = picon_bmp; }
+      void SetSkewIcon(wxBitmap *picon_bmp){ if( m_pSkewIconBmp ) delete m_pSkewIconBmp; m_pSkewIconBmp = picon_bmp; }
+      void SetTMercIcon(wxBitmap *picon_bmp){ if( m_pTmercIconBmp ) delete m_pTmercIconBmp; m_pTmercIconBmp = picon_bmp; }
+      void SetPolyIcon(wxBitmap *picon_bmp){ if( m_pPolyIconBmp ) delete m_pPolyIconBmp; m_pPolyIconBmp = picon_bmp; }
 
       wxPoint GetKeyOrigin(int key_index);
       void ResetRollover(void);
@@ -199,10 +180,10 @@ class WiFiStatWin: public wxWindow
 //----------------------------------------------------------------------------
 // StatWin
 //----------------------------------------------------------------------------
-class StatWin: public wxWindow
+class StatWin: public wxDialog
 {
 public:
-      StatWin(wxFrame *frame);
+      StatWin(wxWindow *frame);
       ~StatWin();
       void OnSize(wxSizeEvent& event);
       void OnPaint(wxPaintEvent& event);
@@ -210,6 +191,7 @@ public:
       int  GetFontHeight();
       int  GetRows(){ return(m_rows);}
       void SetColorScheme(ColorScheme cs);
+      void RePosition();
 
       void FormatStat(void);
 

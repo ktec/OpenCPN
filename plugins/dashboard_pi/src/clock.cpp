@@ -7,8 +7,6 @@
  *
  ***************************************************************************
  *   Copyright (C) 2010 by David S. Register                               *
- *   bdbcat@yahoo.com                                                      *
- *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
@@ -65,7 +63,7 @@ void DashboardInstrument_Clock::SetUtcTime(int st, wxDateTime data)
       {
             if (data.IsValid())
             {
-                  m_data = data.ToUTC().FormatISOTime().Append(_T(" UTC"));
+                  m_data = data.FormatISOTime().Append(_T(" UTC"));
             }
 
             Refresh(false);
@@ -83,7 +81,7 @@ void DashboardInstrument_Moon::SetUtcTime(int st, wxDateTime data)
       {
             if (data.IsValid())
             {
-                  int phase = moon_phase(data.ToUTC().GetYear(), data.ToUTC().GetMonth() + 1, data.ToUTC().GetDay());
+                  int phase = moon_phase(data.GetYear(), data.GetMonth() + 1, data.GetDay());
                   char sign = ' ';
                   if (phase > 0 && phase < 4)
                         sign = '+';

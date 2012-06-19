@@ -1,5 +1,4 @@
 /******************************************************************************
- * $Id: grib_pi.h,v 1.8 2010/06/21 01:54:37 bdbcat Exp $
  *
  * Project:  OpenCPN
  * Purpose:  GRIB Plugin
@@ -7,7 +6,6 @@
  *
  ***************************************************************************
  *   Copyright (C) 2010 by David S. Register   *
- *   bdbcat@yahoo.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -37,7 +35,7 @@
 #endif //precompiled headers
 
 #define     PLUGIN_VERSION_MAJOR    1
-#define     PLUGIN_VERSION_MINOR    3
+#define     PLUGIN_VERSION_MINOR    4
 
 #define     MY_API_VERSION_MAJOR    1
 #define     MY_API_VERSION_MINOR    7
@@ -80,11 +78,11 @@ public:
       void SetDefaults(void);
 
       int GetToolbarToolCount(void);
-      
+
       void ShowPreferencesDialog( wxWindow* parent );
 
       void OnToolbarToolCallback(int id);
-      
+
 
 // Other public methods
 
@@ -112,6 +110,7 @@ private:
       int              m_display_width, m_display_height;
       int              m_leftclick_tool_id;
 
+      bool             m_bShowGrib;
 
       int              m_grib_dialog_x, m_grib_dialog_y;
       int              m_grib_dialog_sx, m_grib_dialog_sy;

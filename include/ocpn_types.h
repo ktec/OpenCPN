@@ -6,7 +6,6 @@
  *
  ***************************************************************************
  *   Copyright (C) 2010 by David S. Register   *
- *   bdbcat@yahoo.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -130,6 +129,12 @@ class ViewPort
 };
 
 
+//----------------------------------------------------------------------------
+// ocpn Toolbar stuff
+//----------------------------------------------------------------------------
+class ChartBase;
+class wxSocketEvent;
+class ocpnToolBarSimple;
 
 
 

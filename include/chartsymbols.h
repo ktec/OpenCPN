@@ -2,11 +2,10 @@
  *
  * Project:  OpenCPN
  * Purpose:  Chart Symbols
- * Author:   David Register
+ * Author:   Jesper Weissglas
  *
  ***************************************************************************
  *   Copyright (C) 2010 by David S. Register                               *
- *   bdbcat@yahoo.com                                                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,7 +20,7 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************
  *
  */
@@ -29,19 +28,19 @@
 #pragma once
 
 #include "s52plib.h"
-#include <wx/xml/xml.h>
+#include <tinyxml.h>
 
 
 class Lookup {
 public:
 	int	RCID;
 	int id;
-	wxString name;
+	wxString       name;
 	Object_t       type;             // 'A' Area, 'L' Line, 'P' Point
 	DisPrio        displayPrio;             // Display Priority
 	RadPrio        radarPrio;             // 'O' or 'S', Radar Priority
 	LUPname        tableName;             // FTYP:  areas, points, lines
-	wxArrayString *attributeCodeArray;        // ArrayString of LUP Attributes
+	wxArrayString* attributeCodeArray;        // ArrayString of LUP Attributes
 	wxString       instruction;            // Instruction Field (rules)
 	DisCat         displayCat;             // Display Categorie: D/S/O, DisplayBase, Standard, Other
 	int            comment;             // Look-Up Comment (PLib3.x put 'groupes' here,
@@ -58,7 +57,7 @@ typedef struct _SymbolSizeInfo {
 } SymbolSizeInfo_t;
 
 
-class Pattern {
+class OCPNPattern {
 public:
 	int	RCID;
 	wxString name;
@@ -110,6 +109,8 @@ public:
 	~ChartSymbols(void);
 	bool LoadConfigFile( s52plib* plibArg, wxString path );
 
+	static void InitializeGlobals( void );
+	static void DeleteGlobals( void );
 	static int LoadRasterFileForColorTable( int tableNo );
 	static wxArrayPtrVoid * GetColorTables();
 	static int FindColorTable( wxString& tableName );
@@ -121,15 +122,15 @@ public:
 
 
 private:
-	void ProcessVectorTag( wxXmlNode* subNodes, SymbolSizeInfo_t &vectorSize );
-	void ProcessColorTables( wxXmlNode* colortableodes );
-	void ProcessLookups( wxXmlNode* lookupNodes );
-	void ProcessLinestyles( wxXmlNode* linestyleNodes );
-	void ProcessPatterns( wxXmlNode* patternNodes );
-	void ProcessSymbols( wxXmlNode* symbolNodes );
+      void ProcessVectorTag( TiXmlElement* subNodes, SymbolSizeInfo_t &vectorSize );
+      void ProcessColorTables( TiXmlElement* colortableodes );
+      void ProcessLookups( TiXmlElement* lookupNodes );
+      void ProcessLinestyles( TiXmlElement* linestyleNodes );
+      void ProcessPatterns( TiXmlElement* patternNodes );
+      void ProcessSymbols( TiXmlElement* symbolNodes );
 	void BuildLineStyle( LineStyle &lineStyle );
 	void BuildLookup( Lookup &lookup );
-	void BuildPattern( Pattern &pattern );
+	void BuildPattern( OCPNPattern &pattern );
 	void BuildSymbol( ChartSymbol &symol );
 
 	s52plib* plib;

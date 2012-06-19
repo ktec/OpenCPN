@@ -1,11 +1,26 @@
-##---------------------------------------------------------------------------
-## Author:      bdbcat aka. dsr (Dave Register)
-## Copyright:   
-## License:     wxWidgets License
+#---------------------------------------------------------------------------
+## Author:      Dave Register
+## DEB config from: antonm - Anton Martchukov <anton@martchukov.com>
 ## Update:      sethdart (Jean-Eudes Onfray)
 ##              with parts from balp (Anders Arnholm)
-## DEB config from: antonm - Anton Martchukov <anton@martchukov.com>
-##---------------------------------------------------------------------------
+##***************************************************************************
+## *   Copyright (C) 2010 by David S. Register                               *
+## *   This program is free software; you can redistribute it and/or modify  *
+## *   it under the terms of the GNU General Public License as published by  *
+## *   the Free Software Foundation; either version 2 of the License, or     *
+## *   (at your option) any later version.                                   *
+## *                                                                         *
+## *   This program is distributed in the hope that it will be useful,       *
+## *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+## *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+## *   GNU General Public License for more details.                          *
+## *                                                                         *
+## *   You should have received a copy of the GNU General Public License     *
+## *   along with this program; if not, write to the                         *
+## *   Free Software Foundation, Inc.,                                       *
+## *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
+## ***************************************************************************
+ 
  
 #TODO:
 # - cross platform compiling
@@ -52,7 +67,7 @@ IF (NOT WIN32)
   SET (LIB_INSTALL_DIR "lib")
   IF (EXISTS /etc/debian_version)
     SET (PACKAGE_FORMAT "DEB")
-    SET (PACKAGE_DEPS "libwxgtk2.8-0 (>= 2.8.7.1), libglu1-mesa (>= 7.0.0), libgl1-mesa-glx (>= 7.0.0), zlib1g, bzip2, libsdl1.2debian")
+    SET (PACKAGE_DEPS "libc6, libwxgtk2.8-0 (>= 2.8.7.1), libglu1-mesa (>= 7.0.0), libgl1-mesa-glx (>= 7.0.0), zlib1g, bzip2, libsdl1.2debian, libtinyxml2.6.2")
     SET (PACKAGE_RECS "xcalib") 
     SET (LIB_INSTALL_DIR "lib")
     IF (CMAKE_SIZEOF_VOID_P MATCHES "8")
@@ -86,7 +101,9 @@ IF (NOT WIN32)
   ENDIF (EXISTS /etc/suse-release OR EXISTS /etc/SuSE-release)
   IF(APPLE)
     IF (CMAKE_SIZEOF_VOID_P MATCHES "8")
-      SET(ARCH "x86_64")
+      IF (CMAKE_OSX_64)
+        SET(ARCH "x86_64")
+      ENDIF (CMAKE_OSX_64)
     ENDIF (CMAKE_SIZEOF_VOID_P MATCHES "8")
   ENDIF()
 ELSE (NOT WIN32)
@@ -142,6 +159,7 @@ MESSAGE (STATUS "*** Staging to build ${PACKAGE_NAME}  ***")
 IF (PREFIX)
 	SET(CMAKE_INSTALL_PREFIX ${PREFIX})
 ENDIF (PREFIX)
+MESSAGE (STATUS "*** Will install to ${CMAKE_INSTALL_PREFIX}  ***")
 SET(PREFIX_BIN bin)
 SET(PREFIX_INCLUDE include)
 SET(PREFIX_DATA share)
@@ -261,7 +279,7 @@ IF (USE_GPSD)
             INCLUDE_DIRECTORIES(${GPS_INCLUDE_DIR})
             ADD_DEFINITIONS(${GPS_DEFINITIONS})
             ADD_DEFINITIONS(-DBUILD_WITH_LIBGPS)
-#            message (STATUS "GPS library is ${GPS_LIBRARY}")
+            message (STATUS "GPS library include location is ${GPS_INCLUDE_DIR}")
 #            SET(EXTRA_LIBS ${EXTRA_LIBS} ${GPS_LIBRARY})
       ELSE (GPS_FOUND)
             message (STATUS "Gps library not found")
@@ -274,8 +292,8 @@ ENDIF (NOT WIN32)
 
 #FILE(GLOB_RECURSE SRCS *.cpp *.c)
 SET(HDRS
-                include/ocpn_types.h
-                include/ocpndc.h
+        include/ocpn_types.h
+        include/ocpndc.h
 		include/chart1.h
 		include/bbox.h
 		include/ocpn_pixel.h
@@ -297,20 +315,23 @@ SET(HDRS
 		include/wvschart.h
 		include/about.h
 		include/ais.h
-                include/pluginmanager.h
-                include/ocpn_plugin.h
+        include/pluginmanager.h
+        include/ocpn_plugin.h
 		include/gpxdocument.h
-                include/wx/json_defs.h
-                include/wx/jsonwriter.h
-                include/chartsymbols.h
-                include/razdsparser.h
+        include/wx/json_defs.h
+        include/wx/jsonwriter.h
+        include/chartsymbols.h
+        include/razdsparser.h
+		include/styles.h
+		include/toolbar.h
+		include/compasswin.h
 )
 
 SET(SRCS 
 		src/chart1.cpp
 		src/bbox.cpp
 		src/ocpn_pixel.cpp
-                src/ocpndc.cpp
+        src/ocpndc.cpp
 		src/chartdb.cpp
 		src/chartdbs.cpp
 		src/chartimg.cpp
@@ -329,13 +350,15 @@ SET(SRCS
 		src/wvschart.cpp
 		src/about.cpp
 		src/ais.cpp
-                src/pluginmanager.cpp
+        src/pluginmanager.cpp
 		src/gpxdocument.cpp
-            	src/wxJSON/jsonwriter.cpp
-            	src/wxJSON/jsonval.cpp
-                src/chartsymbols.cpp
-                src/razdsparser.cpp
-
+    	src/wxJSON/jsonwriter.cpp
+    	src/wxJSON/jsonval.cpp
+        src/chartsymbols.cpp
+        src/razdsparser.cpp
+		src/styles.cpp
+		src/toolbar.cpp
+		src/compasswin.cpp
     )
 
 IF(wx_Version MATCHES "2.9")
@@ -559,6 +582,13 @@ SET(wvsData
         data/wvsdata/wvs43.dat
    )
 
+SET(uiData
+	src/bitmaps/styles.xml
+	src/bitmaps/toolicons_journeyman.png
+	src/bitmaps/toolicons_journeyman_flat.png
+	src/bitmaps/toolicons_traditional.png
+	)
+
 IF (USE_S57)
       SET(s57data
             data/s57data/attdecode.csv
@@ -586,13 +616,13 @@ IF(APPLE)
   INCLUDE_DIRECTORIES(/usr/X11/include /usr/X11/include/GL)
 
   SET(CMAKE_C_FLAGS "-O2 -arch ${ARCH}")
-  SET(CMAKE_C_FLAGS_DEBUG "-g -O2 -arch ${ARCH}")
+  SET(CMAKE_C_FLAGS_DEBUG "-g -O0 -arch ${ARCH}")
   SET(CMAKE_C_FLAGS_MINSIZEREL "-O2 -arch ${ARCH}")
   SET(CMAKE_C_FLAGS_RELEASE "-O3 -arch ${ARCH}")
   SET(CMAKE_C_FLAGS_RELWITHDEBINFO "-g -O3 -arch ${ARCH}")
 
   SET(CMAKE_CXX_FLAGS "-O2 -arch ${ARCH}")
-  SET(CMAKE_CXX_FLAGS_DEBUG "-g -O2 -arch ${ARCH}")
+  SET(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -arch ${ARCH}")
   SET(CMAKE_CXX_FLAGS_MINSIZEREL "-O2 -arch ${ARCH}")
   SET(CMAKE_CXX_FLAGS_RELEASE "-O3 -arch ${ARCH}")
   SET(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-g -O3 -arch ${ARCH}")
@@ -630,6 +660,8 @@ IF(APPLE)
 SET_SOURCE_FILES_PROPERTIES(
            ${wvsData} PROPERTIES MACOSX_PACKAGE_LOCATION SharedSupport/wvsdata  )
 SET_SOURCE_FILES_PROPERTIES(
+           ${uiData} PROPERTIES MACOSX_PACKAGE_LOCATION SharedSupport/uidata  )
+SET_SOURCE_FILES_PROPERTIES(
            ${s57data} PROPERTIES MACOSX_PACKAGE_LOCATION SharedSupport/s57data  )
 SET_SOURCE_FILES_PROPERTIES(
            ${tcData} PROPERTIES MACOSX_PACKAGE_LOCATION SharedSupport/tcdata  )
@@ -657,6 +689,7 @@ ADD_EXECUTABLE(${PACKAGE_NAME} MACOSX_BUNDLE
       ${HDRS}
       ${SRCS}
       ${wvsData}
+      ${uidata}
       ${s57data}
       ${tcData}
       data/license.txt
@@ -673,7 +706,7 @@ ADD_EXECUTABLE(${PACKAGE_NAME} MACOSX_BUNDLE
 
   INSTALL(TARGETS
     ${PACKAGE_NAME}
-    BUNDLE DESTINATION ${PREFIX_BIN})
+    BUNDLE DESTINATION ${PREFIX_BIN} PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
 
 TARGET_LINK_LIBRARIES(${PACKAGE_NAME}
@@ -743,7 +776,7 @@ INSTALL(TARGETS ${PACKAGE_NAME} RUNTIME DESTINATION ".")
 ENDIF(WIN32)
 
 IF(UNIX AND NOT APPLE)
-INSTALL(TARGETS ${PACKAGE_NAME} RUNTIME DESTINATION ${PREFIX_BIN})
+INSTALL(TARGETS ${PACKAGE_NAME} RUNTIME DESTINATION ${PREFIX_BIN} PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 ENDIF(UNIX AND NOT APPLE)
 
 #ADD_CUSTOM_TARGET(dummy ALL DEPENDS ${PACKAGE_NAME} i18n)
@@ -754,24 +787,28 @@ IF(WIN32)
 SET(PREFIX_PKGDATA ".")
 ENDIF(WIN32)
 
-INSTALL(FILES ${wvsData} DESTINATION ${PREFIX_PKGDATA}/wvsdata )
+INSTALL(FILES ${wvsData} DESTINATION ${PREFIX_PKGDATA}/wvsdata PERMISSIONS OWNER_READ  OWNER_WRITE GROUP_READ WORLD_READ)
+
+INSTALL(FILES ${uiData} DESTINATION ${PREFIX_PKGDATA}/uidata PERMISSIONS OWNER_READ  OWNER_WRITE GROUP_READ WORLD_READ)
 
 IF (USE_S57)
-	INSTALL(FILES ${s57data} DESTINATION ${PREFIX_PKGDATA}/s57data )
+	INSTALL(FILES ${s57data} DESTINATION ${PREFIX_PKGDATA}/s57data PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ)
 ENDIF (USE_S57)
 
-INSTALL(FILES ${tcData} DESTINATION ${PREFIX_PKGDATA}/tcdata )
+INSTALL(FILES ${tcData} DESTINATION ${PREFIX_PKGDATA}/tcdata PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ)
 
-INSTALL(FILES data/license.txt DESTINATION ${PREFIX_PKGDATA} )
+INSTALL(FILES data/license.txt DESTINATION ${PREFIX_PKGDATA} PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ)
+INSTALL(FILES data/copyright DESTINATION ${PREFIX_DATA}/doc/${PACKAGE_NAME} PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ)
+INSTALL(FILES data/changelog.Debian.gz DESTINATION ${PREFIX_DATA}/doc/${PACKAGE_NAME} PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ)
 
 INSTALL(DIRECTORY data/sounds/ DESTINATION ${PREFIX_PKGDATA}/sounds )
 
 INSTALL(DIRECTORY data/doc/ DESTINATION ${PREFIX_PKGDATA}/doc )
 
 IF(UNIX)
-  INSTALL(FILES data/opencpn.png DESTINATION ${PREFIX_DATA}/icons/hicolor/48x48/apps )
-  INSTALL(FILES src/bitmaps/other_svg_src/opencpn.svg DESTINATION ${PREFIX_DATA}/icons/hicolor/scalable/apps )
-  INSTALL(FILES data/opencpn.desktop DESTINATION ${PREFIX_DATA}/applications )
+  INSTALL(FILES data/opencpn.png DESTINATION ${PREFIX_DATA}/icons/hicolor/48x48/apps PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ)
+  INSTALL(FILES src/bitmaps/other_svg_src/opencpn.svg DESTINATION ${PREFIX_DATA}/icons/hicolor/scalable/apps PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ)
+  INSTALL(FILES data/opencpn.desktop DESTINATION ${PREFIX_DATA}/applications PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ )
 ENDIF(UNIX)
 
 ENDIF(NOT APPLE)
@@ -846,7 +883,7 @@ MACRO(GETTEXT_BUILD_MO _poFile _lang)
 IF(APPLE)
    INSTALL(FILES ${_gmoFile} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/OpenCPN.app/Contents/Resources/${_lang}.lproj RENAME ${PACKAGE_NAME}.mo )
 ELSE(APPLE)
-   INSTALL(FILES ${_gmoFile} DESTINATION ${PREFIX_DATA}/locale/${_lang}/LC_MESSAGES RENAME ${PACKAGE_NAME}.mo )
+   INSTALL(FILES ${_gmoFile} DESTINATION ${PREFIX_DATA}/locale/${_lang}/LC_MESSAGES RENAME ${PACKAGE_NAME}.mo PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ)
 ENDIF(APPLE)
 
    SET(_gmoFiles ${_gmoFiles} ${_gmoFile})
@@ -990,16 +1027,16 @@ IF(UNIX AND NOT APPLE)
 
  
     SET(CPACK_GENERATOR ${PACKAGE_FORMAT})
-    SET(CPACK_PACKAGE_CONTACT "Dave Register <bdbcat@yahoo.com>")
+    SET(CPACK_PACKAGE_CONTACT "David S. Register ")
     SET(CPACK_DEBIAN_PACKAGE_DEPENDS ${PACKAGE_DEPS})
     SET(CPACK_DEBIAN_PACKAGE_RECOMMENDS ${PACKAGE_RECS})
     SET(CPACK_DEBIAN_PACKAGE_ARCHITECTURE ${ARCH})
     SET(CPACK_DEBIAN_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION}")
-    SET(CPACK_DEBIAN_PACKAGE_SECTION "Miscellaneous")
+    SET(CPACK_DEBIAN_PACKAGE_SECTION "misc")
     SET(CPACK_RPM_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION}")
     SET(CPACK_RPM_PACKAGE_ARCHITECTURE  ${ARCH})
     SET(CPACK_RPM_PACKAGE_REQUIRES  ${PACKAGE_DEPS})
-    SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "An OpenSource Chart Plotter/Navigator")
+    SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "OpenSource Chart Plotter/Navigator")
     SET(CPACK_PACKAGE_DESCRIPTION "OpenCPN is a concise ChartPlotter/Navigator. The application supports: GPS/GPDS Position Input, BSB Raster Chart Display, S57 Vector ENChart Display, AIS Input Decoding, Waypoint Autopilot Navigation .")
     SET(CPACK_SET_DESTDIR ON)
     SET(CPACK_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")

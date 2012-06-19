@@ -6,7 +6,6 @@
  *
  ***************************************************************************
  *   Copyright (C) 2010 by David S. Register   *
- *   bdbcat@yahoo.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -100,6 +99,7 @@ void DimeControl(wxWindow* ctrl, wxColour col, wxColour col1, wxColour back_colo
 #define     ROLLOVER_TIMER    7
 #define     ZOOM_TIMER        8
 #define     PANKEY_TIMER      9
+#define     DBLCLICK_TIMER   10
 
 
 
@@ -339,9 +339,13 @@ private:
       int m_panx, m_pany, m_panspeed, m_modkeys;
       bool m_bmouse_key_mod;
 
+      bool singleClickEventIsValid;
+      wxMouseEvent singleClickEvent;
+
       //    Methods
       void OnActivate(wxActivateEvent& event);
       void OnSize(wxSizeEvent& event);
+      void MouseTimedEvent(wxTimerEvent& event);
       void MouseEvent(wxMouseEvent& event);
       void ShipDraw(ocpnDC& dc);
       void DrawArrow(ocpnDC& dc, int x, int y, double rot_angle, double scale);
@@ -371,7 +375,7 @@ private:
       void AISDraw(ocpnDC& dc);
       void AISDrawAreaNotices (ocpnDC& dc );
       void AISDrawTarget (AIS_Target_Data *td, ocpnDC& dc );
-      
+
 
       void AlertDraw(ocpnDC& dc);                // pjotrc 2010.02.22
 
@@ -399,6 +403,8 @@ private:
       void EmbossCanvas ( ocpnDC &dc, emboss_data *pemboss, int x, int y);
 
       void JaggyCircle(ocpnDC &dc, wxPen pen, int x, int y, int radius);
+      void ShowObjectQueryWindow( int x, int y, float zlat, float zlon);
+
 
 
       //    Data
@@ -426,6 +432,7 @@ private:
       wxTimer     *pCurTrackTimer;  // This timer used to update the status window on mouse idle
       wxTimer     *pRotDefTimer;    // This timer used to control rotaion rendering on mouse moves
       wxTimer     *pPanKeyTimer;    // This timer used to update pan key actions
+      wxTimer     *m_DoubleClickTimer;
 
       wxTimer     m_MouseWheelTimer;
       wxTimer     m_RouteLegPopupTimer;
@@ -713,110 +720,6 @@ class ocpCursor : public wxCursor
             ocpCursor(const char **xpm_data, long type, int hotSpotX=0, int hotSpotY=0);
 };
 
-#ifdef USE_S57
-//----------------------------------------------------------------------------------------------------------
-//    s57QueryDialog Specification
-//----------------------------------------------------------------------------------------------------------
-class S57QueryDialog: public wxDialog
-{
-DECLARE_CLASS( S57QueryDialog )
-DECLARE_EVENT_TABLE()
-public:
-
-      /// Constructors
-
-      S57QueryDialog( );
-      S57QueryDialog( wxWindow* parent,
-            wxWindowID id = wxID_ANY,
-            const wxString& caption = _("Object Query"),
-            const wxPoint& pos = wxDefaultPosition,
-            const wxSize& size = wxDefaultSize,
-            long style = wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU );
-
-      ~S57QueryDialog( );
-      /// Initialise our variables
-      void Init();
-
-      /// Creation
-      bool Create( wxWindow* parent,
-            wxWindowID id = wxID_ANY,
-            const wxString& caption = _("Object Query"),
-            const wxPoint& pos = wxDefaultPosition,
-            const wxSize& size = wxDefaultSize,
-            long style = wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU );
-
-      void SetColorScheme(ColorScheme cs);
-
-      /// Creates the controls and sizers
-      void CreateControls();
-
-      void SetText(wxString &text_string);
-      void SetObjectTree(void **pOD, int n_items);
-
-      void SetSelectedItem(wxTreeItemId item_id);                  // a "notification" from Tree control
-      void OnSize(wxSizeEvent& event);
-      void OnClose(wxCloseEvent& event);
-
-      wxString format_attributes(wxString &attr, int lcol, int rcol);
-
-      //    Overrides
-      void OnPaint ( wxPaintEvent& event );
-
-      void UpdateStringFormats(void);
-
-
-      //    Data
-      wxString          QueryResult;
-      wxTextCtrl        *m_pQueryTextCtl;
-      S57ObjectTree     *m_pTree;
-      wxTreeItemId      m_root_id;
-
-      int               m_n_items;
-      void              **m_ppOD;
-
-      wxTreeItemId      *m_id_array;                              // an array of wxTreeItemIDs
-      int               m_char_width;
-      wxTreeItemId      m_current_item_id;
-};
-
-//----------------------------------------------------------------------------------------------------------
-//    S57 Object Query Tree Control Specification
-//----------------------------------------------------------------------------------------------------------
-class S57ObjectTree: public wxTreeCtrl
-{
-      DECLARE_CLASS( S57ObjectTree )
-                  DECLARE_EVENT_TABLE()
-      public:
-      /// Constructors
-            S57ObjectTree( );
-            S57ObjectTree( S57QueryDialog* parent, wxWindowID id = wxID_ANY,
-                           const wxPoint& pos = wxDefaultPosition,
-                           const wxSize& size = wxDefaultSize,
-                           long style = wxTR_HAS_BUTTONS );
-
-            ~S57ObjectTree( );
-
-      /// Initialise our variables
-            void Init();
-
-      //  Override events
-            void OnItemExpanding( wxTreeEvent& event);
-            void OnItemSelectChange( wxTreeEvent& event);
-
-      //    Data
-            S57QueryDialog    *m_parent;
-
-};
-
-class MyTreeItemData : public wxTreeItemData
-{
-      public:
-            MyTreeItemData(S57ObjectDesc *pOD){ m_pOD = pOD; }
-
-            S57ObjectDesc     *m_pOD;
-};
-
-#endif
 
 class AISInfoWin;
 
@@ -1044,6 +947,54 @@ class GoToPositionDialog: public wxDialog
 
             double        m_lat_save;
             double        m_lon_save;
+};
+
+
+//----------------------------------------------------------------------------------------------------------
+//    s57QueryDialog Specification
+//----------------------------------------------------------------------------------------------------------
+class wxHtmlWindow;
+
+class S57QueryDialog: public wxDialog
+{
+      DECLARE_CLASS( S57QueryDialog )
+                  DECLARE_EVENT_TABLE()
+      public:
+
+      /// Constructors
+
+            S57QueryDialog( );
+            S57QueryDialog( wxWindow* parent,
+                            wxWindowID id = wxID_ANY,
+                            const wxString& caption = _("Object Query"),
+                                        const wxPoint& pos = wxDefaultPosition,
+                                        const wxSize& size = wxDefaultSize,
+                                        long style = wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU );
+
+            ~S57QueryDialog( );
+            void Init();
+
+            bool Create( wxWindow* parent,
+                         wxWindowID id = wxID_ANY,
+                         const wxString& caption = _("Object Query"),
+                                     const wxPoint& pos = wxDefaultPosition,
+                                     const wxSize& size = wxDefaultSize,
+                                     long style = wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU );
+
+            void SetColorScheme(void);
+
+            void CreateControls();
+            void OnSize(wxSizeEvent& event);
+            void OnClose(wxCloseEvent& event);
+
+      //    Overrides
+            void OnPaint ( wxPaintEvent& event );
+
+            void SetHTMLPage(wxString& page);
+
+      //    Data
+            wxHtmlWindow      *m_phtml;
+
 };
 
 

@@ -790,7 +790,7 @@
 			<table-name>Plain</table-name>
 			<attrib-code index="0">ORIENT </attrib-code>
 			<attrib-code index="1">TRAFIC1</attrib-code>
-			<instruction>SY(TSSLPT51,ORIENT);SY(DWRTPT51);LS(DASH,3,TRFCD);CS(RESTRN01)</instruction>
+			<instruction>SY(TSSLPT51,ORIENT);SY(DWRTPT51);LS(DASH,2,TRFCD);CS(RESTRN01)</instruction>
 			<display-cat>Standard</display-cat>
 			<comment>15010</comment>
 		</lookup>
@@ -801,7 +801,7 @@
 			<table-name>Plain</table-name>
 			<attrib-code index="0">ORIENT </attrib-code>
 			<attrib-code index="1">TRAFIC2</attrib-code>
-			<instruction>SY(TSSLPT51,ORIENT);SY(DWRTPT51);LS(DASH,3,TRFCD);CS(RESTRN01)</instruction>
+			<instruction>SY(TSSLPT51,ORIENT);SY(DWRTPT51);LS(DASH,2,TRFCD);CS(RESTRN01)</instruction>
 			<display-cat>Standard</display-cat>
 			<comment>15010</comment>
 		</lookup>
@@ -812,7 +812,7 @@
 			<table-name>Plain</table-name>
 			<attrib-code index="0">ORIENT </attrib-code>
 			<attrib-code index="1">TRAFIC3</attrib-code>
-			<instruction>SY(TSSLPT51,ORIENT);SY(DWRTPT51);LS(DASH,3,TRFCD);CS(RESTRN01)</instruction>
+			<instruction>SY(TSSLPT51,ORIENT);SY(DWRTPT51);LS(DASH,2,TRFCD);CS(RESTRN01)</instruction>
 			<display-cat>Standard</display-cat>
 			<comment>15010</comment>
 		</lookup>
@@ -823,7 +823,7 @@
 			<table-name>Plain</table-name>
 			<attrib-code index="0">ORIENT </attrib-code>
 			<attrib-code index="1">TRAFIC4</attrib-code>
-			<instruction>SY(DWRUTE51,ORIENT);SY(DWRTPT51);LS(DASH,3,TRFCD);CS(RESTRN01)</instruction>
+			<instruction>SY(DWRUTE51,ORIENT);SY(DWRTPT51);LS(DASH,2,TRFCD);CS(RESTRN01)</instruction>
 			<display-cat>Standard</display-cat>
 			<comment>15010</comment>
 		</lookup>
@@ -832,7 +832,7 @@
 			<disp-prio>Point Symbol</disp-prio>
 			<radar-prio>Supressed</radar-prio>
 			<table-name>Plain</table-name>
-			<instruction>SY(TWRTPT52);SY(DWRTPT51);LS(DASH,3,TRFCD);CS(RESTRN01)</instruction>
+			<instruction>SY(TWRTPT52);SY(DWRTPT51);LS(DASH,2,TRFCD);CS(RESTRN01)</instruction>
 			<display-cat>Standard</display-cat>
 			<comment>15010</comment>
 		</lookup>
@@ -2421,7 +2421,7 @@
 			<table-name>Plain</table-name>
 			<attrib-code index="0">ORIENT </attrib-code>
 			<attrib-code index="1">TRAFIC1</attrib-code>
-			<instruction>SY(TWRTPT53,ORIENT);LS(DASH,4,TRFCD)</instruction>
+			<instruction>SY(TWRTPT53,ORIENT);LS(DASH,2,TRFCD)</instruction>
 			<display-cat>Displaybase</display-cat>
 			<comment>15010</comment>
 		</lookup>
@@ -2432,7 +2432,7 @@
 			<table-name>Plain</table-name>
 			<attrib-code index="0">ORIENT </attrib-code>
 			<attrib-code index="1">TRAFIC2</attrib-code>
-			<instruction>SY(TWRTPT53,ORIENT);LS(DASH,4,TRFCD)</instruction>
+			<instruction>SY(TWRTPT53,ORIENT);LS(DASH,2,TRFCD)</instruction>
 			<display-cat>Displaybase</display-cat>
 			<comment>15010</comment>
 		</lookup>
@@ -2443,7 +2443,7 @@
 			<table-name>Plain</table-name>
 			<attrib-code index="0">ORIENT </attrib-code>
 			<attrib-code index="1">TRAFIC3</attrib-code>
-			<instruction>SY(TWRTPT53,ORIENT);LS(DASH,4,TRFCD)</instruction>
+			<instruction>SY(TWRTPT53,ORIENT);LS(DASH,2,TRFCD)</instruction>
 			<display-cat>Displaybase</display-cat>
 			<comment>15010</comment>
 		</lookup>
@@ -2454,7 +2454,7 @@
 			<table-name>Plain</table-name>
 			<attrib-code index="0">ORIENT </attrib-code>
 			<attrib-code index="1">TRAFIC4</attrib-code>
-			<instruction>SY(TWRTPT52,ORIENT);LS(DASH,4,TRFCD)</instruction>
+			<instruction>SY(TWRTPT52,ORIENT);LS(DASH,2,TRFCD)</instruction>
 			<display-cat>Displaybase</display-cat>
 			<comment>15010</comment>
 		</lookup>
@@ -2463,7 +2463,7 @@
 			<disp-prio>Point Symbol</disp-prio>
 			<radar-prio>Supressed</radar-prio>
 			<table-name>Plain</table-name>
-			<instruction>SY(TWRDEF51);LS(DASH,4,TRFCD)</instruction>
+			<instruction>SY(TWRDEF51);LS(DASH,2,TRFCD)</instruction>
 			<display-cat>Displaybase</display-cat>
 			<comment>15010</comment>
 		</lookup>
@@ -8614,7 +8614,7 @@
 			<disp-prio>Routing</disp-prio>
 			<radar-prio>On Top</radar-prio>
 			<table-name>Lines</table-name>
-			<instruction>LS(DASH,4,TRFCD)</instruction>
+			<instruction>LS(DASH,2,TRFCD)</instruction>
 			<display-cat>Standard</display-cat>
 			<comment>15010</comment>
 		</lookup>
@@ -9119,7 +9119,7 @@
 			<table-name>Lines</table-name>
 			<attrib-code index="0">TRAFIC1</attrib-code>
 			<attrib-code index="1">ORIENT </attrib-code>
-			<instruction>LS(DASH,1,TRFCD);SY(rdocal02,ORIENT);TX(OBJNAM,3,1,2,'24207',1,-1,CHBLK,21);TX(COMCHA,3,1,2,'24207',1,1,CHBLK,52)</instruction>
+			<instruction>LS(DASH,1,TRFCD);SY(RDOCAL02,ORIENT);TX(OBJNAM,3,1,2,'24207',1,-1,CHBLK,21);TX(COMCHA,3,1,2,'24207',1,1,CHBLK,52)</instruction>
 			<display-cat>Displaybase</display-cat>
 			<comment>15060</comment>
 		</lookup>
@@ -9130,7 +9130,7 @@
 			<table-name>Lines</table-name>
 			<attrib-code index="0">TRAFIC2</attrib-code>
 			<attrib-code index="1">ORIENT </attrib-code>
-			<instruction>LS(DASH,1,TRFCD);SY(rdocal02,ORIENT);TX(OBJNAM,3,1,2,'24207',1,-1,CHBLK,21);TX(COMCHA,3,1,2,'24207',1,1,CHBLK,52)</instruction>
+			<instruction>LS(DASH,1,TRFCD);SY(RDOCAL02,ORIENT);TX(OBJNAM,3,1,2,'24207',1,-1,CHBLK,21);TX(COMCHA,3,1,2,'24207',1,1,CHBLK,52)</instruction>
 			<display-cat>Displaybase</display-cat>
 			<comment>15060</comment>
 		</lookup>
@@ -9141,7 +9141,7 @@
 			<table-name>Lines</table-name>
 			<attrib-code index="0">TRAFIC3</attrib-code>
 			<attrib-code index="1">ORIENT </attrib-code>
-			<instruction>LS(DASH,1,TRFCD);SY(rdocal02,ORIENT);TX(OBJNAM,3,1,2,'24207',1,-1,CHBLK,21);TX(COMCHA,3,1,2,'24207',1,1,CHBLK,52)</instruction>
+			<instruction>LS(DASH,1,TRFCD);SY(RDOCAL02,ORIENT);TX(OBJNAM,3,1,2,'24207',1,-1,CHBLK,21);TX(COMCHA,3,1,2,'24207',1,1,CHBLK,52)</instruction>
 			<display-cat>Displaybase</display-cat>
 			<comment>15060</comment>
 		</lookup>
@@ -9152,7 +9152,7 @@
 			<table-name>Lines</table-name>
 			<attrib-code index="0">TRAFIC4</attrib-code>
 			<attrib-code index="1">ORIENT </attrib-code>
-			<instruction>LS(DASH,1,TRFCD);SY(rdocal03,ORIENT);TX(OBJNAM,3,1,2,'24207',1,-1,CHBLK,21);TX(COMCHA,3,1,2,'24207',1,1,CHBLK,52)</instruction>
+			<instruction>LS(DASH,1,TRFCD);SY(RDOCAL03,ORIENT);TX(OBJNAM,3,1,2,'24207',1,-1,CHBLK,21);TX(COMCHA,3,1,2,'24207',1,1,CHBLK,52)</instruction>
 			<display-cat>Displaybase</display-cat>
 			<comment>15060</comment>
 		</lookup>
@@ -20227,6 +20227,7 @@
 			<display-cat>Standard</display-cat>
 			<comment>17010</comment>
 		</lookup>
+		
 		<lookup id="1971" RCID="30242" name="BOYSPP">
 			<type>Point</type>
 			<disp-prio>Hazards</disp-prio>
@@ -20238,6 +20239,19 @@
 			<display-cat>Standard</display-cat>
 			<comment>17010</comment>
 		</lookup>
+
+		<lookup id="1971" RCID="3024200" name="BOYSPP">
+			<type>Point</type>
+			<disp-prio>Hazards</disp-prio>
+			<radar-prio>On Top</radar-prio>
+			<table-name>Paper</table-name>
+			<attrib-code index="0">BOYSHP2</attrib-code>
+			<attrib-code index="1">INFORMwhite/orange</attrib-code>
+			<instruction>SY(BOYCAN77);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)</instruction>
+			<display-cat>Standard</display-cat>
+			<comment>17010</comment>
+		</lookup>
+
 		<lookup id="1972" RCID="30243" name="BOYSPP">
 			<type>Point</type>
 			<disp-prio>Hazards</disp-prio>
@@ -24260,7 +24274,7 @@
 			<table-name>Paper</table-name>
 			<attrib-code index="0">TRAFIC1</attrib-code>
 			<attrib-code index="1">ORIENT </attrib-code>
-			<instruction>SY(RDOCAL02,ORIENT);TE('%s','OBJNAM',3,1,2,'15110',1,-1,CHBLK,21);TE('ch %s','COMCHA',3,1,2,'15110',1,1,CHBLK,11)</instruction>
+			<instruction>SY(RDOCAL02,ORIENT);TE('%s','OBJNAM',3,1,2,'15110',1,-1,CHBLK,21);TE('Ch %s','COMCHA',3,1,2,'15110',1,1,CHBLK,11)</instruction>
 			<display-cat>Displaybase</display-cat>
 			<comment>15060</comment>
 		</lookup>
@@ -24271,7 +24285,7 @@
 			<table-name>Paper</table-name>
 			<attrib-code index="0">TRAFIC2</attrib-code>
 			<attrib-code index="1">ORIENT </attrib-code>
-			<instruction>SY(RDOCAL02,ORIENT);TE('%s','OBJNAM',3,1,2,'15110',1,-1,CHBLK,21);TE('ch %s','COMCHA',3,1,2,'15110',1,1,CHBLK,11)</instruction>
+			<instruction>SY(RDOCAL02,ORIENT);TE('%s','OBJNAM',3,1,2,'15110',1,-1,CHBLK,21);TE('Ch %s','COMCHA',3,1,2,'15110',1,1,CHBLK,11)</instruction>
 			<display-cat>Displaybase</display-cat>
 			<comment>15060</comment>
 		</lookup>
@@ -24282,7 +24296,7 @@
 			<table-name>Paper</table-name>
 			<attrib-code index="0">TRAFIC3</attrib-code>
 			<attrib-code index="1">ORIENT </attrib-code>
-			<instruction>SY(RDOCAL02,ORIENT);TE('%s','OBJNAM',3,1,2,'15110',1,-1,CHBLK,21);TE('ch %s','COMCHA',3,1,2,'15110',1,1,CHBLK,11)</instruction>
+			<instruction>SY(RDOCAL02,ORIENT);TE('%s','OBJNAM',3,1,2,'15110',1,-1,CHBLK,21);TE('Ch %s','COMCHA',3,1,2,'15110',1,1,CHBLK,11)</instruction>
 			<display-cat>Displaybase</display-cat>
 			<comment>15060</comment>
 		</lookup>
@@ -24293,7 +24307,7 @@
 			<table-name>Paper</table-name>
 			<attrib-code index="0">TRAFIC4</attrib-code>
 			<attrib-code index="1">ORIENT </attrib-code>
-			<instruction>SY(RDOCAL03,ORIENT);TE('%s','OBJNAM',3,1,2,'15110',1,-1,CHBLK,21);TE('ch %s','COMCHA',3,1,2,'15110',1,1,CHBLK,11)</instruction>
+			<instruction>SY(RDOCAL03,ORIENT);TE('%s','OBJNAM',3,1,2,'15110',1,-1,CHBLK,21);TE('Ch %s','COMCHA',3,1,2,'15110',1,1,CHBLK,11)</instruction>
 			<display-cat>Displaybase</display-cat>
 			<comment>15060</comment>
 		</lookup>
@@ -25255,6 +25269,17 @@
 			<display-cat>Standard</display-cat>
 			<comment>27020</comment>
 		</lookup>
+		<lookup id="2441" RCID="940111" name="TOPMAR">
+			<type>Point</type>
+			<disp-prio>Area Symbol</disp-prio>
+			<radar-prio>On Top</radar-prio>
+			<table-name>Paper</table-name>
+			<attrib-code index="0">COLOUR3</attrib-code>
+			<attrib-code index="1">INFORMtriangle, point up|TR</attrib-code>
+			<instruction>SY(TOPSHP20)</instruction>
+			<display-cat>Standard</display-cat>
+			<comment>27020</comment>
+		</lookup>
 		<lookup id="2442" RCID="94012" name="TOPMAR">
 			<type>Point</type>
 			<disp-prio>Area Symbol</disp-prio>
@@ -25262,6 +25287,17 @@
 			<table-name>Paper</table-name>
 			<attrib-code index="0">COLOUR4</attrib-code>
 			<instruction>SY(TOPMAR92)</instruction>
+			<display-cat>Standard</display-cat>
+			<comment>27020</comment>
+		</lookup>
+		<lookup id="2442" RCID="940121" name="TOPMAR">
+			<type>Point</type>
+			<disp-prio>Area Symbol</disp-prio>
+			<radar-prio>On Top</radar-prio>
+			<table-name>Paper</table-name>
+			<attrib-code index="0">COLOUR4</attrib-code>
+			<attrib-code index="1">INFORMsquare|SG</attrib-code>
+			<instruction>SY(TOPSHP48)</instruction>
 			<display-cat>Standard</display-cat>
 			<comment>27020</comment>
 		</lookup>
@@ -28808,47 +28844,47 @@
 			<display-cat>Mariners</display-cat>
 			<comment>62010</comment>
 		</lookup>
-		<lookup id="2780" RCID="30848" name="rdocal">
+		<lookup id="2780" RCID="30848" name="_RDOCAL">
 			<type>Point</type>
 			<disp-prio>Area Symbol</disp-prio>
 			<radar-prio>On Top</radar-prio>
 			<table-name>Paper</table-name>
 			<attrib-code index="0">TRAFIC1</attrib-code>
-			<instruction>SY(rdocal02,ORIENT);TX(COMCHA,1,2,2,'14106',0,0,CHMGD,11);TX(OBJNAM,3,2,2,'14106',2,-2,CHBLK,11)</instruction>
+			<instruction>SY(RDOCAL02,ORIENT);TX(COMCHA,1,2,2,'14106',0,0,CHMGD,11);TX(OBJNAM,3,2,2,'14106',2,-2,CHBLK,11)</instruction>
 			<display-cat>Displaybase</display-cat>
 			<comment>15060</comment>
 		</lookup>
-		<lookup id="2781" RCID="30849" name="rdocal">
+		<lookup id="2781" RCID="30849" name="_RDOCAL">
 			<type>Point</type>
 			<disp-prio>Area Symbol</disp-prio>
 			<radar-prio>On Top</radar-prio>
 			<table-name>Paper</table-name>
 			<attrib-code index="0">TRAFIC2</attrib-code>
-			<instruction>SY(rdocal02,ORIENT);TX(COMCHA,1,2,2,'14106',0,0,CHMGD,11);TX(OBJNAM,3,2,2,'14106',2,-2,CHBLK,11)</instruction>
+			<instruction>SY(RDOCAL02,ORIENT);TX(COMCHA,1,2,2,'14106',0,0,CHMGD,11);TX(OBJNAM,3,2,2,'14106',2,-2,CHBLK,11)</instruction>
 			<display-cat>Displaybase</display-cat>
 			<comment>15060</comment>
 		</lookup>
-		<lookup id="2782" RCID="30850" name="rdocal">
+		<lookup id="2782" RCID="30850" name="_RDOCAL">
 			<type>Point</type>
 			<disp-prio>Area Symbol</disp-prio>
 			<radar-prio>On Top</radar-prio>
 			<table-name>Paper</table-name>
 			<attrib-code index="0">TRAFIC3</attrib-code>
-			<instruction>SY(rdocal02,ORIENT);TX(COMCHA,1,2,2,'14106',0,0,CHMGD,11);TX(OBJNAM,3,2,2,'14106',2,-2,CHBLK,11)</instruction>
+			<instruction>SY(RDOCAL02,ORIENT);TX(COMCHA,1,2,2,'14106',0,0,CHMGD,11);TX(OBJNAM,3,2,2,'14106',2,-2,CHBLK,11)</instruction>
 			<display-cat>Displaybase</display-cat>
 			<comment>15060</comment>
 		</lookup>
-		<lookup id="2783" RCID="30851" name="rdocal">
+		<lookup id="2783" RCID="30851" name="_RDOCAL">
 			<type>Point</type>
 			<disp-prio>Area Symbol</disp-prio>
 			<radar-prio>On Top</radar-prio>
 			<table-name>Paper</table-name>
 			<attrib-code index="0">TRAFIC4</attrib-code>
-			<instruction>SY(rdocal03,ORIENT);TX(COMCHA,1,2,2,'14106',0,0,CHMGD,11);TX(OBJNAM,3,2,2,'14106',2,-2,CHBLK,11)</instruction>
+			<instruction>SY(RDOCAL03,ORIENT);TX(COMCHA,1,2,2,'14106',0,0,CHMGD,11);TX(OBJNAM,3,2,2,'14106',2,-2,CHBLK,11)</instruction>
 			<display-cat>Displaybase</display-cat>
 			<comment>15060</comment>
 		</lookup>
-		<lookup id="2784" RCID="30852" name="rdocal">
+		<lookup id="2784" RCID="30852" name="_RDOCAL">
 			<type>Point</type>
 			<disp-prio>Area Symbol</disp-prio>
 			<radar-prio>On Top</radar-prio>
@@ -31397,7 +31433,7 @@
 				<origin x="264" y="597" />
 			</vector>
 			<description>chart scale boundary, the double line indicates the larger scale</description>
-			<HPGL>SPA;SW3;PU264,597;PD874,597;SPA;SW1;PU264,772;PD865,772;SPA;SW1;PU264,841;PD865,841;</HPGL>
+			<HPGL>SPA;SW2;PU264,597;PD874,597;SPA;SW1;PU264,772;PD865,772;SPA;SW1;PU264,841;PD865,841;</HPGL>
 			<color-ref>ACHGRF</color-ref>
 		</line-style>
 		<line-style RCID="3421">
@@ -31650,6 +31686,12 @@
 			<definition>V</definition>
 			<filltype>S</filltype>
 			<spacing>C</spacing>
+			<bitmap width="40" height="40">
+				<distance min="100" max="200" />
+				<pivot x="20" y="20" />
+				<origin x="0" y="0" />
+				<graphics-location x="257" y="1007" />
+			</bitmap>
 			<vector width="511" height="438">
 				<distance min="2000" max="10000" />
 				<pivot x="1753" y="189" />
@@ -31665,6 +31707,12 @@
 			<definition>V</definition>
 			<filltype>S</filltype>
 			<spacing>C</spacing>
+			<bitmap width="40" height="40">
+				<distance min="100" max="200" />
+				<pivot x="20" y="20" />
+				<origin x="0" y="0" />
+				<graphics-location x="305" y="1007" />
+			</bitmap>
 			<vector width="790" height="320">
 				<distance min="2000" max="10000" />
 				<pivot x="2200" y="1470" />
@@ -32000,7 +32048,7 @@
 				<distance min="0" max="0" />
 				<pivot x="981" y="958" />
 				<origin x="1621" y="1471" />
-				<HPGL>SPA;SW1;PU2193,1471;PD2193,1800;PD1875,1800;PD1875,1912;PD2193,1912;PD2193,2596;PD1987,2550;PD1800,2409;PD1621,2409;PD1875,2596;PD2250,2775;PD2596,2596;PD2850,2409;PD2700,2409;PD2475,2550;PD2268,2596;PD2268,1912;PD2596,1912;PD2596,1800;PD2268,1800;PD2268,1471;PD2193,1471;SPA;SW3;PU2703,1671;PD1701,2679;SPC;SW3;PU3001,2775;PD3056,2775;SPC;SW1;PU3019,2325;PD3019,2671;</HPGL>
+				<HPGL>SPA;SW1;PU2193,1471;PD2193,1800;PD1875,1800;PD1875,1912;PD2193,1912;PD2193,2596;PD1987,2550;PD1800,2409;PD1621,2409;PD1875,2596;PD2250,2775;PD2596,2596;PD2850,2409;PD2700,2409;PD2475,2550;PD2268,2596;PD2268,1912;PD2596,1912;PD2596,1800;PD2268,1800;PD2268,1471;PD2193,1471;SPA;SW2;PU2703,1671;PD1701,2679;SPC;SW2;PU3001,2775;PD3056,2775;SPC;SW1;PU3019,2325;PD3019,2671;</HPGL>
 			</vector>
 			<definition>V</definition>
 		</symbol>
@@ -33368,7 +33416,7 @@
 				<distance min="0" max="0" />
 				<pivot x="3101" y="1855" />
 				<origin x="2930" y="1289" />
-				<HPGL>SPA;SW3;PU3246,1289;PD2930,1791;PD3304,1923;PD3005,2401;</HPGL>
+				<HPGL>SPA;SW2;PU3246,1289;PD2930,1791;PD3304,1923;PD3005,2401;</HPGL>
 			</vector>
 			<definition>V</definition>
 		</symbol>
@@ -33653,7 +33701,7 @@
 				<distance min="0" max="0" />
 				<pivot x="2061" y="1246" />
 				<origin x="276" y="1846" />
-				<HPGL>SPA;SW3;PU775,2471;PD775,2006;SPA;SW2;PU708,2651;PD851,2651;SPA;SW2;PU773,2343;CI497;</HPGL>
+				<HPGL>SPA;SW2;PU775,2471;PD775,2006;SPA;SW2;PU708,2651;PD851,2651;SPA;SW2;PU773,2343;CI497;</HPGL>
 			</vector>
 			<definition>V</definition>
 		</symbol>
@@ -33672,7 +33720,7 @@
 				<distance min="0" max="0" />
 				<pivot x="2061" y="1246" />
 				<origin x="276" y="1846" />
-				<HPGL>SPA;SW3;PU775,2471;PD775,2006;SPA;SW2;PU708,2651;PD851,2651;SPA;SW2;PU773,2343;CI497;</HPGL>
+				<HPGL>SPA;SW2;PU775,2471;PD775,2006;SPA;SW2;PU708,2651;PD851,2651;SPA;SW2;PU773,2343;CI497;</HPGL>
 			</vector>
 			<definition>V</definition>
 		</symbol>
@@ -33691,7 +33739,7 @@
 				<distance min="0" max="0" />
 				<pivot x="2061" y="1246" />
 				<origin x="35" y="1846" />
-				<HPGL>SPA;SW3;PU775,2471;PD775,2006;SPA;SW2;PU708,2651;PD851,2651;SPA;SW2;PU773,2343;CI497;SPD;SW1;PU127,2827;PD127,2593;PD35,2592;SPD;SW1;PU36,2828;PD223,2828;SPD;SW1;PU81,2474;PD84,2514;</HPGL>
+				<HPGL>SPA;SW2;PU775,2471;PD775,2006;SPA;SW2;PU708,2651;PD851,2651;SPA;SW2;PU773,2343;CI497;SPD;SW1;PU127,2827;PD127,2593;PD35,2592;SPD;SW1;PU36,2828;PD223,2828;SPD;SW1;PU81,2474;PD84,2514;</HPGL>
 			</vector>
 			<definition>V</definition>
 		</symbol>
@@ -33712,7 +33760,8 @@
 				<origin x="297" y="362" />
 				<HPGL>SPA;SW1;PU685,1257;PD785,1058;PD884,1257;SPA;SW1;PU685,1073;PD785,874;PD884,1073;SPA;SW1;PU785,362;PD785,1270;SPA;SW1;PU684,611;PD786,364;PD886,611;SPA;SW1;PU297,710;PD310,682;PD323,657;PD340,640;PD357,623;PD383,614;PD406,616;PD436,625;PD464,631;PD487,665;PD505,684;PD517,706;PD517,731;PD505,755;PD492,776;PD472,800;PD449,825;PD428,851;PD415,870;PD404,887;PD402,909;PD402,932;PD402,949;PD404,971;PD404,973;SPA;SW2;PU383,1057;PD436,1057;SPA;SW1;PU1086,704;PD1099,676;PD1112,651;PD1129,634;PD1146,617;PD1172,608;PD1195,610;PD1225,619;PD1253,625;PD1276,659;PD1294,678;PD1306,700;PD1306,725;PD1294,749;PD1281,770;PD1261,794;PD1238,819;PD1217,845;PD1204,864;PD1193,881;PD1191,903;PD1191,926;PD1191,943;PD1193,965;PD1193,967;SPA;SW2;PU1172,1051;PD1225,1051;</HPGL>
 			</vector>
-			<definition>V</definition>
+                        <prefer-bitmap>no</prefer-bitmap>
+                        <definition>V</definition>
 		</symbol>
 
 		<symbol RCID="3128">
@@ -33731,7 +33780,7 @@
 				<origin x="684" y="362" />
 				<HPGL>SPA;SW1;PU685,1257;PD785,1058;PD884,1257;SPA;SW1;PU685,1073;PD785,874;PD884,1073;SPA;SW1;PU785,362;PD785,1270;SPA;SW1;PU684,611;PD786,364;PD886,611;</HPGL>
 			</vector>
-			<definition>V</definition>
+                        <definition>V</definition>
 		</symbol>
 
 		<symbol RCID="1328">
@@ -34147,9 +34196,10 @@
 				<distance min="0" max="0" />
 				<pivot x="2313" y="2615" />
 				<origin x="1587" y="881" />
-				<HPGL>SPA;SW2;PU1587,901;PD1587,1802;PD1880,1804;PD1987,1751;PD2089,1603;PD2089,1105;PD1987,952;PD1883,901;PD1587,901;SPA;SW2;PU2353,899;PD2551,1806;PD2755,904;PD2954,1815;PD3157,881;</HPGL>
+				<HPGL>SPA;SW2;PU1987,1141;PD1987,1592;PD2134,1593;PD2187,1566;PD2238,1492;PD2238,1243;PD2187,1167;PD2135,1141;PD1987,1141;SPA;SW2;PU2370,1141;PD2469,1594;PD2571,1144;PD2671,1594;PD2772,1141;</HPGL>
 			</vector>
 			<definition>V</definition>
+			<prefer-bitmap>no</prefer-bitmap>
 		</symbol>
 
 		<symbol RCID="3501">
@@ -34225,7 +34275,7 @@
 				<distance min="0" max="0" />
 				<pivot x="2265" y="2721" />
 				<origin x="276" y="1846" />
-				<HPGL>SPA;SW3;PU1020,2344;PD558,2344;SPA;SW2;PU773,2343;CI497;</HPGL>
+				<HPGL>SPA;SW2;PU1020,2344;PD558,2344;SPA;SW2;PU773,2343;CI497;</HPGL>
 			</vector>
 			<definition>V</definition>
 		</symbol>
@@ -34244,7 +34294,7 @@
 				<distance min="0" max="0" />
 				<pivot x="2265" y="2721" />
 				<origin x="276" y="1846" />
-				<HPGL>SPA;SW3;PU1020,2344;PD558,2344;SPA;SW2;PU773,2343;CI497;SPC;SW1;PU1392,2865;PD1447,2865;SPC;SW1;PU1405,2479;PD1405,2814;</HPGL>
+				<HPGL>SPA;SW2;PU1020,2344;PD558,2344;SPA;SW2;PU773,2343;CI497;SPC;SW1;PU1392,2865;PD1447,2865;SPC;SW1;PU1405,2479;PD1405,2814;</HPGL>
 			</vector>
 			<definition>V</definition>
 		</symbol>
@@ -34263,7 +34313,7 @@
 				<distance min="0" max="0" />
 				<pivot x="2265" y="2721" />
 				<origin x="35" y="1846" />
-				<HPGL>SPA;SW3;PU1020,2344;PD558,2344;SPA;SW2;PU773,2343;CI497;SPC;SW1;PU127,2827;PD127,2593;PD35,2592;SPC;SW1;PU36,2828;PD223,2828;SPC;SW1;PU81,2474;PD84,2514;</HPGL>
+				<HPGL>SPA;SW2;PU1020,2344;PD558,2344;SPA;SW2;PU773,2343;CI497;SPC;SW1;PU127,2827;PD127,2593;PD35,2592;SPC;SW1;PU36,2828;PD223,2828;SPC;SW1;PU81,2474;PD84,2514;</HPGL>
 			</vector>
 			<definition>V</definition>
 		</symbol>
@@ -34400,7 +34450,8 @@
 				<origin x="684" y="362" />
 				<HPGL>SPA;SW1;PU785,362;PD785,1277;SPA;SW1;PU684,611;PD786,364;PD886,611;SPA;SW1;PU787,894;PD886,1099;SPA;SW1;PU787,1079;PD886,1277;SPA;SW1;PU785,1103;PD785,1161;</HPGL>
 			</vector>
-			<definition>V</definition>
+                        <prefer-bitmap>no</prefer-bitmap>
+                        <definition>V</definition>
 		</symbol>
 
 		<symbol RCID="1337">
@@ -35739,7 +35790,7 @@
 		<symbol RCID="3189">
 			<name>PRCARE12</name>
 			<description>point symbol for traffic precautionary area</description>
-			<bitmap width="12" height="16">
+			<bitmap width="16" height="16">
 				<distance min="0" max="0" />
 				<pivot x="5" y="9" />
 				<origin x="0" y="0" />
@@ -35978,9 +36029,10 @@
 				<distance min="0" max="0" />
 				<pivot x="751" y="748" />
 				<origin x="144" y="231" />
-				<HPGL>SPA;SW1;PU144,651;PD157,623;PD170,598;PD187,581;PD204,564;PD230,555;PD253,557;PD283,566;PD311,572;PD334,606;PD352,625;PD364,647;PD364,672;PD352,696;PD339,717;PD319,741;PD296,766;PD275,792;PD262,811;PD251,828;PD249,850;PD249,873;PD249,890;PD251,912;PD251,914;SPA;SW2;PU230,998;PD283,998;SPA;SW1;PU1133,651;PD1146,623;PD1159,598;PD1176,581;PD1193,564;PD1219,555;PD1242,557;PD1272,566;PD1300,572;PD1323,606;PD1341,625;PD1353,647;PD1353,672;PD1341,696;PD1328,717;PD1308,741;PD1285,766;PD1264,792;PD1251,811;PD1240,828;PD1238,850;PD1238,873;PD1238,890;PD1240,912;PD1240,914;SPA;SW2;PU1219,998;PD1272,998;SPA;SW1;PU750,750;CI218;SPA;SW1;PU580,589;PD752,231;PD923,589;SPA;SW1;PU920,914;PD742,1268;PD580,911;</HPGL>
+				<HPGL>SPA;SW1;PU144,651;PD157,623;PD170,598;PD187,581;PD204,564;PD230,555;PD253,557;PD283,566;PD311,572;PD334,606;PD352,625;PD364,647;PD364,672;PD352,696;PD339,717;PD319,741;PD296,766;PD275,792;PD262,811;PD251,828;PD249,850;PD249,873;PD249,890;PD251,912;PD251,914;SPA;SW2;PU230,998;PD283,998;SPA;SW1;PU1133,651;PD1146,623;PD1159,598;PD1176,581;PD1193,564;PD1219,555;PD1242,557;PD1272,566;PD1300,572;PD1323,606;PD1341,625;PD1353,647;PD1353,672;PD1341,696;PD1328,717;PD1308,741;PD1285,766;PD1264,792;PD1251,811;PD1240,828;PD1238,850;PD1238,873;PD1238,890;PD1240,912;PD1240,914;SPA;SW2;PU1219,998;PD1272,998;SPA;SW2;PU750,750;CI218;SPA;SW2;PU580,589;PD752,231;PD923,589;SPA;SW2;PU920,914;PD742,1268;PD580,911;</HPGL>
 			</vector>
 			<definition>V</definition>
+			<prefer-bitmap>no</prefer-bitmap>
 		</symbol>
 
 		<symbol RCID="2098">
@@ -36017,7 +36069,7 @@
 				<distance min="0" max="0" />
 				<pivot x="750" y="750" />
 				<origin x="532" y="231" />
-				<HPGL>SPA;SW1;PU750,750;CI218;SPA;SW1;PU580,589;PD752,231;PD923,589;</HPGL>
+				<HPGL>SPA;SW2;PU750,750;CI218;SPA;SW2;PU580,589;PD752,231;PD923,589;</HPGL>
 			</vector>
 			<definition>V</definition>
 			<prefer-bitmap>no</prefer-bitmap>
@@ -36037,7 +36089,7 @@
 				<distance min="0" max="0" />
 				<pivot x="750" y="750" />
 				<origin x="532" y="231" />
-				<HPGL>SPA;SW1;PU750,750;CI218;SPA;SW1;PU580,589;PD752,231;PD923,589;SPA;SW1;PU920,914;PD742,1268;PD580,911;</HPGL>
+				<HPGL>SPA;SW2;PU750,750;CI218;SPA;SW2;PU580,589;PD752,231;PD923,589;SPA;SW2;PU920,914;PD742,1268;PD580,911;</HPGL>
 			</vector>
 			<definition>V</definition>
 			<prefer-bitmap>no</prefer-bitmap>
@@ -36328,9 +36380,10 @@
 				<distance min="0" max="0" />
 				<pivot x="2257" y="2077" />
 				<origin x="1639" y="1383" />
-				<HPGL>SPA;SW3;PU2134,1545;PD2257,1383;PD2380,1545;SPA;SW3;PU2043,1661;PD1960,1777;PD2108,1777;SPA;SW3;PU2394,1773;PD2557,1773;PD2463,1650;SPA;SW3;PU2104,2585;PD2104,2773;PD2408,2773;PD2408,2588;SPA;SW3;PU2104,2435;PD2104,2278;SPA;SW3;PU2104,1937;PD2104,2087;SPA;SW3;PU2423,1929;PD2423,2075;SPA;SW3;PU2419,2270;PD2419,2422;SPI;SW1;PU1639,2104;PD1652,2076;PD1665,2051;PD1682,2034;PD1699,2017;PD1725,2008;PD1748,2010;PD1778,2019;PD1806,2025;PD1829,2059;PD1847,2078;PD1859,2100;PD1859,2125;PD1847,2149;PD1834,2170;PD1814,2194;PD1791,2219;PD1770,2245;PD1757,2264;PD1746,2281;PD1744,2303;PD1744,2326;PD1744,2343;PD1746,2365;PD1746,2367;SPI;SW2;PU1725,2451;PD1778,2451;SPI;SW1;PU2596,2102;PD2609,2074;PD2622,2049;PD2639,2032;PD2656,2015;PD2682,2006;PD2705,2008;PD2735,2017;PD2763,2023;PD2786,2057;PD2804,2076;PD2816,2098;PD2816,2123;PD2804,2147;PD2791,2168;PD2771,2192;PD2748,2217;PD2727,2243;PD2714,2262;PD2703,2279;PD2701,2301;PD2701,2324;PD2701,2341;PD2703,2363;PD2703,2365;SPI;SW2;PU2682,2449;PD2735,2449;</HPGL>
+				<HPGL>SPA;SW2;PU2134,1545;PD2257,1383;PD2380,1545;SPA;SW2;PU2043,1661;PD1960,1777;PD2108,1777;SPA;SW2;PU2394,1773;PD2557,1773;PD2463,1650;SPA;SW2;PU2104,2585;PD2104,2773;PD2408,2773;PD2408,2588;SPA;SW2;PU2104,2435;PD2104,2278;SPA;SW2;PU2104,1937;PD2104,2087;SPA;SW2;PU2423,1929;PD2423,2075;SPA;SW2;PU2419,2270;PD2419,2422;SPI;SW1;PU1639,2104;PD1652,2076;PD1665,2051;PD1682,2034;PD1699,2017;PD1725,2008;PD1748,2010;PD1778,2019;PD1806,2025;PD1829,2059;PD1847,2078;PD1859,2100;PD1859,2125;PD1847,2149;PD1834,2170;PD1814,2194;PD1791,2219;PD1770,2245;PD1757,2264;PD1746,2281;PD1744,2303;PD1744,2326;PD1744,2343;PD1746,2365;PD1746,2367;SPI;SW2;PU1725,2451;PD1778,2451;SPI;SW1;PU2596,2102;PD2609,2074;PD2622,2049;PD2639,2032;PD2656,2015;PD2682,2006;PD2705,2008;PD2735,2017;PD2763,2023;PD2786,2057;PD2804,2076;PD2816,2098;PD2816,2123;PD2804,2147;PD2791,2168;PD2771,2192;PD2748,2217;PD2727,2243;PD2714,2262;PD2703,2279;PD2701,2301;PD2701,2324;PD2701,2341;PD2703,2363;PD2703,2365;SPI;SW2;PU2682,2449;PD2735,2449;</HPGL>
 			</vector>
 			<definition>V</definition>
+			<prefer-bitmap>no</prefer-bitmap>
 		</symbol>
 
 		<symbol RCID="2259">
@@ -36834,9 +36887,9 @@
 		<symbol RCID="1595">
 			<name>TOPMAR02</name>
 			<description>topmark for buoys, cone point up, paper-chart</description>
-			<bitmap width="7" height="6">
+			<bitmap width="8" height="6">
 				<distance min="0" max="0" />
-				<pivot x="0" y="24" />
+				<pivot x="1" y="24" />
 				<origin x="0" y="0" />
 				<graphics-location x="1378" y="239" />
 			</bitmap>
@@ -36912,7 +36965,7 @@
 			<description>topmark for buoys, 2 cones base to base, paper-chart</description>
 			<bitmap width="8" height="13">
 				<distance min="0" max="0" />
-				<pivot x="-1" y="30" />
+				<pivot x="0" y="30" />
 				<origin x="0" y="0" />
 				<graphics-location x="1452" y="239" />
 			</bitmap>
@@ -36931,7 +36984,7 @@
 			<description>topmark for buoys, 2 cones point to point, paper-chart</description>
 			<bitmap width="11" height="12">
 				<distance min="0" max="0" />
-				<pivot x="0" y="28" />
+				<pivot x="1" y="28" />
 				<origin x="0" y="0" />
 				<graphics-location x="10" y="307" />
 			</bitmap>
@@ -36950,7 +37003,7 @@
 			<description>topmark for buoys, sphere, paper-chart</description>
 			<bitmap width="7" height="7">
 				<distance min="0" max="0" />
-				<pivot x="-1" y="27" />
+				<pivot x="-1" y="25" />
 				<origin x="0" y="0" />
 				<graphics-location x="31" y="307" />
 			</bitmap>
@@ -36988,7 +37041,7 @@
 			<description>topmark for buoys, cylinder, paper-chart</description>
 			<bitmap width="7" height="8">
 				<distance min="0" max="0" />
-				<pivot x="-1" y="27" />
+				<pivot x="0" y="25" />
 				<origin x="0" y="0" />
 				<graphics-location x="66" y="307" />
 			</bitmap>
@@ -37005,9 +37058,9 @@
 		<symbol RCID="1604">
 			<name>TOPMAR14</name>
 			<description>topmark for buoys, board, paper-chart</description>
-			<bitmap width="8" height="5">
+			<bitmap width="8" height="8">
 				<distance min="0" max="0" />
-				<pivot x="0" y="23" />
+				<pivot x="2" y="24" />
 				<origin x="0" y="0" />
 				<graphics-location x="83" y="307" />
 			</bitmap>
@@ -37197,7 +37250,7 @@
 			<description>topmark for beacons, sphere, paper-chart</description>
 			<bitmap width="8" height="8">
 				<distance min="0" max="0" />
-				<pivot x="4" y="27" />
+				<pivot x="4" y="25" />
 				<origin x="0" y="0" />
 				<graphics-location x="272" y="307" />
 			</bitmap>
@@ -37235,7 +37288,7 @@
 			<description>topmark for beacons, cylinder, paper-chart</description>
 			<bitmap width="6" height="9">
 				<distance min="0" max="0" />
-				<pivot x="2" y="29" />
+				<pivot x="2" y="27" />
 				<origin x="0" y="0" />
 				<graphics-location x="308" y="307" />
 			</bitmap>
@@ -37570,6 +37623,7 @@
 				<HPGL>SPA;SW1;ST3;PU1950,1950;PM0;PD2250,1500;PD2550,1950;PD2400,1950;PD2400,2850;PD2100,2850;PD2100,1950;PD1950,1950;PM2;FP;SPA;SW1;PU2100,2850;PD2100,1950;PD1950,1950;PD2250,1500;PD2550,1950;PD2400,1950;PD2400,2850;PD2100,2850;SPC;SW1;PU1647,2232;PD1660,2204;PD1673,2179;PD1690,2162;PD1707,2145;PD1733,2136;PD1756,2138;PD1786,2147;PD1814,2153;PD1837,2187;PD1855,2206;PD1867,2228;PD1867,2253;PD1855,2277;PD1842,2298;PD1822,2322;PD1799,2347;PD1778,2373;PD1765,2392;PD1754,2409;PD1752,2431;PD1752,2454;PD1752,2471;PD1754,2493;PD1754,2495;SPC;SW2;PU1733,2579;PD1786,2579;SPC;SW1;PU2636,2232;PD2649,2204;PD2662,2179;PD2679,2162;PD2696,2145;PD2722,2136;PD2745,2138;PD2775,2147;PD2803,2153;PD2826,2187;PD2844,2206;PD2856,2228;PD2856,2253;PD2844,2277;PD2831,2298;PD2811,2322;PD2788,2347;PD2767,2373;PD2754,2392;PD2743,2409;PD2741,2431;PD2741,2454;PD2741,2471;PD2743,2493;PD2743,2495;SPC;SW2;PU2722,2579;PD2775,2579;</HPGL>
 			</vector>
 			<definition>V</definition>
+			<prefer-bitmap>no</prefer-bitmap>
 		</symbol>
 
 		<symbol RCID="2131">
@@ -37644,9 +37698,10 @@
 				<distance min="0" max="0" />
 				<pivot x="2257" y="2077" />
 				<origin x="1568" y="1383" />
-				<HPGL>SPA;SW3;PU2134,1545;PD2257,1383;PD2380,1545;SPA;SW3;PU2043,1661;PD1960,1777;PD2108,1777;SPA;SW3;PU2394,1773;PD2557,1773;PD2463,1650;SPA;SW3;PU2105,1965;PD2105,2178;SPA;SW3;PU2398,1959;PD2398,2170;SPA;SW3;PU2137,2616;PD2260,2786;PD2383,2616;SPA;SW3;PU2105,2373;PD1946,2373;PD2040,2493;SPA;SW3;PU2401,2373;PD2550,2373;PD2466,2504;SPI;SW1;PU1568,1942;PD1581,1914;PD1594,1889;PD1611,1872;PD1628,1855;PD1654,1846;PD1677,1848;PD1707,1857;PD1735,1863;PD1758,1897;PD1776,1916;PD1788,1938;PD1788,1963;PD1776,1987;PD1763,2008;PD1743,2032;PD1720,2057;PD1699,2083;PD1686,2102;PD1675,2119;PD1673,2141;PD1673,2164;PD1673,2181;PD1675,2203;PD1675,2205;SPI;SW2;PU1654,2289;PD1707,2289;SPI;SW1;PU2709,1939;PD2722,1911;PD2735,1886;PD2752,1869;PD2769,1852;PD2795,1843;PD2818,1845;PD2848,1854;PD2876,1860;PD2899,1894;PD2917,1913;PD2929,1935;PD2929,1960;PD2917,1984;PD2904,2005;PD2884,2029;PD2861,2054;PD2840,2080;PD2827,2099;PD2816,2116;PD2814,2138;PD2814,2161;PD2814,2178;PD2816,2200;PD2816,2202;SPI;SW2;PU2795,2286;PD2848,2286;</HPGL>
+				<HPGL>SPA;SW2;PU2134,1545;PD2257,1383;PD2380,1545;SPA;SW2;PU2043,1661;PD1960,1777;PD2108,1777;SPA;SW2;PU2394,1773;PD2557,1773;PD2463,1650;SPA;SW2;PU2105,1965;PD2105,2178;SPA;SW2;PU2398,1959;PD2398,2170;SPA;SW2;PU2137,2616;PD2260,2786;PD2383,2616;SPA;SW2;PU2105,2373;PD1946,2373;PD2040,2493;SPA;SW2;PU2401,2373;PD2550,2373;PD2466,2504;SPI;SW1;PU1568,1942;PD1581,1914;PD1594,1889;PD1611,1872;PD1628,1855;PD1654,1846;PD1677,1848;PD1707,1857;PD1735,1863;PD1758,1897;PD1776,1916;PD1788,1938;PD1788,1963;PD1776,1987;PD1763,2008;PD1743,2032;PD1720,2057;PD1699,2083;PD1686,2102;PD1675,2119;PD1673,2141;PD1673,2164;PD1673,2181;PD1675,2203;PD1675,2205;SPI;SW2;PU1654,2289;PD1707,2289;SPI;SW1;PU2709,1939;PD2722,1911;PD2735,1886;PD2752,1869;PD2769,1852;PD2795,1843;PD2818,1845;PD2848,1854;PD2876,1860;PD2899,1894;PD2917,1913;PD2929,1935;PD2929,1960;PD2917,1984;PD2904,2005;PD2884,2029;PD2861,2054;PD2840,2080;PD2827,2099;PD2816,2116;PD2814,2138;PD2814,2161;PD2814,2178;PD2816,2200;PD2816,2202;SPI;SW2;PU2795,2286;PD2848,2286;</HPGL>
 			</vector>
 			<definition>V</definition>
+			<prefer-bitmap>no</prefer-bitmap>
 		</symbol>
 
 		<symbol RCID="2133">
@@ -37663,7 +37718,7 @@
 				<distance min="0" max="0" />
 				<pivot x="2257" y="2077" />
 				<origin x="1946" y="1383" />
-				<HPGL>SPA;SW3;PU2134,1545;PD2257,1383;PD2380,1545;SPA;SW3;PU2043,1661;PD1960,1777;PD2108,1777;SPA;SW3;PU2394,1773;PD2557,1773;PD2463,1650;SPA;SW3;PU2105,1965;PD2105,2178;SPA;SW3;PU2398,1959;PD2398,2170;SPA;SW3;PU2137,2616;PD2260,2786;PD2383,2616;SPA;SW3;PU2105,2373;PD1946,2373;PD2040,2493;SPA;SW3;PU2401,2373;PD2550,2373;PD2466,2504;</HPGL>
+				<HPGL>SPA;SW2;PU2134,1545;PD2257,1383;PD2380,1545;SPA;SW2;PU2043,1661;PD1960,1777;PD2108,1777;SPA;SW2;PU2394,1773;PD2557,1773;PD2463,1650;SPA;SW2;PU2105,1965;PD2105,2178;SPA;SW2;PU2398,1959;PD2398,2170;SPA;SW2;PU2137,2616;PD2260,2786;PD2383,2616;SPA;SW2;PU2105,2373;PD1946,2373;PD2040,2493;SPA;SW2;PU2401,2373;PD2550,2373;PD2466,2504;</HPGL>
 			</vector>
 			<prefer-bitmap>no</prefer-bitmap>
 			<definition>V</definition>
@@ -37683,7 +37738,7 @@
 				<distance min="0" max="0" />
 				<pivot x="2257" y="2077" />
 				<origin x="1960" y="1383" />
-				<HPGL>SPA;SW3;PU2134,1545;PD2257,1383;PD2380,1545;SPA;SW3;PU2043,1661;PD1960,1777;PD2108,1777;SPA;SW3;PU2394,1773;PD2557,1773;PD2463,1650;SPA;SW3;PU2104,2585;PD2104,2773;PD2408,2773;PD2408,2588;SPA;SW3;PU2104,2435;PD2104,2278;SPA;SW3;PU2104,1937;PD2104,2087;SPA;SW3;PU2423,1929;PD2423,2075;SPA;SW3;PU2419,2270;PD2419,2422;</HPGL>
+				<HPGL>SPA;SW2;PU2134,1545;PD2257,1383;PD2380,1545;SPA;SW2;PU2043,1661;PD1960,1777;PD2108,1777;SPA;SW2;PU2394,1773;PD2557,1773;PD2463,1650;SPA;SW2;PU2104,2585;PD2104,2773;PD2408,2773;PD2408,2588;SPA;SW2;PU2104,2435;PD2104,2278;SPA;SW2;PU2104,1937;PD2104,2087;SPA;SW2;PU2423,1929;PD2423,2075;SPA;SW2;PU2419,2270;PD2419,2422;</HPGL>
 			</vector>
 			<prefer-bitmap>no</prefer-bitmap>
 			<definition>V</definition>
@@ -38091,7 +38146,7 @@
 		<symbol RCID="2038">
 			<name>WRECKS05</name>
 			<description>dangerous wreck, depth unknown</description>
-			<bitmap width="18" height="13">
+			<bitmap width="19" height="13">
 				<distance min="0" max="0" />
 				<pivot x="9" y="6" />
 				<origin x="0" y="0" />
@@ -46569,7 +46624,7 @@
 			<description>beacon top mark, red boarded square board, vertical</description>
 			<bitmap width="15" height="15">
 				<distance min="0" max="0" />
-				<pivot x="7" y="26" />
+				<pivot x="6" y="27" />
 				<origin x="0" y="0" />
 				<graphics-location x="176" y="902" />
 			</bitmap>

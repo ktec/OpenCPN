@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opencpn 1.3.6 (Pt01)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-25 00:06-0400\n"
+"POT-Creation-Date: 2012-05-17 09:42-0400\n"
 "PO-Revision-Date: 2010-02-05 16:06+0100\n"
 "Last-Translator: as <as400big@gmail.com>\n"
 "Language-Team: Minhota <zemaria@zemaria.biz>\n"
@@ -24,6 +24,12 @@ msgstr ""
 # 
 # 
 msgid "\n"
+msgstr ""
+#
+msgid ""
+"\n"
+"\n"
+"Continuing libgps setup..."
 msgstr ""
 #
 # 
@@ -485,8 +491,26 @@ msgstr "Mover Barco Para Aqui"
 # 
 # 
 # 
+#, fuzzy
+msgid "&Jump To"
+msgstr "Posição"
+#
+# 
+# 
+# 
+# 
+# 
 msgid "&Kilometers"
 msgstr "&Kilómetros"
+#
+# 
+# 
+# 
+# 
+# 
+#, fuzzy
+msgid "&Merge Selected Tracks"
+msgstr "Apagar Rastro"
 #
 # 
 # 
@@ -666,6 +690,9 @@ msgstr "Finalizar Rota"
 msgid "(Unnamed Waypoint)"
 msgstr "Waypoints"
 #
+msgid "(m)"
+msgstr ""
+#
 # 
 # 
 # 
@@ -823,15 +850,6 @@ msgstr "AIS Porta de dados"
 # 
 msgid "AIS General"
 msgstr "AIS Geral"
-#
-# 
-# 
-# 
-# 
-# 
-#, fuzzy
-msgid "AIS SART Alert"
-msgstr "Alerta AIS"
 #
 # 
 # 
@@ -1500,14 +1518,6 @@ msgstr "Trocar Esquema Cor"
 # 
 # 
 # 
-msgid "Chart"
-msgstr "Carta"
-#
-# 
-# 
-# 
-# 
-# 
 msgid "Chart Depth Units"
 msgstr "Unid. Sondas"
 #
@@ -1565,6 +1575,15 @@ msgstr "Imprimir Carta"
 # 
 msgid "Chart1::Event...TCMgr Not Available"
 msgstr "Carta 1 :: Evento...TCMgr Não Disponível"
+#
+# 
+# 
+# 
+# 
+# 
+#, fuzzy
+msgid "ChartTexts"
+msgstr "Cartas"
 #
 # 
 # 
@@ -1829,7 +1848,8 @@ msgstr ""
 # 
 # 
 # 
-msgid "De-Clutter Text (exp.)"
+#, fuzzy
+msgid "De-Clutter Text"
 msgstr "Desobstruir Texto (exp.)"
 #
 # 
@@ -1887,6 +1907,15 @@ msgstr "Cor da Letra."
 #, fuzzy
 msgid "Default dataset"
 msgstr "Cor da Letra."
+#
+# 
+# 
+# 
+# 
+# 
+#, fuzzy
+msgid "Deg"
+msgstr "Perna"
 #
 # 
 msgid "Degrees, Decimal minutes"
@@ -2996,9 +3025,6 @@ msgstr ""
 msgid "List contents"
 msgstr "Licença"
 #
-msgid "Loaded legacy PLIB data: "
-msgstr ""
-#
 # 
 # 
 msgid "Local @ PC"
@@ -3153,7 +3179,8 @@ msgstr "Marcar Embarcações como alvo perdido após [Minutos]:"
 # 
 # 
 # 
-msgid "Mark/WP Properties"
+#, fuzzy
+msgid "Mark/WP Properties..."
 msgstr "Propriedades de Marca/WP"
 #
 # 
@@ -3325,6 +3352,9 @@ msgstr "Origem dos Dados NMEA"
 msgid "NMEA Options"
 msgstr "Ajustes NMEA"
 #
+msgid "NMi"
+msgstr ""
+#
 # 
 # 
 # 
@@ -3442,6 +3472,15 @@ msgstr ""
 # 
 msgid "Object, towed, not otherwise specified"
 msgstr ""
+#
+# 
+# 
+# 
+# 
+# 
+#, fuzzy
+msgid "ObjectQuery"
+msgstr "Informação Dos Objectos"
 #
 # 
 # 
@@ -4208,6 +4247,10 @@ msgid "Rename Waypoints?"
 msgstr "Waypoints"
 #
 #, c-format
+msgid "RenderHPGL: The '%s' instruction is not implemented."
+msgstr ""
+#
+#, c-format
 msgid "Report as of: %d:%d UTC "
 msgstr ""
 #
@@ -4270,6 +4313,15 @@ msgstr ""
 # 
 msgid "Route"
 msgstr "Rota"
+#
+# 
+# 
+# 
+# 
+# 
+#, fuzzy
+msgid "Route Distance: "
+msgstr "Distancia Total"
 #
 # 
 # 
@@ -5136,6 +5188,11 @@ msgstr "Ajustes"
 msgid "Text Element"
 msgstr "Elementos de Texto"
 #
+msgid ""
+"The currently running Track was not merged.\n"
+"You can merge it later when it is completed."
+msgstr ""
+#
 # 
 # 
 # 
@@ -5827,16 +5884,12 @@ msgstr ""
 msgid "cm93 Detail"
 msgstr "Detalhe CM93"
 #
-# 
-# 
-# 
-# 
 #, c-format
 msgid ""
 "libgps API version mismatch.\n"
 "OpenCPN found version %d.%d, but requires at least version 3.0\n"
 "\n"
-"Would you like to use this version of libgps anyway?"
+"      Would you like to use this version of libgps anyway?"
 msgstr ""
 #
 # 
@@ -5851,6 +5904,8 @@ msgstr ""
 #
 msgid "wxFB Website"
 msgstr ""
+#
+#
 #
 #
 # 
@@ -5887,6 +5942,8 @@ msgstr ""
 #, fuzzy
 #~ msgid "&Close"
 #~ msgstr "Fechar"
+#
+#
 #
 #
 # 
@@ -5930,6 +5987,8 @@ msgstr ""
 #~ msgstr "Apagar todas as Rotas..."
 #
 #
+#
+#
 # 
 # 
 # 
@@ -5969,6 +6028,8 @@ msgstr ""
 #, fuzzy
 #~ msgid "&Delete All Tracks..."
 #~ msgstr "Apagar todas as Rotas..."
+#
+#
 #
 #
 # 
@@ -6017,8 +6078,22 @@ msgstr ""
 # 
 # 
 # 
+#, fuzzy
+#~ msgid "AIS SART Alert"
+#~ msgstr "Alerta AIS"
+#
+#
+#
+#
+# 
+# 
+# 
+# 
+# 
 #~ msgid "Additional information"
 #~ msgstr "Informação Adicional"
+#
+#
 #
 #
 # 
@@ -6058,6 +6133,18 @@ msgstr ""
 #~ msgstr "Indicativo Estação VHF:  "
 #
 #
+#
+# 
+# 
+# 
+# 
+# 
+#~ msgid "Chart"
+#~ msgstr "Carta"
+#
+#
+#
+#
 # 
 # 
 # 
@@ -6087,6 +6174,8 @@ msgstr ""
 # 
 #~ msgid "Chart file corrupt.. disabling this chart \n"
 #~ msgstr "Ficheiro de carta corrompido.. a desactivar carta \n"
+#
+#
 #
 #
 # 
@@ -6127,6 +6216,8 @@ msgstr ""
 #~ msgstr ""
 #~ "Classe:     A\n"
 #~ "\n"
+#
+#
 #
 #
 # 
@@ -6171,6 +6262,8 @@ msgstr ""
 #~ msgstr ""
 #~ "Classe:     B\n"
 #~ "\n"
+#
+#
 #
 #
 # 
@@ -6221,6 +6314,8 @@ msgstr ""
 #~ msgstr "Apagar todas as Rotas..."
 #
 #
+#
+#
 # 
 # 
 # 
@@ -6258,6 +6353,8 @@ msgstr ""
 #~ msgstr "(ETA) Hora de Chegada Estimada:                  Desconhecida"
 #
 #
+#
+#
 # 
 # 
 # 
@@ -6283,6 +6380,8 @@ msgstr ""
 # 
 #~ msgid "Exit OpenCPN"
 #~ msgstr "Sair do OpenCPN"
+#
+#
 #
 #
 # 
@@ -6333,6 +6432,8 @@ msgstr ""
 #~ msgstr "Exportar...."
 #
 #
+#
+#
 # 
 # 
 # 
@@ -6364,6 +6465,8 @@ msgstr ""
 # 
 #~ msgid "GRIB"
 #~ msgstr "GRIB"
+#
+#
 #
 #
 # 
@@ -6401,6 +6504,8 @@ msgstr ""
 #~ msgstr "Dados GRIB"
 #
 #
+#
+#
 # 
 # 
 # 
@@ -6434,6 +6539,8 @@ msgstr ""
 # 
 #~ msgid "GRIB Display Control"
 #~ msgstr "Controlo Visualização GRIB"
+#
+#
 #
 #
 # 
@@ -6471,6 +6578,8 @@ msgstr ""
 #~ msgstr "Pasta de Ficheiros GRIB"
 #
 #
+#
+#
 # 
 # 
 # 
@@ -6479,6 +6588,8 @@ msgstr ""
 #, fuzzy
 #~ msgid "MMSI:                 %09d\n"
 #~ msgstr "(ETA) Hora de Chegada Estimada:                  "
+#
+#
 #
 #
 # 
@@ -6510,6 +6621,8 @@ msgstr ""
 #~ msgstr "Standard Marítimo"
 #
 #
+#
+#
 # 
 # 
 # 
@@ -6519,6 +6632,8 @@ msgstr ""
 #~ msgstr "Ícone"
 #
 #
+#
+#
 # 
 # 
 # 
@@ -6526,6 +6641,8 @@ msgstr ""
 # 
 #~ msgid "Mark Name"
 #~ msgstr "Nome"
+#
+#
 #
 #
 # 
@@ -6538,6 +6655,8 @@ msgstr ""
 # 
 #~ msgid "New Mark"
 #~ msgstr "Nova Marca"
+#
+#
 #
 #
 # 
@@ -6575,6 +6694,8 @@ msgstr ""
 #~ msgstr "Ajuste Zoom ou Escala para ver CRAIN GRIB escondido"
 #
 #
+#
+#
 # 
 # 
 # 
@@ -6608,6 +6729,8 @@ msgstr ""
 # 
 #~ msgid "Please Zoom or Scale Out to view suppressed HTSGW GRIB"
 #~ msgstr "Ajuste Zoom ou Escala para ver HTSGW GRIB escondido"
+#
+#
 #
 #
 # 
@@ -6646,6 +6769,8 @@ msgstr ""
 #~ msgstr "Ajuste Zoom ou Escala para ver CRAIN GRIB escondido"
 #
 #
+#
+#
 # 
 # 
 # 
@@ -6682,6 +6807,8 @@ msgstr ""
 #~ msgstr "Ajuste Zoom ou Escala para ver HTSGW GRIB escondido"
 #
 #
+#
+#
 # 
 # 
 # 
@@ -6694,6 +6821,8 @@ msgstr ""
 #, fuzzy
 #~ msgid "Position:               "
 #~ msgstr "Posição:              "
+#
+#
 #
 #
 # 
@@ -6731,6 +6860,8 @@ msgstr ""
 #~ msgstr "Pressão, mBar"
 #
 #
+#
+#
 # 
 # 
 # 
@@ -6758,6 +6889,8 @@ msgstr ""
 #~ msgstr ""
 #~ "Período das aquisições mais recentes:     %3d Sec.\n"
 #~ "\n"
+#
+#
 #
 #
 # 
@@ -6794,6 +6927,8 @@ msgstr ""
 #, fuzzy
 #~ msgid "Select GRIB Directory"
 #~ msgstr "Pasta de Ficheiros GRIB"
+#
+#
 #
 #
 # 
@@ -6837,6 +6972,8 @@ msgstr ""
 #~ msgstr "Enviar para GPS..."
 #
 #
+#
+#
 # 
 # 
 # 
@@ -6864,6 +7001,8 @@ msgstr ""
 # 
 #~ msgid "ShipName:  "
 #~ msgstr "Nome da Embarcação:"
+#
+#
 #
 #
 # 
@@ -6906,6 +7045,8 @@ msgstr ""
 #~ msgstr "Mostrar ícones GPX"
 #
 #
+#
+#
 # 
 # 
 # 
@@ -6946,6 +7087,8 @@ msgstr ""
 #~ msgstr "Mostrar Janela GRIB"
 #
 #
+#
+#
 # 
 # 
 # 
@@ -6977,6 +7120,8 @@ msgstr ""
 # 
 #~ msgid "Show GRIB icon"
 #~ msgstr "Mostrar Ícone GRIB"
+#
+#
 #
 #
 # 
@@ -7014,6 +7159,8 @@ msgstr ""
 #~ msgstr "Altura de Vaga Significativa, m"
 #
 #
+#
+#
 # 
 # 
 # 
@@ -7036,6 +7183,8 @@ msgstr ""
 #~ msgstr ""
 #~ "Dimensões:                %5dm x %dm x ---m\n"
 #~ "\n"
+#
+#
 #
 #
 # 
@@ -7062,6 +7211,8 @@ msgstr ""
 #~ msgstr "Comutar Rastro"
 #
 #
+#
+#
 # 
 # 
 # 
@@ -7084,6 +7235,8 @@ msgstr ""
 #, fuzzy
 #~ msgid "Toggle Names"
 #~ msgstr "Rota"
+#
+#
 #
 #
 # 
@@ -7117,6 +7270,8 @@ msgstr ""
 # 
 #~ msgid "Use High Definition Graphics"
 #~ msgstr "Usar Gráficos Alta Definição"
+#
+#
 #
 #
 # 
@@ -7154,6 +7309,8 @@ msgstr ""
 #~ msgstr "ATENÇÃO:  Os dados GRIB QuickScat já têm %d horas atraso."
 #
 #
+#
+#
 # 
 # 
 # 
@@ -7187,6 +7344,8 @@ msgstr ""
 # 
 #~ msgid "Wind Direction"
 #~ msgstr "Direcção Vento"
+#
+#
 #
 #
 # 

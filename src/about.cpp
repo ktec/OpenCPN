@@ -6,7 +6,6 @@
  *
  ***************************************************************************
  *   Copyright (C) 2010 by David S. Register   *
- *   bdbcat@yahoo.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -43,10 +42,7 @@
 #include "about.h"
 #include "chart1.h"
 #include "chcanv.h"
-
-extern wxBitmap *_img_donate;
-
-
+#include "styles.h"
 
 //    Some constants
 
@@ -62,6 +58,7 @@ wxString OpenCPNVersion = str_version_start + str_version_major + wxT(".") + str
 extern wxString        *pHome_Locn;
 extern wxString         glog_file;
 extern wxString         gConfig_File;
+extern ocpnStyle::StyleManager* g_StyleManager;
 
 char AboutText[] =
 {
@@ -82,106 +79,74 @@ char OpenCPNInfo[] = {"\n\n\
 char AuthorText[] =
 {
 "   David S Register\n\
-      bdbcat@yahoo.com\n\
       OpenCPN Lead Developer\n\n\
+    Jesper Weissglas\n\
+      Vector Chart Renderer Enhancements\n\n\
     Sean D'Epagnier\n\
-      sean@depagnier.com\n\
       OpenGL Architecture\n\n\
     Kathleen Boswell\n\
-      bigdumboat@yahoo.com\n\
       Icon design\n\n\
     Flavius Bindea\n\
-      dev@wikisail.org\n\
       CM93 Offset and AIS enhancements\n\n\
     Gunther Pilz\n\
-      gunther.pilz@gmail.com\n\
       Windows Installer enhancements\n\n\
     Alan Bleasby\n\
-      <--->\n\
       Garmin jeeps module\n\n\
     Jean-Eudes Onfray\n\
-      je@onfray.fr\n\
       Dashboard and Dialog enhancements\n\n\
     Pavel Kalian\n\
-      pavel@kalian.cz\n\
       S52 Rasterization Improvements\n\n\
     Piotr Carlson\n\
-      pjotrc_at_interia.pl\n\
       General usability enhancements\n\n\
     Anders Lund\n\
-      anders@alweb.dk\n\
       RouteManagerDialog\n\n\
     Gordon Mau\n\
-      gmau@hotmail.com\n\
       OpenCPN Documentation\n\n\
     Tim Francis\n\
-      tim.francis.asia@gmail.com\n\
       OpenCPN Documentation\n\n\
     Mark A Sikes\n\
-      markasikes@gmail.com\n\
       OpenCPN CoDeveloper\n\n\
     Thomas Haller\n\
-      thomasmartin.haller@web.de\n\
       GPX Import/Export Implementation\n\n\
     Will Kamp\n\
-      will@matrixmariner.com\n\
       Toolbar Icon design\n\n\
     Richard Smith\n\
-      smithstrawler@hotmail.com\n\
       OpenCPN CoDeveloper, MacOSX\n\n\
     David Herring\n\
-      dherring@dherring.com\n\
       OpenCPN CoDeveloper, MacOSX\n\n\
     Philip Lange\n\
-      philip.lange@albemarleweb.com\n\
       OpenCPN Documentation\n\n\
     Ron Kuris\n\
-      swcafe@gmail.com\n\
       wxWidgets Support\n\n\
     Julian Smart, Robert Roebling et al\n\
-      wxwidgets.org\n\
       wxWidgets Authors\n\n\
     Sylvain Duclos\n\
-      sylvain_duclos@yahoo.com\n\
       S52 Presentation Library code\n\n\
     Manish P. Pagey\n\
-      pagey@san.rr.com\n\
       Serial Port Library\n\n\
     David Flater\n\
-      software@flaterco.com\n\
       XTIDE tide and current code\n\n\
     Frank Warmerdam\n\
-      warmerdam@pobox.com\n\
       GDAL Class Library\n\n\
     Mike Higgins\n\
-      higgins@monitor.net\n\
       BSB Chart Format Detail\n\n\
     Samuel R. Blackburn\n\
-      sammy@sed.csc.com\n\
       NMEA0183 Class Library\n\n\
     Atul Narkhede\n\
-      narkhede@cs.unc.edu\n\
       Polygon Graphics utilities\n\n\
     Jan C. Depner\n\
-      depnerj@navo.navy.mil\n\
       WVS Chart Library\n\n\
     Stuart Cunningham, et al\n\
-      stuart_hc@users.sourceforge.net\n\
       BSB Chart Georeferencing Algorithms\n\n\
     John F. Waers\n\
-      jfwaers@csn.net\n\
       UTM Conversion Algorithms\n\n\
     Carsten Tschach\n\
-      tschach@zedat.fu-berlin.de\n\
       UTM Conversion Algorithms\n\n\
     Ed Williams\n\
-      http://williams.best.vwh.net/avform.htm\n\
       Great Circle Formulary\n\n\
     Philippe Bekaert\n\
-                   \n\
       CIE->RGB Color Conversion Matrix\n\n\
     Robert Lipe\n\
-      robertlipe@usa.net\n\
       Garmin USB GPS Interface\n"
 
 };
@@ -311,7 +276,8 @@ void about::CreateControls()
   itemBoxSizer2->Add(pST1);
 
   //   "Donate" Button
-  wxBitmap donate_bmp = *_img_donate;
+  ocpnStyle::Style* style = g_StyleManager->GetCurrentStyle();
+  wxBitmap donate_bmp = style->GetIcon( _T("donate") );
 
   wxButton* donateButton = new wxBitmapButton( itemDialog1, ID_DONATE, donate_bmp, wxDefaultPosition, wxDefaultSize, 0 );
   donateButton->SetDefault();

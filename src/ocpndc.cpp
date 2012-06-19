@@ -36,6 +36,7 @@
 #endif
 
 #include <wx/dc.h>
+#include <wx/dcscreen.h>
 #include <wx/dcmemory.h>
 #include <wx/image.h>
 
@@ -44,6 +45,8 @@
 #include <wx/dcclient.h>
 
 #include "ocpndc.h"
+
+extern double g_GLMinLineWidth;
 
 /* pass the dc to the constructor, or NULL to use opengl */
 ocpnDC::ocpnDC(wxGLCanvas &canvas) : glcanvas(&canvas), dc(NULL), m_pen(wxNullPen), m_brush(wxNullBrush), pgc(NULL)
@@ -67,6 +70,10 @@ ocpnDC::ocpnDC(wxDC &pdc) : glcanvas(NULL), dc(&pdc), m_pen(wxNullPen), m_brush(
      }
 #endif
      m_textforegroundcolour = wxColour(0,0,0);
+}
+
+ocpnDC::ocpnDC(): glcanvas(NULL), dc(NULL), m_pen(wxNullPen), m_brush(wxNullBrush), pgc(NULL)
+{
 }
 
 ocpnDC::~ocpnDC()
@@ -245,6 +252,8 @@ void ocpnDC::DrawLine( wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2, bool b_hi
 
                   bool b_draw_thick = false;
 
+                  float pen_width = wxMax(g_GLMinLineWidth, m_pen.GetWidth());
+
                   //      Enable anti-aliased lines, at best quality
                   if(b_hiqual)
                   {
@@ -253,38 +262,38 @@ void ocpnDC::DrawLine( wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2, bool b_hi
                         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
                         glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 
-                        if(m_pen.GetWidth() > 1)
+                        if(pen_width > 1.0)
                         {
                               GLint parms[2];
                               glGetIntegerv(GL_SMOOTH_LINE_WIDTH_RANGE, &parms[0]);
-                              if(m_pen.GetWidth() > parms[1])
+                              if(pen_width > parms[1])
                                     b_draw_thick = true;
                               else
-                                    glLineWidth(m_pen.GetWidth());
+                                    glLineWidth(pen_width);
                         }
                         else
-                              glLineWidth(1);
+                              glLineWidth(pen_width);
                   }
                   else
                   {
                         glDisable(GL_LINE_SMOOTH);
                         glDisable(GL_BLEND);
 
-                        if(m_pen.GetWidth() > 1)
+                        if(pen_width > 1)
                         {
                               GLint parms[2];
                               glGetIntegerv(GL_ALIASED_LINE_WIDTH_RANGE, &parms[0]);
-                              if(m_pen.GetWidth() > parms[1])
+                              if(pen_width > parms[1])
                                     b_draw_thick = true;
                               else
-                                    glLineWidth(m_pen.GetWidth());
+                                    glLineWidth(pen_width);
                         }
                         else
-                              glLineWidth(1);
+                              glLineWidth(pen_width);
                   }
 
 
-                  if(b_draw_thick/*m_pen.GetWidth() > 1*/)
+                  if(b_draw_thick)
                         DrawThickLine(x1, y1, x2, y2, m_pen, b_hiqual);
                   else
                   {
@@ -367,10 +376,10 @@ void ocpnDC::DrawLines( int n, wxPoint points[], wxCoord xoffset, wxCoord yoffse
                        if(m_pen.GetWidth() > parms[1])
                              b_draw_thick = true;
                        else
-                             glLineWidth(m_pen.GetWidth());
+                             glLineWidth(wxMax(g_GLMinLineWidth, m_pen.GetWidth()));
                  }
                  else
-                       glLineWidth(1);
+                       glLineWidth(wxMax(g_GLMinLineWidth, 1));
            }
            else
            {
@@ -384,10 +393,10 @@ void ocpnDC::DrawLines( int n, wxPoint points[], wxCoord xoffset, wxCoord yoffse
                        if(m_pen.GetWidth() > parms[1])
                              b_draw_thick = true;
                        else
-                             glLineWidth(m_pen.GetWidth());
+                             glLineWidth(wxMax(g_GLMinLineWidth, m_pen.GetWidth()));
                  }
                  else
-                       glLineWidth(1);
+                       glLineWidth(wxMax(g_GLMinLineWidth, 1));
            }
 
 
@@ -682,7 +691,7 @@ void ocpnDC::DrawBitmap(const wxBitmap &bitmap, wxCoord x, wxCoord y, bool usema
 
                glColor4f(1, 1, 1, 1);
                GLDrawBlendData(x, y, w, h, GL_RGBA, e);
-               free(e);
+               delete[](e);
           } else {
                glRasterPos2i(x, y);
                glPixelZoom(1, -1); /* draw data from top to bottom */
@@ -697,8 +706,15 @@ void ocpnDC::DrawText(const wxString &text, wxCoord x, wxCoord y)
      if(dc)
           dc->DrawText(text, x, y);
      else {
-          wxCoord w, h;
+          wxCoord w = 0;
+          wxCoord h = 0;
+#ifdef __WXMAC__
+          wxBitmap tbmp(200, 200);
+          wxMemoryDC mac_dc(tbmp);
+          mac_dc.GetTextExtent(text, &w, &h, NULL, NULL, &m_font);
+#else
           GetTextExtent(text, &w, &h);
+#endif
 
           if(w && h)
           {
@@ -730,7 +746,7 @@ void ocpnDC::DrawText(const wxString &text, wxCoord x, wxCoord y)
                         m_textforegroundcolour.Blue(),
                         255);
             GLDrawBlendData(x, y, w, h, GL_ALPHA, data);
-            free(data);
+            delete[] data;
           }
      }
 }
@@ -771,7 +787,7 @@ bool ocpnDC::ConfigurePen()
      int width = m_pen.GetWidth();
      glColor4ub(c.Red(), c.Green(), c.Blue(), c.Alpha());
 
-     glLineWidth(width);
+     glLineWidth(wxMax(g_GLMinLineWidth, width));
 
      //     Stippling is not done.
      //     Instead, we directly calculate and draw the line segments the hard way.

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opencpn 2.4.423\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-25 00:06-0400\n"
+"POT-Creation-Date: 2012-05-17 09:42-0400\n"
 "PO-Revision-Date: 2011-10-06 15:29+0100\n"
 "Last-Translator: Kaptan <khanyux@gmail.com>\n"
 "Language-Team: http://trasno.net/ <proxecto@trasno.net>\n"
@@ -20,6 +20,12 @@ msgstr ""
 # 
 msgid "\n"
 msgstr "\n"
+#
+msgid ""
+"\n"
+"\n"
+"Continuing libgps setup..."
+msgstr ""
 #
 # 
 msgid ""
@@ -287,8 +293,18 @@ msgid "&Go To"
 msgstr "&Ir a"
 #
 # 
+#, fuzzy
+msgid "&Jump To"
+msgstr "Moverse a"
+#
+# 
 msgid "&Kilometers"
 msgstr "&Kilómetros"
+#
+# 
+#, fuzzy
+msgid "&Merge Selected Tracks"
+msgstr "Borrar Derrota"
 #
 # 
 msgid "&Nautical miles"
@@ -377,6 +393,9 @@ msgstr "(Derrota sen nome)"
 # 
 msgid "(Unnamed Waypoint)"
 msgstr "(Waypoint sen nome)"
+#
+msgid "(m)"
+msgstr ""
 #
 # 
 #, fuzzy
@@ -484,11 +503,6 @@ msgstr "Porto de Datos AIS"
 # 
 msgid "AIS General"
 msgstr "AIS Xeral"
-#
-# 
-#, fuzzy
-msgid "AIS SART Alert"
-msgstr "Alerta AIS"
 #
 # 
 msgid "AIS Target Query"
@@ -871,10 +885,6 @@ msgid "Change Color Scheme"
 msgstr "Cambiar Esquema de Cor"
 #
 # 
-msgid "Chart"
-msgstr "Carta"
-#
-# 
 msgid "Chart Depth Units"
 msgstr "Unidades de Profundidade na Carta"
 #
@@ -908,6 +918,11 @@ msgstr "Imprimir Carta"
 # 
 msgid "Chart1::Event...TCMgr Not Available"
 msgstr "Chart1::Event...TCMgr Non Dispoñí­bel"
+#
+# 
+#, fuzzy
+msgid "ChartTexts"
+msgstr "Cartas"
 #
 # 
 msgid "Charts"
@@ -1075,7 +1090,8 @@ msgid "Dark Yellow"
 msgstr ""
 #
 # 
-msgid "De-Clutter Text (exp.)"
+#, fuzzy
+msgid "De-Clutter Text"
 msgstr "Des/Agrupar Texto (exp.)"
 #
 # 
@@ -1108,6 +1124,11 @@ msgstr "A cor do tipo de letra"
 #, fuzzy
 msgid "Default dataset"
 msgstr "A cor do tipo de letra"
+#
+# 
+#, fuzzy
+msgid "Deg"
+msgstr "Dragar"
 #
 # 
 msgid "Degrees, Decimal minutes"
@@ -1709,9 +1730,6 @@ msgstr ""
 msgid "List contents"
 msgstr "Lista de contidos"
 #
-msgid "Loaded legacy PLIB data: "
-msgstr ""
-#
 # 
 msgid "Local @ PC"
 msgstr "Local @ PC"
@@ -1805,7 +1823,8 @@ msgid "Mark targets as lost after (Minutes:):"
 msgstr "Marcar obxectivos como perdidos despois de (Minutos):"
 #
 # 
-msgid "Mark/WP Properties"
+#, fuzzy
+msgid "Mark/WP Properties..."
 msgstr "Propiedades da Marca/WP"
 #
 # 
@@ -1917,6 +1936,9 @@ msgstr "Orixe  Datos NMEA"
 msgid "NMEA Options"
 msgstr "Opcións NMEA"
 #
+msgid "NMi"
+msgstr ""
+#
 # 
 msgid "Name"
 msgstr "Nome"
@@ -1983,6 +2005,11 @@ msgstr ""
 # 
 msgid "Object, towed, not otherwise specified"
 msgstr ""
+#
+# 
+#, fuzzy
+msgid "ObjectQuery"
+msgstr "Consulta Obxectos"
 #
 # 
 msgid "Ok"
@@ -2435,6 +2462,10 @@ msgid "Rename Waypoints?"
 msgstr "Renomear Waypoints?"
 #
 #, c-format
+msgid "RenderHPGL: The '%s' instruction is not implemented."
+msgstr ""
+#
+#, c-format
 msgid "Report as of: %d:%d UTC "
 msgstr ""
 #
@@ -2478,6 +2509,11 @@ msgstr "Rollover"
 # 
 msgid "Route"
 msgstr "Ruta"
+#
+# 
+#, fuzzy
+msgid "Route Distance: "
+msgstr "Distancia Total"
 #
 # 
 msgid "Route Manager"
@@ -2980,6 +3016,11 @@ msgstr "Parámetros"
 msgid "Text Element"
 msgstr "Elemento de texto"
 #
+msgid ""
+"The currently running Track was not merged.\n"
+"You can merge it later when it is completed."
+msgstr ""
+#
 # 
 msgid "The font colour."
 msgstr "A cor do tipo de letra"
@@ -3415,12 +3456,12 @@ msgid "cm93 Detail"
 msgstr "Detalle cm93"
 #
 # 
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "libgps API version mismatch.\n"
 "OpenCPN found version %d.%d, but requires at least version 3.0\n"
 "\n"
-"Would you like to use this version of libgps anyway?"
+"      Would you like to use this version of libgps anyway?"
 msgstr ""
 "Versión API libgps non coincide.\n"
 "Opencpn encontrou a  versión %d.%d, pero require polo menos a versión 3.0\n"
@@ -3439,6 +3480,8 @@ msgid "wxFB Website"
 msgstr ""
 #
 #
+#
+#
 # 
 # 
 # 
@@ -3453,12 +3496,16 @@ msgstr ""
 #~ "\n"
 #
 #
+#
+#
 # 
 # 
 # 
 # 
 #~ msgid "   PlugInManager: Cannot load library: "
 #~ msgstr "   XestordeEngadidos: Non se pode cargar a libería:"
+#
+#
 #
 #
 # 
@@ -3469,12 +3516,16 @@ msgstr ""
 #~ msgstr "   XestordeEngadidos: Non se pode cargar símbolo create_pi:"
 #
 #
+#
+#
 # 
 # 
 # 
 # 
 #~ msgid "   PlugInManager: Cannot load symbol destroy_pi: "
 #~ msgstr "   XestordeEngadidos: Non se pode cargar símbolo destroy_pi:"
+#
+#
 #
 #
 # 
@@ -3486,8 +3537,18 @@ msgstr ""
 #
 #
 # 
+#, fuzzy
+#~ msgid "AIS SART Alert"
+#~ msgstr "Alerta AIS"
+#
+#
+#
+#
+# 
 #~ msgid "Additional information"
 #~ msgstr "Información adicional"
+#
+#
 #
 #
 # 
@@ -3498,12 +3559,22 @@ msgstr ""
 #~ msgstr "Intentando cargar libgps.so"
 #
 #
+#
+#
 # 
 # 
 # 
 # 
 #~ msgid "BaseClassCommonName"
 #~ msgstr "BaseClaseComúnNome"
+#
+#
+#
+# 
+#~ msgid "Chart"
+#~ msgstr "Carta"
+#
+#
 #
 #
 # 
@@ -3514,12 +3585,16 @@ msgstr ""
 #~ msgstr "Saí­r de OpenCPN"
 #
 #
+#
+#
 # 
 # 
 # 
 # 
 #~ msgid "Failed to load libgps.so"
 #~ msgstr "Houbo un erro cargando libgps.so"
+#
+#
 #
 #
 # 
@@ -3530,6 +3605,8 @@ msgstr ""
 #~ msgstr "Houbo un error cargando libgps.so.19"
 #
 #
+#
+#
 # 
 # 
 # 
@@ -3538,10 +3615,14 @@ msgstr ""
 #~ msgstr "Importar unha nova capa"
 #
 #
+#
+#
 # 
 #, fuzzy
 #~ msgid "MMSI:                 %09d\n"
 #~ msgstr "Tipo:"
+#
+#
 #
 #
 # 
@@ -3549,9 +3630,13 @@ msgstr ""
 #~ msgstr "Icona da Marca"
 #
 #
+#
+#
 # 
 #~ msgid "Mark Name"
 #~ msgstr "Nome da Marca"
+#
+#
 #
 #
 # 
@@ -3562,12 +3647,16 @@ msgstr ""
 #~ msgstr "Nova Marca"
 #
 #
+#
+#
 # 
 # 
 # 
 # 
 #~ msgid "OpenCPN PlugIn Base Class"
 #~ msgstr "Engadido OpenCPN Clase de base"
+#
+#
 #
 #
 # 
@@ -3582,12 +3671,16 @@ msgstr ""
 #~ "RexistrodeEngadidos creou esta clase de base"
 #
 #
+#
+#
 # 
 # 
 # 
 # 
 #~ msgid "OpenCPN S57 SENC File Load"
 #~ msgstr "Cargar ficheiro OpenCPN S57 SENC"
+#
+#
 #
 #
 # 
@@ -3598,12 +3691,16 @@ msgstr ""
 #~ msgstr "O XestordeEngadidos está buscando a localización dos Engadidos"
 #
 #
+#
+#
 # 
 # 
 # 
 # 
 #~ msgid "PlugInManager: Deactivating PlugIn: "
 #~ msgstr "XestorEngadidos: Desactivando Engadido:"
+#
+#
 #
 #
 # 
@@ -3614,6 +3711,8 @@ msgstr ""
 #~ msgstr "XestordeEngadidos: Iniciando Engadido:"
 #
 #
+#
+#
 # 
 # 
 # 
@@ -3622,12 +3721,16 @@ msgstr ""
 #~ msgstr "XestordeEngadidos: Cargando Engadido:"
 #
 #
+#
+#
 # 
 # 
 # 
 # 
 #~ msgid "PlugInManager: UnLoading PlugIn: "
 #~ msgstr "XestordeEngadidos: Descargando Engadido:"
+#
+#
 #
 #
 # 
@@ -3640,12 +3743,16 @@ msgstr ""
 #~ "d: "
 #
 #
+#
+#
 # 
 # 
 # 
 # 
 #~ msgid "Position:               "
 #~ msgstr "Posición:"
+#
+#
 #
 #
 # 
@@ -3660,12 +3767,16 @@ msgstr ""
 #~ "\n"
 #
 #
+#
+#
 # 
 # 
 # 
 # 
 #~ msgid "Toggle Listing"
 #~ msgstr "Alternar Listados"
+#
+#
 #
 #
 # 

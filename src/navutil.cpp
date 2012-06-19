@@ -62,6 +62,7 @@
 #include "tinyxml.h"
 #include "gpxdocument.h"
 #include "ocpndc.h"
+#include "styles.h"
 
 #ifdef USE_S57
 #include "s52plib.h"
@@ -97,7 +98,7 @@ extern wxString         g_NMEABaudRate;
 
 extern wxString         *pNMEA_AP_Port;
 extern wxString         *pWIFIServerName;
-extern wxString         *g_pcsv_locn;
+extern wxString         g_csv_locn;
 extern wxString         g_SENCPrefix;
 extern wxString         g_UserPresLibData;
 
@@ -306,6 +307,8 @@ extern int              g_GroupIndex;
 extern bool             g_bDebugOGL;
 extern int              g_current_arrow_scale;
 extern wxString         g_GPS_Ident;
+
+extern ocpnStyle::StyleManager* g_StyleManager;
 
 //------------------------------------------------------------------------------
 // Some wxWidgets macros for useful classes
@@ -2908,6 +2911,10 @@ int MyConfig::LoadMyConfig ( int iteration )
             Read ( _T ( "NavMessageShown" ), &n_NavMessageShown, 0 );
       }
 
+      wxString uiStyle;
+      Read ( _T ( "UIStyle" ), &uiStyle, wxT(""));
+      g_StyleManager->SetStyle( uiStyle );
+
       Read ( _T ( "NCacheLimit" ), &g_nCacheLimit, CACHE_N_LIMIT_DEFAULT );
 
       int mem_limit;
@@ -2972,9 +2979,9 @@ int MyConfig::LoadMyConfig ( int iteration )
       Read ( _T ( "SkewToNorthUp" ),  &g_bskew_comp, 0 );
       Read ( _T ( "OpenGL" ),  &g_bopengl, 0 );
 
-#ifdef __WXMAC__
-      g_bopengl = 0;
-#endif
+//#ifdef __WXMAC__
+//      g_bopengl = 0;
+//#endif
 
       Read ( _T ( "ActiveChartGroup" ),  &g_GroupIndex, 0 );
 
@@ -3122,7 +3129,7 @@ int MyConfig::LoadMyConfig ( int iteration )
       s.ToDouble ( &g_ShowMoored_Kts );
 
       Read ( _T ( "bShowAreaNotices" ), &g_bShowAreaNotices );
-      
+
       Read ( _T ( "bAISAlertDialog" ), &g_bAIS_CPA_Alert );
 
       Read ( _T ( "bAISAlertAudio" ), &g_bAIS_CPA_Alert_Audio );
@@ -3171,8 +3178,8 @@ int MyConfig::LoadMyConfig ( int iteration )
       if((g_NMEALogWindow_y < 0) || (g_NMEALogWindow_y > display_height))
             g_NMEALogWindow_y = 5;
 
-      g_S57_dialog_sx = Read ( _T ( "S57QueryDialogSizeX" ), 200L );
-      g_S57_dialog_sy = Read ( _T ( "S57QueryDialogSizeY" ), 200L );
+      g_S57_dialog_sx = Read ( _T ( "S57QueryDialogSizeX" ), 400L );
+      g_S57_dialog_sy = Read ( _T ( "S57QueryDialogSizeY" ), 400L );
 
 #ifdef USE_S57
       if ( NULL != ps52plib )
@@ -3242,6 +3249,7 @@ int MyConfig::LoadMyConfig ( int iteration )
       if ( iteration == 0 )
             g_UserPresLibData = valpres;
 
+/*
       wxString strd ( _T ( "S57DataLocation" ) );
       SetPath ( _T ( "/Directories" ) );
       Read ( strd, &val );              // Get the Directory name
@@ -3256,7 +3264,7 @@ int MyConfig::LoadMyConfig ( int iteration )
                   g_pcsv_locn->Append ( val );
             }
       }
-
+*/
       wxString strs ( _T ( "SENCFileLocation" ) );
       SetPath ( _T ( "/Directories" ) );
       wxString vals;
@@ -4308,6 +4316,8 @@ void MyConfig::UpdateSettings()
       Write ( _T ( "ConfigVersionString" ), g_config_version_string );
       Write ( _T ( "NavMessageShown" ), n_NavMessageShown );
 
+      Write ( _T ( "UIStyle" ), g_StyleManager->GetStyleNextInvocation() );
+
       Write ( _T ( "ShowDebugWindows" ), m_bShowDebugWindows );
       Write ( _T ( "ShowPrintIcon" ), g_bShowPrintIcon );
       Write ( _T ( "SetSystemTime" ), s_bSetSystemTime );
@@ -4505,29 +4515,30 @@ void MyConfig::UpdateSettings()
 
 #ifdef USE_S57
       SetPath ( _T ( "/Settings/GlobalState" ) );
-      Write ( _T ( "bShowS57Text" ), ps52plib->GetShowS57Text() );
-      Write ( _T ( "bShowS57ImportantTextOnly" ), ps52plib->GetShowS57ImportantTextOnly() );
-      Write ( _T ( "nDisplayCategory" ), ( long ) ps52plib->m_nDisplayCategory );
-      Write ( _T ( "nSymbolStyle" ), ( int ) ps52plib->m_nSymbolStyle );
-      Write ( _T ( "nBoundaryStyle" ), ( int ) ps52plib->m_nBoundaryStyle );
+      if(ps52plib)
+      {
+            Write ( _T ( "bShowS57Text" ), ps52plib->GetShowS57Text() );
+            Write ( _T ( "bShowS57ImportantTextOnly" ), ps52plib->GetShowS57ImportantTextOnly() );
+            Write ( _T ( "nDisplayCategory" ), ( long ) ps52plib->m_nDisplayCategory );
+            Write ( _T ( "nSymbolStyle" ), ( int ) ps52plib->m_nSymbolStyle );
+            Write ( _T ( "nBoundaryStyle" ), ( int ) ps52plib->m_nBoundaryStyle );
 
-      Write ( _T ( "bShowSoundg" ), ps52plib->m_bShowSoundg );
-      Write ( _T ( "bShowMeta" ), ps52plib->m_bShowMeta );
-      Write ( _T ( "bUseSCAMIN" ), ps52plib->m_bUseSCAMIN );
-      Write ( _T ( "bShowAtonText" ), ps52plib->m_bShowAtonText );
-      Write ( _T ( "bShowLightDescription" ), ps52plib->m_bShowLdisText );
-      Write ( _T ( "bDeClutterText" ), ps52plib->m_bDeClutterText );
+            Write ( _T ( "bShowSoundg" ), ps52plib->m_bShowSoundg );
+            Write ( _T ( "bShowMeta" ), ps52plib->m_bShowMeta );
+            Write ( _T ( "bUseSCAMIN" ), ps52plib->m_bUseSCAMIN );
+            Write ( _T ( "bShowAtonText" ), ps52plib->m_bShowAtonText );
+            Write ( _T ( "bShowLightDescription" ), ps52plib->m_bShowLdisText );
+            Write ( _T ( "bDeClutterText" ), ps52plib->m_bDeClutterText );
 
-      Write ( _T ( "S52_MAR_SAFETY_CONTOUR" ), S52_getMarinerParam ( S52_MAR_SAFETY_CONTOUR ) );
-      Write ( _T ( "S52_MAR_SHALLOW_CONTOUR" ), S52_getMarinerParam ( S52_MAR_SHALLOW_CONTOUR ) );
-      Write ( _T ( "S52_MAR_DEEP_CONTOUR" ), S52_getMarinerParam ( S52_MAR_DEEP_CONTOUR ) );
-      Write ( _T ( "S52_MAR_TWO_SHADES" ), S52_getMarinerParam ( S52_MAR_TWO_SHADES ) );
-      Write ( _T ( "S52_DEPTH_UNIT_SHOW" ), ps52plib->m_nDepthUnitDisplay );
-
+            Write ( _T ( "S52_MAR_SAFETY_CONTOUR" ), S52_getMarinerParam ( S52_MAR_SAFETY_CONTOUR ) );
+            Write ( _T ( "S52_MAR_SHALLOW_CONTOUR" ), S52_getMarinerParam ( S52_MAR_SHALLOW_CONTOUR ) );
+            Write ( _T ( "S52_MAR_DEEP_CONTOUR" ), S52_getMarinerParam ( S52_MAR_DEEP_CONTOUR ) );
+            Write ( _T ( "S52_MAR_TWO_SHADES" ), S52_getMarinerParam ( S52_MAR_TWO_SHADES ) );
+            Write ( _T ( "S52_DEPTH_UNIT_SHOW" ), ps52plib->m_nDepthUnitDisplay );
+      }
       SetPath ( _T ( "/Directories" ) );
-      Write ( _T ( "S57DataLocation" ), *g_pcsv_locn );
-      Write ( _T ( "SENCFileLocation" ), g_SENCPrefix );
-//      Write ( _T ( "PresentationLibraryData" ), g_UserPresLibData );
+      Write ( _T ( "S57DataLocation" ), _T(""));
+      Write ( _T ( "SENCFileLocation" ), _T(""));
 
 #endif
 
@@ -6717,8 +6728,7 @@ wxFont *FontMgr::GetFont ( const wxString &TextElement, int default_size )
 
       wxString nativefont = GetSimpleNativeFont(new_size);
 
-      wxFont *nf0 = new wxFont();
-      wxFont *nf = nf0->New ( nativefont );
+      wxFont *nf =  wxFont::New ( nativefont );
 
       wxColor color(*wxBLACK);
 
@@ -6781,7 +6791,7 @@ wxString FontMgr::GetSimpleNativeFont(int size)
                         0,                   //lf.lfQuality,
                         0);                    //lf.lfPitchAndFamily,
 
-      nativefont.Append(_T("MS Sans Serif"));
+      nativefont.Append(_T("Verdana"));
 #endif
 
       return nativefont;
@@ -7388,8 +7398,9 @@ void X11FontPicker::OnChangeFace ( wxCommandEvent& WXUNUSED ( event ) )
 void X11FontPicker::SetChoiceOptionsFromFacename ( wxString &facename )
 {
       //    Get a list of matching fonts
-      char face[100];
+      char face[101];
       strncpy ( face, facename.mb_str(), 100 );
+      face[100] = \0;
 
       char pattern[100];
       sprintf ( pattern, "-*-%s-*-*-*-*-*-*-*-*-*-*-iso8859-1", face );

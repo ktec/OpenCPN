@@ -7,7 +7,6 @@
  *
  ***************************************************************************
  *   Copyright (C) 2010 by David S. Register   *
- *   bdbcat@yahoo.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -460,6 +459,7 @@ void GRIBUIDialog::UpdateTrackingControls(void)
 
 void GRIBUIDialog::OnClose ( wxCloseEvent& event )
 {
+/*
       pPlugIn->SetGribDir(m_currentGribDir);
 
 
@@ -471,6 +471,7 @@ void GRIBUIDialog::OnClose ( wxCloseEvent& event )
       delete m_pitemCurrentGribDirectoryCtrl;
 
       Destroy();
+*/
       pPlugIn->OnGribDialogClose();
 }
 
@@ -484,7 +485,7 @@ void GRIBUIDialog::OnIdOKClick ( wxCommandEvent& event )
 void GRIBUIDialog::OnMove ( wxMoveEvent& event )
 {
       //    Record the dialog position
-      wxPoint p = event.GetPosition();
+      wxPoint p =  GetPosition();
       pPlugIn->SetGribDialogX(p.x);
       pPlugIn->SetGribDialogY(p.y);
 
@@ -1535,16 +1536,20 @@ bool GRIBOverlayFactory::RenderGribPressure(GribRecord *pGR, PlugIn_ViewPort *vp
                   piso->drawGLIsoLine(this, vp, true, true); //g_bGRIBUseHiDef
 
             // Draw Isobar labels
-            int gr = 80;
-            wxColour color = wxColour(gr,gr,gr);
-            int density = 40;//40;
+            wxColour text_color;
+            GetGlobalColor ( _T ( "DILG3" ), &text_color );
+
+            wxColour back_color;
+            GetGlobalColor ( _T ( "DILG0" ), &back_color );
+
+            int density = 40;
             int first = 0;
 
             double coef = .01;
             if(m_pdc)
-                  piso->drawIsoLineLabels(this, *m_pdc, color, vp, density, first, coef);
+                  piso->drawIsoLineLabels(this, *m_pdc, text_color, back_color, vp, density, first, coef);
             else
-                  piso->drawGLIsoLineLabels(this, color, vp, density, first, coef);
+                  piso->drawGLIsoLineLabels(this, text_color, back_color, vp, density, first, coef);
 
             //
 
@@ -1912,7 +1917,7 @@ void GRIBOverlayFactory::DrawOLBitmap(const wxBitmap &bitmap, wxCoord x, wxCoord
       glPixelZoom(1, 1);
       glDisable(GL_BLEND);
 
-               free(e);
+               delete[](e);
           } else {
                glRasterPos2i(x, y);
                glPixelZoom(1, -1); /* draw data from top to bottom */

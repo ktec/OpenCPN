@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Open CPN 1.3.6\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-25 00:06-0400\n"
+"POT-Creation-Date: 2012-05-17 09:42-0400\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Ole E. Mikkelsen <oem@live.dk>\n"
 "Language-Team: \n"
@@ -14,6 +14,12 @@ msgstr ""
 # 
 # 
 msgid "\n"
+msgstr ""
+#
+msgid ""
+"\n"
+"\n"
+"Continuing libgps setup..."
 msgstr ""
 #
 # 
@@ -358,11 +364,21 @@ msgstr "&Skrifttype familie:"
 msgid "&Go To"
 msgstr "&Gå til"
 #
+msgid "&Jump To"
+msgstr ""
+#
 # 
 # 
 # 
 msgid "&Kilometers"
 msgstr "&Kilometer"
+#
+# 
+# 
+# 
+#, fuzzy
+msgid "&Merge Selected Tracks"
+msgstr "Slet spor"
 #
 # 
 # 
@@ -492,6 +508,9 @@ msgstr "(unavngivet spor)"
 # 
 msgid "(Unnamed Waypoint)"
 msgstr "(Unavngivet Waypoint)"
+#
+msgid "(m)"
+msgstr ""
 #
 # 
 # 
@@ -624,13 +643,6 @@ msgstr "AIS datakilde"
 # 
 msgid "AIS General"
 msgstr "AIS Generelt"
-#
-# 
-# 
-# 
-#, fuzzy
-msgid "AIS SART Alert"
-msgstr "AIS advarsel"
 #
 # 
 # 
@@ -1141,12 +1153,6 @@ msgstr "Farveopsætning"
 # 
 # 
 # 
-msgid "Chart"
-msgstr "Kort"
-#
-# 
-# 
-# 
 msgid "Chart Depth Units"
 msgstr "Enhed for havdybde"
 #
@@ -1193,6 +1199,13 @@ msgstr "Kort Udskriv"
 # TCMgr --? chart1 (reference to program ?)
 msgid "Chart1::Event...TCMgr Not Available"
 msgstr "'Chart1':: Hændelse...'TCMgr' er ikke tilgængelig"
+#
+# 
+# 
+# 
+#, fuzzy
+msgid "ChartTexts"
+msgstr "Kort"
 #
 # 
 # 
@@ -1401,7 +1414,8 @@ msgstr ""
 #
 # 
 # 
-msgid "De-Clutter Text (exp.)"
+#, fuzzy
+msgid "De-Clutter Text"
 msgstr "Ryd op/gør tekst luftig"
 #
 # 
@@ -1443,6 +1457,13 @@ msgstr "Farve"
 #, fuzzy
 msgid "Default dataset"
 msgstr "Farve"
+#
+# 
+# 
+# 
+#, fuzzy
+msgid "Deg"
+msgstr "Ben"
 #
 # 
 msgid "Degrees, Decimal minutes"
@@ -2222,9 +2243,6 @@ msgstr ""
 msgid "List contents"
 msgstr "Licens"
 #
-msgid "Loaded legacy PLIB data: "
-msgstr ""
-#
 # 
 # 
 msgid "Local @ PC"
@@ -2351,7 +2369,8 @@ msgstr "Marker fartøjer ude af syne efter (minutter):"
 # 
 # 
 # 
-msgid "Mark/WP Properties"
+#, fuzzy
+msgid "Mark/WP Properties..."
 msgstr "Egenskaber for waypoint"
 #
 # 
@@ -2499,6 +2518,9 @@ msgstr "NMEA datakilde"
 msgid "NMEA Options"
 msgstr "Valgmuligheder for NMEA-data"
 #
+msgid "NMi"
+msgstr ""
+#
 # 
 # 
 # 
@@ -2593,6 +2615,13 @@ msgstr ""
 # 
 msgid "Object, towed, not otherwise specified"
 msgstr ""
+#
+# 
+# 
+# 
+#, fuzzy
+msgid "ObjectQuery"
+msgstr "Forespørg på objekt"
 #
 # 
 # 
@@ -3208,6 +3237,10 @@ msgid "Rename Waypoints?"
 msgstr "Omdøb waypoints"
 #
 #, c-format
+msgid "RenderHPGL: The '%s' instruction is not implemented."
+msgstr ""
+#
+#, c-format
 msgid "Report as of: %d:%d UTC "
 msgstr ""
 #
@@ -3260,6 +3293,13 @@ msgstr ""
 # 
 msgid "Route"
 msgstr "Rute"
+#
+# 
+# 
+# 
+#, fuzzy
+msgid "Route Distance: "
+msgstr "Afstand i alt"
 #
 # 
 # 
@@ -3948,6 +3988,11 @@ msgstr "Konfiguration"
 msgid "Text Element"
 msgstr "Tekst element"
 #
+msgid ""
+"The currently running Track was not merged.\n"
+"You can merge it later when it is completed."
+msgstr ""
+#
 # 
 # 
 # 
@@ -4527,12 +4572,12 @@ msgstr "CM93 detaljer"
 #
 # 
 # 
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "libgps API version mismatch.\n"
 "OpenCPN found version %d.%d, but requires at least version 3.0\n"
 "\n"
-"Would you like to use this version of libgps anyway?"
+"      Would you like to use this version of libgps anyway?"
 msgstr ""
 "libgps API versionsmismatch.\n"
 "OpenCPN fandt version %d.%d, men kræver mindst version 3.0\n"
@@ -4553,6 +4598,8 @@ msgid "wxFB Website"
 msgstr ""
 #
 #
+#
+#
 # 
 # 
 # 
@@ -4562,6 +4609,8 @@ msgstr ""
 # 
 #~ msgid "   PlugInManager: Cannot load library: "
 #~ msgstr "   PlugInManager: Programfunktioner kan ikke indlæses: "
+#
+#
 #
 #
 # 
@@ -4575,6 +4624,8 @@ msgstr ""
 #~ msgstr "   PlugInManager: 'create_pi' kan ikke indlæses: "
 #
 #
+#
+#
 # 
 # 
 # 
@@ -4584,6 +4635,8 @@ msgstr ""
 # 
 #~ msgid "   PlugInManager: Cannot load symbol destroy_pi: "
 #~ msgstr "   PlugInManager: 'destroy_pi' kan ikke indlæses: "
+#
+#
 #
 #
 # 
@@ -4615,6 +4668,8 @@ msgstr ""
 # 
 #~ msgid "&Close"
 #~ msgstr "&Luk"
+#
+#
 #
 #
 # 
@@ -4653,6 +4708,8 @@ msgstr ""
 #~ msgstr "&Slet alle ruter..."
 #
 #
+#
+#
 # 
 # 
 # 
@@ -4687,6 +4744,8 @@ msgstr ""
 # 
 #~ msgid "&Delete All Tracks..."
 #~ msgstr "&Slet alle spor..."
+#
+#
 #
 #
 # 
@@ -4728,8 +4787,20 @@ msgstr ""
 # 
 # 
 # 
+#, fuzzy
+#~ msgid "AIS SART Alert"
+#~ msgstr "AIS advarsel"
+#
+#
+#
+#
+# 
+# 
+# 
 #~ msgid "Additional information"
 #~ msgstr "Yderligere information"
+#
+#
 #
 #
 # 
@@ -4745,6 +4816,8 @@ msgstr ""
 #, fuzzy
 #~ msgid "Attempting to load libgps.so"
 #~ msgstr "Ikke muligt at indlæse 'libgps.so.19'"
+#
+#
 #
 #
 # 
@@ -4780,6 +4853,16 @@ msgstr ""
 #~ msgstr "Kaldesignal:"
 #
 #
+#
+# 
+# 
+# 
+#~ msgid "Chart"
+#~ msgstr "Kort"
+#
+#
+#
+#
 # 
 # 
 # 
@@ -4807,6 +4890,8 @@ msgstr ""
 # 
 #~ msgid "Chart file corrupt.. disabling this chart \n"
 #~ msgstr "Kortfilen er ikke valid..Kortet bliver inaktiveret \n"
+#
+#
 #
 #
 # 
@@ -4849,6 +4934,8 @@ msgstr ""
 #~ "\n"
 #
 #
+#
+#
 # 
 # 
 # 
@@ -4885,6 +4972,8 @@ msgstr ""
 #~ "\n"
 #
 #
+#
+#
 # 
 # 
 # 
@@ -4916,6 +5005,8 @@ msgstr ""
 #~ msgstr "Hastighed, knob"
 #
 #
+#
+#
 # 
 # 
 # 
@@ -4926,6 +5017,8 @@ msgstr ""
 # 
 #~ msgid "ETE/Timestamp"
 #~ msgstr "ETE/Kl."
+#
+#
 #
 #
 # 
@@ -4953,6 +5046,8 @@ msgstr ""
 #~ msgstr "Afslut OpenCPN"
 #
 #
+#
+#
 # 
 # 
 # 
@@ -4968,6 +5063,8 @@ msgstr ""
 #~ msgstr "Ikke muligt at indlæse 'libgps.so.19'"
 #
 #
+#
+#
 # 
 # 
 # 
@@ -4981,6 +5078,8 @@ msgstr ""
 #, fuzzy
 #~ msgid "Failed to load libgps.so.19"
 #~ msgstr "Ikke muligt at indlæse 'libgps.so.19'"
+#
+#
 #
 #
 # 
@@ -5014,6 +5113,8 @@ msgstr ""
 #~ msgstr "Meteorologi(GRIB)"
 #
 #
+#
+#
 # 
 # 
 # 
@@ -5043,6 +5144,8 @@ msgstr ""
 # 
 #~ msgid "GRIB Data"
 #~ msgstr "Meteorologi(GRIB)"
+#
+#
 #
 #
 # 
@@ -5076,6 +5179,8 @@ msgstr ""
 #~ msgstr "Meteorologi(GRIB) visning"
 #
 #
+#
+#
 # 
 # 
 # 
@@ -5107,6 +5212,8 @@ msgstr ""
 #~ msgstr "Meteorologi(GRIB) folder"
 #
 #
+#
+#
 # 
 # 
 # 
@@ -5129,11 +5236,15 @@ msgstr ""
 #~ msgstr "Importer GPX-fil"
 #
 #
+#
+#
 # 
 # 
 #, fuzzy
 #~ msgid "MMSI:                 %09d\n"
 #~ msgstr "FREMME KL:                   "
+#
+#
 #
 #
 # 
@@ -5163,6 +5274,8 @@ msgstr ""
 #~ msgstr "Maritim standard"
 #
 #
+#
+#
 # 
 # 
 # 
@@ -5171,12 +5284,16 @@ msgstr ""
 #~ msgstr "Ikon for waypoint"
 #
 #
+#
+#
 # 
 # 
 # 
 # Mark - ?
 #~ msgid "Mark Name"
 #~ msgstr "Waypointnavn"
+#
+#
 #
 #
 # 
@@ -5189,6 +5306,8 @@ msgstr ""
 #~ msgstr "Nyt waypoint"
 #
 #
+#
+#
 # 
 # 
 # 
@@ -5198,6 +5317,8 @@ msgstr ""
 # 
 #~ msgid "OpenCPN PlugIn Base Class"
 #~ msgstr "OpenCPN PlugIn base klasse"
+#
+#
 #
 #
 # 
@@ -5213,6 +5334,8 @@ msgstr ""
 #~ msgstr ""
 #~ "OpenCPN PlugIn base klasse\n"
 #~ "PlugInManager oprettede denne base klasse"
+#
+#
 #
 #
 # 
@@ -5246,6 +5369,8 @@ msgstr ""
 #~ msgstr "Zoom eller skaler ud for at se skjult CRAIN GRIB"
 #
 #
+#
+#
 # 
 # 
 # 
@@ -5275,6 +5400,8 @@ msgstr ""
 # 
 #~ msgid "Please Zoom or Scale Out to view suppressed HTSGW GRIB"
 #~ msgstr "Zoom eller skaler ud for at se skjult HTSGW GRIB"
+#
+#
 #
 #
 # 
@@ -5308,6 +5435,8 @@ msgstr ""
 #~ msgstr "Zoom eller skaler ud for at se skjult CRAIN GRIB"
 #
 #
+#
+#
 # 
 # 
 # 
@@ -5339,6 +5468,8 @@ msgstr ""
 #~ msgstr "Zoom eller skaler ud for at se skjult HTSGW GRIB"
 #
 #
+#
+#
 # 
 # 
 # 
@@ -5368,6 +5499,8 @@ msgstr ""
 #~ msgstr "Tilføjelse, navn"
 #
 #
+#
+#
 # 
 # 
 # 
@@ -5377,6 +5510,8 @@ msgstr ""
 # 
 #~ msgid "PlugInManager searching for PlugIns in location "
 #~ msgstr "PlugInManager søger tilføjelser på lokation "
+#
+#
 #
 #
 # 
@@ -5390,6 +5525,8 @@ msgstr ""
 #~ msgstr "PlugInManager: Deaktiverer tilføjelse: "
 #
 #
+#
+#
 # 
 # 
 # 
@@ -5399,6 +5536,8 @@ msgstr ""
 # 
 #~ msgid "PlugInManager: Initializing PlugIn: "
 #~ msgstr "PlugInManager: Initialiserer tilføjelse: "
+#
+#
 #
 #
 # 
@@ -5412,6 +5551,8 @@ msgstr ""
 #~ msgstr "PlugInManager: Indlæser tilføjelse: "
 #
 #
+#
+#
 # 
 # 
 # 
@@ -5421,6 +5562,8 @@ msgstr ""
 # 
 #~ msgid "PlugInManager: UnLoading PlugIn: "
 #~ msgstr "PlugInManager: Frakobler tilføjelse: "
+#
+#
 #
 #
 # 
@@ -5434,6 +5577,8 @@ msgstr ""
 #~ msgstr "PlugInManager: Frakobler tilføjelse med forkert API version %d.%d: "
 #
 #
+#
+#
 # 
 # 
 # 
@@ -5442,6 +5587,8 @@ msgstr ""
 # 
 #~ msgid "Position:               "
 #~ msgstr "Position:             "
+#
+#
 #
 #
 # 
@@ -5475,6 +5622,8 @@ msgstr ""
 #~ msgstr "Tryk, mBar"
 #
 #
+#
+#
 # 
 # 
 # 
@@ -5498,6 +5647,8 @@ msgstr ""
 #~ msgstr ""
 #~ "Nyeste data interval:   %3d Sek.\n"
 #~ "\n"
+#
+#
 #
 #
 # 
@@ -5531,6 +5682,8 @@ msgstr ""
 #~ msgstr "Havoverflade temperatur, C"
 #
 #
+#
+#
 # 
 # 
 # 
@@ -5562,6 +5715,8 @@ msgstr ""
 #~ msgstr "Meteorologi(GRIB) folder"
 #
 #
+#
+#
 # 
 # 
 # 
@@ -5587,6 +5742,8 @@ msgstr ""
 # 
 #~ msgid "ShipName:  "
 #~ msgstr "Fartøjsnavn:"
+#
+#
 #
 #
 # 
@@ -5620,6 +5777,8 @@ msgstr ""
 #~ msgstr "Vis meteorologiikon(GRIB)"
 #
 #
+#
+#
 # 
 # 
 # 
@@ -5651,6 +5810,8 @@ msgstr ""
 #~ msgstr "Signifikant bølgehøjde, m"
 #
 #
+#
+#
 # 
 # 
 # 
@@ -5670,6 +5831,8 @@ msgstr ""
 #~ msgstr ""
 #~ "Str.:                 %dm x %dm x ---m\n"
 #~ "\n"
+#
+#
 #
 #
 # 
@@ -5694,6 +5857,8 @@ msgstr ""
 #~ msgstr "Slå spor til/fra"
 #
 #
+#
+#
 # 
 # 
 # 
@@ -5714,6 +5879,8 @@ msgstr ""
 #, fuzzy
 #~ msgid "Toggle Names"
 #~ msgstr "Rute"
+#
+#
 #
 #
 # 
@@ -5747,6 +5914,8 @@ msgstr ""
 #~ msgstr "Brug højopløsningsgrafik"
 #
 #
+#
+#
 # 
 # 
 # 
@@ -5776,6 +5945,8 @@ msgstr ""
 # 
 #~ msgid "WARNING:  QuickScat GRIB data is %d hours old."
 #~ msgstr "ADVARSEL:  QuickScat GRIB data er %d timer gammel."
+#
+#
 #
 #
 # 

@@ -6,7 +6,6 @@
  *
  ***************************************************************************
  *   Copyright (C) 2010 by David S. Register   *
- *   bdbcat@yahoo.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -2008,8 +2007,16 @@ void __CALL_CONVENTION vertexCallback(GLvoid *vertex)
     if(s_buf_idx > s_buf_len - 4)
     {
         int new_buf_len = s_buf_len + 100;
+        GLdouble * tmp = s_pwork_buf;
+
         s_pwork_buf = (GLdouble *)realloc(s_pwork_buf, new_buf_len * sizeof(GLdouble));
-        s_buf_len = new_buf_len;
+        if (NULL == s_pwork_buf)
+        {
+            free(tmp);
+            tmp = NULL;
+        }
+        else
+            s_buf_len = new_buf_len;
     }
 
     if(tess_orient == TESS_VERT)

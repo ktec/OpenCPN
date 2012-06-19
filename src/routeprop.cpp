@@ -6,7 +6,6 @@
 *
 ***************************************************************************
 *   Copyright (C) 2010 by David S. Register   *
-*   bdbcat@yahoo.com   *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
 *   it under the terms of the GNU General Public License as published by  *
@@ -2140,6 +2139,11 @@ MarkInfoImpl::~MarkInfoImpl()
       m_bcomboBoxIcon->Clear();
 }
 
+void MarkInfoImpl::InitialFocus(void) {
+      m_textName->SetFocus();
+      m_textName->SetInsertionPointEnd();
+}
+
 void MarkInfoImpl::SetColorScheme(ColorScheme cs)
 {
       DimeControl(this);
@@ -2293,7 +2297,10 @@ void MarkInfoImpl::SetRoutePoint( RoutePoint *pRP )
 void MarkInfoImpl::m_hyperlinkContextMenu( wxMouseEvent &event )
 {
       m_pEditedLink = (wxHyperlinkCtrl*)event.GetEventObject();
-      m_pEditedLink->PopupMenu( m_menuLink, event.GetPosition() );
+      m_scrolledWindowLinks->PopupMenu( m_menuLink,
+                                        m_pEditedLink->GetPosition().x + event.GetPosition().x,
+                                        m_pEditedLink->GetPosition().y + event.GetPosition().y );
+
 }
 
 void MarkInfoImpl::OnDeleteLink( wxCommandEvent& event )
@@ -2313,7 +2320,7 @@ void MarkInfoImpl::OnDeleteLink( wxCommandEvent& event )
                   Hyperlink *link = linknode->GetData();
                   wxString Link = link->Link;
                   wxString Descr = link->DescrText;
-                  if (Link == findurl && Descr == findlabel)
+                  if (Link == findurl && (Descr == findlabel || (Link == findlabel && Descr == wxEmptyString)))
                         nodeToDelete = linknode;
                   else
                   {
@@ -2353,7 +2360,7 @@ void MarkInfoImpl::OnEditLink( wxCommandEvent& event )
                         Hyperlink *link = linknode->GetData();
                         wxString Link = link->Link;
                         wxString Descr = link->DescrText;
-                        if (Link == findurl && Descr == findlabel)
+                        if (Link == findurl && (Descr == findlabel || (Link == findlabel && Descr == wxEmptyString)))
                         {
                               link->Link = m_pLinkProp->m_textCtrlLinkUrl->GetValue();
                               link->DescrText = m_pLinkProp->m_textCtrlLinkDescription->GetValue();
@@ -2367,6 +2374,9 @@ void MarkInfoImpl::OnEditLink( wxCommandEvent& event )
                         linknode = linknode->GetNext();
                   }
             }
+
+            m_scrolledWindowLinks->InvalidateBestSize();
+            m_scrolledWindowLinks->Layout();
             sbSizerLinks->Layout();
             event.Skip();
       }
@@ -2517,33 +2527,35 @@ void MarkInfoImpl::OnMarkInfoOKClick( wxCommandEvent& event )
 
 void MarkInfoImpl::OnMarkInfoCancelClick( wxCommandEvent& event )
 {
-      m_pRoutePoint->SetVisible(m_bIsVisible_save);
-      m_pRoutePoint->SetNameShown(m_bShowName_save);
-      m_pRoutePoint->SetPosition(m_lat_save, m_lon_save);
-      m_pRoutePoint->m_IconName = m_IconName_save;
-      m_pRoutePoint->ReLoadIcon();
-
-      m_pRoutePoint->m_HyperlinkList->Clear();
-
-      int NbrOfLinks = m_pMyLinkList->GetCount();
-//      int len = 0;
-      if (NbrOfLinks > 0)
+      if (m_pRoutePoint)
       {
-            wxHyperlinkListNode *linknode = m_pMyLinkList->GetFirst();
-            while (linknode)
+            m_pRoutePoint->SetVisible(m_bIsVisible_save);
+            m_pRoutePoint->SetNameShown(m_bShowName_save);
+            m_pRoutePoint->SetPosition(m_lat_save, m_lon_save);
+            m_pRoutePoint->m_IconName = m_IconName_save;
+            m_pRoutePoint->ReLoadIcon();
+
+            m_pRoutePoint->m_HyperlinkList->Clear();
+
+            int NbrOfLinks = m_pMyLinkList->GetCount();
+            if (NbrOfLinks > 0)
             {
-                Hyperlink *link = linknode->GetData();
+                  wxHyperlinkListNode *linknode = m_pMyLinkList->GetFirst();
+                  while (linknode)
+                  {
+                      Hyperlink *link = linknode->GetData();
+                      Hyperlink* h = new Hyperlink();
+                      h->DescrText = link->DescrText;
+                      h->Link = link->Link;
+                      h->Type = link->Type;
 
-                Hyperlink* h = new Hyperlink();
-                h->DescrText = link->DescrText;
-                h->Link = link->Link;
-                h->Type = link->Type;
+                      m_pRoutePoint->m_HyperlinkList->Append(h);
 
-                m_pRoutePoint->m_HyperlinkList->Append(h);
-
-                linknode = linknode->GetNext();
+                      linknode = linknode->GetNext();
+                  }
             }
       }
+
       Show(false);
       delete m_pMyLinkList;
       m_pMyLinkList = NULL;

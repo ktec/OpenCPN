@@ -6,7 +6,6 @@
  *
  ***************************************************************************
  *   Copyright (C) 2010 by David S. Register   *
- *   bdbcat@yahoo.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -132,6 +131,8 @@ extern void txfRenderFancyString( TexFont * txf, char *string, int len );
 
 #endif /* __TEXFONT_H__ */
 
+class RenderFromHPGL;
+
 //-----------------------------------------------------------------------------
 //    s52plib definition
 //-----------------------------------------------------------------------------
@@ -143,6 +144,9 @@ public:
 
 	void SetPPMM( float ppmm ) {
 		canvas_pix_per_mm = ppmm;
+	}
+	float GetPPMM() {
+		return canvas_pix_per_mm;
 	}
 	LUPrec *S52_LUPLookup( LUPname LUP_name, const char * objectName,
 			S57Obj *pObj, bool bStrict = 0 );
@@ -162,6 +166,8 @@ public:
 	wxString GetPLIBColorScheme( void ) {
 		return m_ColorScheme;
 	}
+
+      void SetGLRendererString(wxString &renderer);
 
 	bool ObjectRenderCheck( ObjRazRules *rzRules, ViewPort *vp );
 	bool ObjectRenderCheckPos( ObjRazRules *rzRules, ViewPort *vp );
@@ -196,18 +202,28 @@ public:
 			ViewPort *vp, wxRect &render_rect );
 
 	// Accessors
+      bool GetShowSoundings() {
+            return m_bShowSoundg;
+      }
+      void SetShowSoundings( bool f ) {
+            m_bShowSoundg = f;
+            GenerateStateHash();
+      }
+
 	bool GetShowS57Text() {
 		return m_bShowS57Text;
 	}
 	void SetShowS57Text( bool f ) {
 		m_bShowS57Text = f;
-	}
+            GenerateStateHash();
+      }
 
 	bool GetShowS57ImportantTextOnly() {
 		return m_bShowS57ImportantTextOnly;
 	}
 	void SetShowS57ImportantTextOnly( bool f ) {
 		m_bShowS57ImportantTextOnly = f;
+            GenerateStateHash();
 	}
 
 	int GetMajorVersion( void ) {
@@ -276,7 +292,6 @@ private:
 	bool S52_flush_Plib();
 
 	bool PreloadOBJLFromCSV( wxString &csv_file );
-	void PrepareTxfRenderer( void );
 
 	int DoRenderObject( wxDC *pdcin, ObjRazRules *rzRules, ViewPort *vp );
 
@@ -311,10 +326,6 @@ private:
 			int npt, float sym_len, float sym_factor, Rule *draw_rule,
 			ViewPort *vp );
 
-	bool RenderHPGLtoDC( char *str, char *col, wxDC *pdc, wxPoint &r,
-			wxPoint &pivot, double rot_angle = 0 );
-	bool RenderHPGLtoGL( char *str, char *col, wxPoint &r, wxPoint &pivot,
-			double rot_angle );
 	bool RenderHPGL( ObjRazRules *rzRules, Rule * rule_in, wxPoint &r,
 			ViewPort *vp, float rot_angle = 0. );
 	bool RenderRasterSymbol( ObjRazRules *rzRules, Rule *prule, wxPoint &r,
@@ -322,7 +333,7 @@ private:
 	wxImage RuleXBMToImage( Rule *prule );
 
 	bool RenderText( wxDC *pdc, S52_TextC *ptext, int x, int y,
-			wxRect *pRectDrawn, S57Obj *pobj, bool bCheckOverlap );
+			wxRect *pRectDrawn, S57Obj *pobj, bool bCheckOverlap, ViewPort *vp );
 
 	bool CheckTextRectList( const wxRect &test_rect, S57Obj *pobj );
 	int RenderT_All( ObjRazRules *rzRules, Rules *rules, ViewPort *vp,
@@ -386,6 +397,50 @@ private:
 	int m_txf_avg_char_width;
 	int m_txf_avg_char_height;
 	CARC_Hash m_CARC_hashmap;
+	RenderFromHPGL* HPGL;
+
+};
+
+
+#define HPGL_FILLED true
+
+class RenderFromHPGL {
+public:
+	RenderFromHPGL( s52plib* plibarg );
+
+	void SetTargetDC( wxDC* pdc );
+	void SetTargetOpenGl();
+	void SetTargetGCDC( wxGCDC* gdc );
+	bool Render(char *str, char *col, wxPoint &r, wxPoint &pivot, double rot_angle = 0);
+
+private:
+	const char* findColorNameInRef( char colorCode, char* col );
+	void RotatePoint( wxPoint& point, double angle );
+	wxPoint ParsePoint( wxString& argument );
+	void SetPen();
+	void Line( wxPoint from, wxPoint to );
+	void Circle( wxPoint center, int radius, bool filled = false );
+	void Polygon();
+
+	s52plib* plib;
+	int scaleFactor;
+
+	wxDC* targetDC;
+	wxGCDC* targetGCDC;
+
+	wxColor penColor;
+	wxPen* pen;
+	wxColor brushColor;
+	wxBrush* brush;
+	long penWidth;
+
+	int noPoints;
+	wxPoint polygon[100];
+
+	bool renderToDC;
+	bool renderToOpenGl;
+	bool renderToGCDC;
+	bool havePushedOpenGlAttrib;
 };
 
 #endif //_S52PLIB_H_

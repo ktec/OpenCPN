@@ -6,7 +6,6 @@
  *
  ***************************************************************************
  *   Copyright (C) 2010 by David S. Register   *
- *   bdbcat@yahoo.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -208,9 +207,7 @@ private:
       wxSocketClient    *m_sock;
 #endif
 
-      struct gps_data_t *m_gps_data;
       bool              m_busy;
-      wxTimer           TimerLIBGPS;
       wxTimer           TimerNMEA;
       wxFrame           *m_parent_frame;
       int               m_handler_id;
@@ -220,6 +217,7 @@ private:
       wxMutex           *m_pShareMutex;
       wxThread          *m_pSecondary_Thread;
       wxMutex           *m_pPortMutex;
+      wxThread          *m_gpsd_thread;
 
       bool              m_bGarmin_host;
 
@@ -232,19 +230,6 @@ private:
 
       //    libgps dynamic load parameters
       void              *m_lib_handle;
-
-      struct gps_data_t *(*m_fn_gps_open19)(char *, char *);
-      int                (*m_fn_gps_open)(char *, char *, struct gps_data_t *);
-
-      int                (*m_fn_gps_close)(struct gps_data_t *);
-      int                (*m_fn_gps_poll)(struct gps_data_t *);
-      bool               (*m_fn_gps_waiting)(struct gps_data_t *);
-      int                (*m_fn_gps_stream)(struct gps_data_t *, unsigned int, void *);
-      int                (*m_fn_gps_read)(struct gps_data_t *);
-
-      int                m_libgps_api;
-
-      bool               m_bgps_present;
 
 
 
@@ -326,6 +311,49 @@ private:
 
 };
 
+//-------------------------------------------------------------------------------------------------------------
+//
+//    GPSD Library Input Thread
+//
+//-------------------------------------------------------------------------------------------------------------
+
+class OCP_GPSD_Thread: public wxThread
+{
+
+      public:
+
+            OCP_GPSD_Thread(NMEAHandler *Launcher, wxWindow *MessageTarget, wxString &ip_addr, int api);
+            ~OCP_GPSD_Thread(void);
+            void *Entry();
+
+            void OnExit(void);
+
+      private:
+            bool OpenLibrary(void);
+            void CloseLibrary(void);
+
+            void ThreadMessage(const wxString &msg);          // Send a wxLogMessage to main program event loop
+            wxEvtHandler            *m_pMainEventHandler;
+            NMEAHandler             *m_launcher;
+            bool                    m_bgps_present;
+            int                     m_libgps_api;
+            wxString                m_GPSD_data_ip;
+
+            struct gps_data_t *m_pgps_data;
+
+            unsigned int            m_PACKET_SET;
+            unsigned int            m_TIME_SET;
+            unsigned int            m_LATLON_SET;
+            unsigned int            m_TRACK_SET;
+            unsigned int            m_SPEED_SET;
+            unsigned int            m_SATELLITE_SET;
+            unsigned int            m_ERROR_SET;
+            unsigned int            m_STATUS_SET;
+
+            struct gps_fix_t  *m_pfix;
+            int               *m_pstatus;
+            int               *m_psats_viz;
+};
 
 
 //-------------------------------------------------------------------------------------------------------------

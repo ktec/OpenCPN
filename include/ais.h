@@ -6,7 +6,6 @@
  *
  ***************************************************************************
  *   Copyright (C) 2010 by David S. Register   *
- *   bdbcat@yahoo.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -77,6 +76,7 @@
 #define ID_ACKNOWLEDGE        10001
 #define ID_SILENCE            10002
 #define ID_AIS_TARGET_LIST    10003
+#define ID_JUMPTO             10004
 
 typedef enum AIS_Error
 {
@@ -541,6 +541,7 @@ class AISTargetAlertDialog: public wxDialog
             bool Create( int target_mmsi,
                          wxWindow *parent,
                          AIS_Decoder *pdecoder,
+                         bool b_jumpto,
                          wxWindowID id = wxID_ANY,
                          const wxString& caption = _("AIS Alert"),
                          const wxPoint& pos = wxDefaultPosition,
@@ -559,6 +560,7 @@ class AISTargetAlertDialog: public wxDialog
             void OnMove( wxMoveEvent& event );
             void OnSize( wxSizeEvent& event );
             void OnIdSilenceClick( wxCommandEvent& event );
+            void OnIdJumptoClick( wxCommandEvent& event );
 
 
             AISInfoWin        *m_pAlertTextCtl;
@@ -567,6 +569,7 @@ class AISTargetAlertDialog: public wxDialog
             wxWindow          *m_pparent;
             wxFont            *m_pFont;
             wxString          m_alert_text;
+            bool              m_bjumpto;
 
 };
 

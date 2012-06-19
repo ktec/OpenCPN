@@ -6,7 +6,6 @@
  *
  ***************************************************************************
  *   Copyright (C) 2010 by David S. Register   *
- *   bdbcat@yahoo.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -59,7 +58,7 @@
 #include "navutil.h"        // for Select
 #include "georef.h"
 #include "pluginmanager.h"  // for PlugInManager
-#include "bitmaps/icons.h" // for sorting icons
+#include "styles.h"
 
 extern AISTargetQueryDialog    *g_pais_query_dialog_active;
 extern int              g_ais_query_dialog_x, g_ais_query_dialog_y;
@@ -74,6 +73,7 @@ extern FontMgr          *pFontMgr;
 extern ChartCanvas      *cc1;
 extern MyFrame          *gFrame;
 extern MyConfig         *pConfig;
+extern bool             g_bopengl;
 
 //    AIS Global configuration
 extern bool             g_bCPAMax;
@@ -126,6 +126,7 @@ extern bool             bGPSValid;
 
 extern PlugInManager    *g_pi_manager;
 extern TTYWindow        *g_NMEALogWindow;
+extern ocpnStyle::StyleManager* g_StyleManager;
 
 //    A static structure storing generic position data
 //    Used to communicate  AIVDO events to main application loop
@@ -866,7 +867,7 @@ wxString AIS_Target_Data::BuildQueryResult( void )
       int brg = (int)wxRound(Brg);
       if(Brg > 359.5)
             brg = 0;
-      if(b_positionOnceValid && bGPSValid && (Brg >= 0.) && (Range_NM > 0.))
+      if(b_positionOnceValid && bGPSValid && (Brg >= 0.) && (Range_NM > 0.) && (fabs(Lat) < 85.) )
             line.Printf(_("Bearing:                %03d Deg.\n"), brg);
       else
             line.Printf(_("Bearing:                Unavailable\n"));
@@ -1296,7 +1297,7 @@ int AIS_Bitstring::GetInt(int sp, int len, bool signed_flag)
 int AIS_Bitstring::GetStr(int sp, int bit_len, char *dest, int max_len)
 {
     //char temp_str[85];
-    char *temp_str = new char[max_len];
+    char *temp_str = new char[max_len + 1];
 
     char acc = 0;
     int s0p = sp-1;                          // to zero base
@@ -1390,6 +1391,16 @@ AIS_Decoder::AIS_Decoder(int handler_id, wxFrame *pParent, const wxString& AISDa
       //  Create/connect a dynamic event handler slot for OCPN_AISEvent(s) coming from AIS thread
       Connect(wxEVT_OCPN_AIS, (wxObjectEventFunction)(wxEventFunction)&AIS_Decoder::OnEvtAIS);
 
+      //    Testing....
+      //    Inject an AIS test string right now...
+/*
+      OCPN_AISEvent event(wxEVT_OCPN_AIS , ID_AIS_WINDOW );
+      event.SetEventObject( (wxObject *)this );
+      event.SetExtraLong(EVT_AIS_PARSE_RX);
+      wxString test_string(_T("!AIVDM,1,1,,A,1>M46pvP1TP=fr0MhC027?v20<00,0*38"));
+      event.SetNMEAString(test_string);
+      AddPendingEvent(event);
+*/
 }
 
 AIS_Decoder::~AIS_Decoder(void)
@@ -2231,6 +2242,11 @@ bool AIS_Decoder::Parse_VDXBitstring(AIS_Bitstring *bstr, AIS_Target_Data *ptd)
             {
                   ptd->Class = AIS_SART;
                   ptd->StaticReportTicks = now.GetTicks();  // won't get a static report, so fake it here
+
+                  //    On receipt of Msg 3, force any existing SART target out of acknowledge mode
+                  //    by adjusting its ack_time to yesterday
+                  //    This will cause any previously "Acknowledged" SART to re-alert.
+                  ptd->m_ack_time = wxDateTime::Now() - wxTimeSpan::Day();
             }
 
             parse_result = true;                // so far so good
@@ -2596,8 +2612,6 @@ bool AIS_Decoder::Parse_VDXBitstring(AIS_Bitstring *bstr, AIS_Target_Data *ptd)
                                         sa.right_bound_deg = bstr->GetInt(79,9);
                                     }
                                 }
-                                //std::cerr << "\tlat: " << sa.latitude << " lon: " << sa.longitude << std::endl;
-                                //std::cerr << "\trad: " << sa.radius_m << std::endl;
                                 an.sub_areas.push_back(sa);
                             }
                            ptd->area_notices[an.link_id]=an;
@@ -2620,23 +2634,9 @@ bool AIS_Decoder::Parse_VDXBitstring(AIS_Bitstring *bstr, AIS_Target_Data *ptd)
                         msg_14_text[nd] = 0;
                         ptd->MSG_14_text = wxString(msg_14_text, wxConvUTF8);
                   }
+                  parse_result = true;                // so far so good
 
-                //      Show the alert dialog for "active" AIS_SART target only
-                  if((ptd->Class == AIS_SART) && (ptd->NavStatus == 14))
-                  {
-                        if(!g_pais_alert_dialog_active)
-                        {
-                              AISTargetAlertDialog *pAISAlertDialog = new AISTargetAlertDialog();
-                              pAISAlertDialog->Create ( ptd->MMSI, m_parent_frame, this, -1, _("AIS SART Alert"),
-                                    wxPoint( g_ais_alert_dialog_x, g_ais_alert_dialog_y),
-                                                wxSize( g_ais_alert_dialog_sx, g_ais_alert_dialog_sy));
-
-                              g_pais_alert_dialog_active = pAISAlertDialog;
-                              pAISAlertDialog->Show();                        // Show modeless, so it stays on the screen
-                        }
-
-                  }
-                break;
+                  break;
           }
 
      case 6:                                    // Addressed Binary Message
@@ -2798,7 +2798,7 @@ void AIS_Decoder::UpdateAllAlarms(void)
                   if(!m_bGeneralAlert)
                   {
                   //    Quick check on basic condition
-                        if((td->CPA < g_CPAWarn_NM) && (td->TCPA > 0))
+                        if((td->CPA < g_CPAWarn_NM) && (td->TCPA > 0) && (td->Class != AIS_ATON))
                               m_bGeneralAlert = true;
 
                   //    Some options can suppress general alerts
@@ -2812,6 +2812,11 @@ void AIS_Decoder::UpdateAllAlarms(void)
                   //    Skip if TCPA is too long
                         if((g_bTCPA_Max) && (td->TCPA > g_TCPA_Max))
                               m_bGeneralAlert = false;
+
+                  //  SART targets always alert
+                        if(td->Class == AIS_SART)
+                              m_bGeneralAlert = true;
+
                   }
 
                   ais_alarm_type this_alarm = AIS_NO_ALARM;
@@ -2843,7 +2848,7 @@ void AIS_Decoder::UpdateAllAlarms(void)
                               }
                         }
 
-                        if((td->CPA < g_CPAWarn_NM) && (td->TCPA > 0))
+                        if((td->CPA < g_CPAWarn_NM) && (td->TCPA > 0) && (td->Class != AIS_ATON))
                         {
                               if(g_bTCPA_Max)
                               {
@@ -2855,8 +2860,14 @@ void AIS_Decoder::UpdateAllAlarms(void)
                         }
                   }
 
+                  //  SART targets always alert
+                  if(td->Class == AIS_SART)
+                        this_alarm = AIS_ALARM_SET;
+
                   //    Maintain the timer for in_ack flag
-                  if(g_bAIS_ACK_Timeout)
+                  //  SART targets always maintain ack timeout
+
+                  if(g_bAIS_ACK_Timeout || (td->Class == AIS_SART))
                   {
                         if(td->b_in_ack_timeout)
                         {
@@ -3431,102 +3442,119 @@ void AIS_Decoder::OnTimerAIS(wxTimerEvent& event)
          !g_bShowMoored)
             m_bSuppressed = true;
 
-      //    Is there a SART Alert dialog open?
-      //    If so, update the alert dialog text info, especially BRG and Range
-      bool b_sart_alert = false;
-      if(g_pais_alert_dialog_active)
+
+      m_bAIS_Audio_Alert_On = false;            // default, may be set on
+
+      //    Process any Alarms
+
+      //    If the AIS Alert Dialog is not currently shown....
+
+      //    Show the Alert dialog
+      //    Which of multiple targets?
+      //    Give priority to SART targets, and among them the shortest range
+      //    Otherwise,
+      //    search the list for any targets with CPA alarms, selecting the target with shortest TCPA
+
+      if(NULL == g_pais_alert_dialog_active)
       {
-            AIS_Target_Data *palert_target = Get_Target_Data_From_MMSI(g_pais_alert_dialog_active->Get_Dialog_MMSI());
-            if(palert_target && palert_target->Class == AIS_SART)
-                 b_sart_alert = true;
-      }
+            double tcpa_min = 1e6;             // really long
+            double sart_range = 1e6;
+            AIS_Target_Data *palarm_target_cpa = NULL;
+            AIS_Target_Data *palarm_target_sart = NULL;
 
-      if(g_bAIS_CPA_Alert || b_sart_alert)
-      {
-
-            m_bAIS_Audio_Alert_On = false;            // default, may be set on
-
-            //    Process any Alarms
-
-            //    If the AIS Alert Dialog is not currently shown....
-
-            //    Show the Alert dialog
-            //    Which of multiple targets?
-            //    search the list for any targets with alarms, selecting the target with shortest TCPA
-
-            if(NULL == g_pais_alert_dialog_active)
+            for( it = (*current_targets).begin(); it != (*current_targets).end(); ++it )
             {
-                  double tcpa_min = 1e6;             // really long
-                  AIS_Target_Data *palarm_target = NULL;
-
-                  for( it = (*current_targets).begin(); it != (*current_targets).end(); ++it )
+                  AIS_Target_Data *td = it->second;
+                  if(td)
                   {
-                        AIS_Target_Data *td = it->second;
-                        if(td)
+                        if(td->Class != AIS_SART)
                         {
-                              if(td->b_active)
+
+                              if(g_bAIS_CPA_Alert && td->b_active)
                               {
                                     if((AIS_ALARM_SET == td->n_alarm_state) && !td->b_in_ack_timeout)
                                     {
                                           if(td->TCPA < tcpa_min)
                                           {
                                                 tcpa_min = td->TCPA;
-                                                palarm_target = td;
+                                                palarm_target_cpa = td;
+                                          }
+                                    }
+                              }
+                        }
+                        else
+                        {
+                              if(td->b_active)
+                              {
+                                    if((AIS_ALARM_SET == td->n_alarm_state) && !td->b_in_ack_timeout)
+                                    {
+                                          if(td->Range_NM < sart_range)
+                                          {
+                                                tcpa_min = sart_range;
+                                                palarm_target_sart = td;
                                           }
                                     }
                               }
                         }
                   }
-
-                  if(palarm_target)
-                  {
-                  //    Show the alert
-
-                        AISTargetAlertDialog *pAISAlertDialog = new AISTargetAlertDialog();
-                        pAISAlertDialog->Create ( palarm_target->MMSI, m_parent_frame, this, -1, _("AIS Alert"),
-                                                wxPoint( g_ais_alert_dialog_x, g_ais_alert_dialog_y),
-                                                wxSize( g_ais_alert_dialog_sx, g_ais_alert_dialog_sy));
-
-                        g_pais_alert_dialog_active = pAISAlertDialog;
-                        pAISAlertDialog->Show();                        // Show modeless, so it stays on the screen
-
-
-                        //    Audio alert if requested
-                        m_bAIS_Audio_Alert_On = true;             // always on when alert is first shown
-                  }
             }
 
-            //    The AIS Alert dialog is already shown.  If the  dialog MMSI number is still alerted, update the dialog
-            //    otherwise, destroy the dialog
-            else
+            AIS_Target_Data *palarm_target = palarm_target_cpa;
+
+            if(palarm_target_sart)
+                  palarm_target = palarm_target_sart;
+
+
+            if(palarm_target)
             {
-                  AIS_Target_Data *palert_target = Get_Target_Data_From_MMSI(g_pais_alert_dialog_active->Get_Dialog_MMSI());
+            //    Show the alert
 
-                  if(palert_target)
+                  bool b_jumpto = palarm_target->Class == AIS_SART;
+
+                  AISTargetAlertDialog *pAISAlertDialog = new AISTargetAlertDialog();
+                  pAISAlertDialog->Create ( palarm_target->MMSI, m_parent_frame, this, b_jumpto, -1, _("AIS Alert"),
+                                          wxPoint( g_ais_alert_dialog_x, g_ais_alert_dialog_y),
+                                          wxSize( g_ais_alert_dialog_sx, g_ais_alert_dialog_sy));
+
+                  g_pais_alert_dialog_active = pAISAlertDialog;
+                  pAISAlertDialog->Show();                        // Show modeless, so it stays on the screen
+
+
+                  //    Audio alert if requested
+                  m_bAIS_Audio_Alert_On = true;             // always on when alert is first shown
+            }
+      }
+
+      //    The AIS Alert dialog is already shown.  If the  dialog MMSI number is still alerted, update the dialog
+      //    otherwise, destroy the dialog
+      else
+      {
+            AIS_Target_Data *palert_target = Get_Target_Data_From_MMSI(g_pais_alert_dialog_active->Get_Dialog_MMSI());
+
+            if(palert_target)
+            {
+                  if( ((AIS_ALARM_SET == palert_target->n_alarm_state) && !palert_target->b_in_ack_timeout) ||
+                                    (palert_target->Class == AIS_SART) )
                   {
-                        if( ((AIS_ALARM_SET == palert_target->n_alarm_state) && !palert_target->b_in_ack_timeout) ||
-                                          (palert_target->Class == AIS_SART) )
-                        {
-                              g_pais_alert_dialog_active->UpdateText();
-                        }
-                        else
-                        {
-                              g_pais_alert_dialog_active->Close();
-                              m_bAIS_Audio_Alert_On = false;
-                        }
-
-                        if(true == palert_target->b_suppress_audio)
-                              m_bAIS_Audio_Alert_On = false;
-                        else
-                              m_bAIS_Audio_Alert_On = true;
+                        g_pais_alert_dialog_active->UpdateText();
                   }
                   else
-                  {                                                     // this should not happen, however...
+                  {
                         g_pais_alert_dialog_active->Close();
                         m_bAIS_Audio_Alert_On = false;
                   }
 
+                  if(true == palert_target->b_suppress_audio)
+                        m_bAIS_Audio_Alert_On = false;
+                  else
+                        m_bAIS_Audio_Alert_On = true;
             }
+            else
+            {                                                     // this should not happen, however...
+                  g_pais_alert_dialog_active->Close();
+                  m_bAIS_Audio_Alert_On = false;
+            }
+
       }
 
       //    At this point, the audio flag is set
@@ -4218,6 +4246,7 @@ IMPLEMENT_CLASS ( AISTargetAlertDialog, wxDialog )
             EVT_CLOSE(AISTargetAlertDialog::OnClose)
             EVT_BUTTON( ID_ACKNOWLEDGE, AISTargetAlertDialog::OnIdAckClick )
             EVT_BUTTON( ID_SILENCE, AISTargetAlertDialog::OnIdSilenceClick )
+            EVT_BUTTON( ID_JUMPTO, AISTargetAlertDialog::OnIdJumptoClick )
             EVT_MOVE( AISTargetAlertDialog::OnMove )
             EVT_SIZE( AISTargetAlertDialog::OnSize )
 
@@ -4243,7 +4272,7 @@ void AISTargetAlertDialog::Init( )
 
 
 bool AISTargetAlertDialog::Create ( int target_mmsi,
-                                    wxWindow *parent, AIS_Decoder *pdecoder,
+                                    wxWindow *parent, AIS_Decoder *pdecoder, bool b_jumpto,
                                     wxWindowID id, const wxString& caption,
                                     const wxPoint& pos, const wxSize& size, long style )
 {
@@ -4258,6 +4287,8 @@ bool AISTargetAlertDialog::Create ( int target_mmsi,
       if (( global_color_scheme != GLOBAL_COLOR_SCHEME_DAY ) && ( global_color_scheme != GLOBAL_COLOR_SCHEME_RGB ))
             wstyle |= ( wxNO_BORDER );
 
+      m_bjumpto = b_jumpto;
+
       wxSize size_min = size;
       size_min.IncTo(wxSize(500,600));
       if ( !wxDialog::Create ( parent, id, caption, pos, size_min, wstyle ) )
@@ -4269,7 +4300,7 @@ bool AISTargetAlertDialog::Create ( int target_mmsi,
 
       wxFont *dFont = pFontMgr->GetFont(_("AISTargetAlert"), 12);
       int font_size = wxMax(8, dFont->GetPointSize());
-      wxString face;
+      wxString face = dFont->GetFaceName();
 #ifdef __WXGTK__
       face = _T("Monospace");
 #endif
@@ -4280,7 +4311,7 @@ bool AISTargetAlertDialog::Create ( int target_mmsi,
 
       CreateControls();
 
-      if(CanSetTransparent())
+      if(!g_bopengl && CanSetTransparent())
             SetTransparent(192);
 
       // This fits the dialog to the minimum size dictated by
@@ -4342,8 +4373,6 @@ void AISTargetAlertDialog::CreateControls()
       wxBoxSizer* AckBox = new wxBoxSizer ( wxHORIZONTAL );
       boxSizer->Add ( AckBox, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
 
-//    Button color
-      wxColour button_color = GetGlobalColor ( _T ( "UIBCK" ) );;
 
 // The Silence button
       wxButton* silence = new wxButton ( this, ID_SILENCE, _( "&Silence Alert" ),
@@ -4354,6 +4383,13 @@ void AISTargetAlertDialog::CreateControls()
       wxButton* ack = new wxButton ( this, ID_ACKNOWLEDGE, _( "&Acknowledge" ),
                                      wxDefaultPosition, wxDefaultSize, 0 );
       AckBox->Add ( ack, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+
+      if(m_bjumpto)
+      {
+            wxButton* jumpto = new wxButton ( this, ID_JUMPTO, _( "&Jump To" ),
+                                     wxDefaultPosition, wxDefaultSize, 0 );
+            AckBox->Add ( jumpto, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+      }
 
       DimeControl(this);
 }
@@ -4385,7 +4421,8 @@ void AISTargetAlertDialog::UpdateText()
             m_pAlertTextCtl->Clear();
             m_pAlertTextCtl->AppendText ( m_alert_text );
       }
-      if(CanSetTransparent())
+
+      if(!g_bopengl && CanSetTransparent())
             SetTransparent(192);
 
       m_pAlertTextCtl->SetInsertionPoint(0);
@@ -4394,6 +4431,20 @@ void AISTargetAlertDialog::UpdateText()
 
 void AISTargetAlertDialog::OnClose(wxCloseEvent& event)
 {
+      //    Acknowledge any existing Alert, and dismiss the dialog
+      if(m_pdecoder)
+      {
+            AIS_Target_Data *td = m_pdecoder->Get_Target_Data_From_MMSI(Get_Dialog_MMSI());
+            if(td)
+            {
+                  if(AIS_ALARM_SET == td->n_alarm_state)
+                  {
+                        td->m_ack_time = wxDateTime::Now();
+                        td->b_in_ack_timeout = true;
+                  }
+            }
+      }
+
       Destroy();
       g_pais_alert_dialog_active = NULL;
 }
@@ -4409,7 +4460,6 @@ void AISTargetAlertDialog::OnIdAckClick( wxCommandEvent& event )
             {
                   if(AIS_ALARM_SET == td->n_alarm_state)
                   {
-//                        td->n_alarm_state = AIS_ALARM_ACKNOWLEDGED;
                         td->m_ack_time = wxDateTime::Now();
                         td->b_in_ack_timeout = true;
                   }
@@ -4428,6 +4478,17 @@ void AISTargetAlertDialog::OnIdSilenceClick( wxCommandEvent& event )
             if(td)
                   td->b_suppress_audio = true;
       }
+}
+
+void AISTargetAlertDialog::OnIdJumptoClick( wxCommandEvent& event )
+{
+      if(m_pdecoder)
+      {
+            AIS_Target_Data *td = m_pdecoder->Get_Target_Data_From_MMSI(Get_Dialog_MMSI());
+            if(td)
+                  gFrame->JumpToPosition(td->Lat, td->Lon, cc1->GetVPScale());
+      }
+
 }
 
 void AISTargetAlertDialog::OnMove( wxMoveEvent& event )
@@ -4582,7 +4643,8 @@ wxString OCPNListCtrl::GetTargetColumnData(AIS_Target_Data *pAISTarget, long col
 
                   case tlBRG:
                   {
-                        if(pAISTarget->b_positionOnceValid && bGPSValid && (pAISTarget->Brg >= 0.))
+                        if(pAISTarget->b_positionOnceValid && bGPSValid && (pAISTarget->Brg >= 0.)
+                           && (fabs(pAISTarget->Lat) < 85.) )
                         {
                               int brg = (int)wxRound(pAISTarget->Brg);
                               if(pAISTarget->Brg > 359.5)
@@ -4898,8 +4960,11 @@ AISTargetListDialog::AISTargetListDialog( wxWindow *parent, wxAuiManager *auimgr
       m_pListCtrlAISTargets = new OCPNListCtrl(this, ID_AIS_TARGET_LIST, wxDefaultPosition, wxDefaultSize,
                                                wxLC_REPORT|wxLC_SINGLE_SEL|wxLC_HRULES|wxLC_VRULES|wxBORDER_SUNKEN|wxLC_VIRTUAL );
       wxImageList *imglist = new wxImageList( 16, 16, true, 2 );
-      imglist->Add(*_img_sort_asc);
-      imglist->Add(*_img_sort_desc);
+
+      ocpnStyle::Style* style = g_StyleManager->GetCurrentStyle();
+      imglist->Add(style->GetIcon(_T("sort_asc")));
+      imglist->Add(style->GetIcon(_T("sort_desc")));
+
       m_pListCtrlAISTargets->AssignImageList( imglist, wxIMAGE_LIST_SMALL );
       m_pListCtrlAISTargets->Connect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( AISTargetListDialog::OnTargetSelected ), NULL, this );
       m_pListCtrlAISTargets->Connect( wxEVT_COMMAND_LIST_ITEM_DESELECTED, wxListEventHandler( AISTargetListDialog::OnTargetSelected ), NULL, this );

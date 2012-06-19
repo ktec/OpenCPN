@@ -7,7 +7,6 @@
  *
  ***************************************************************************
  *   Copyright (C) 2010 by David S. Register   *
- *   bdbcat@yahoo.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -243,7 +242,7 @@ int dashboard_pi::Init(void)
       LoadConfig();
 
       //    This PlugIn needs a toolbar icon
-      m_toolbar_item_id  = InsertPlugInTool(_T(""), _img_dashboard, _img_dashboard, wxITEM_CHECK,
+      m_toolbar_item_id  = InsertPlugInTool(_T("dashboard"), _img_dashboard, _img_dashboard, wxITEM_CHECK,
             _("Dashboard"), _T(""), NULL, DASHBOARD_TOOL_POSITION, 0, this);
 
       ApplyConfig();
@@ -382,7 +381,14 @@ void dashboard_pi::SetNMEASentence(wxString &sentence)
                               double m_NMEA0183.Dbt.DepthMeters;
                               double m_NMEA0183.Dbt.DepthFathoms;
                               */
-                              SendSentenceToAllInstruments(OCPN_DBP_STC_DPT, m_NMEA0183.Dbt.DepthMeters, _T("m"));
+                              double depth = 999.;
+                              if (m_NMEA0183.Dbt.DepthMeters != 999.)
+                                    depth = m_NMEA0183.Dbt.DepthMeters;
+                              else if (m_NMEA0183.Dbt.DepthFeet != 999.)
+                                    depth = m_NMEA0183.Dbt.DepthFeet * 0.3048;
+                              else if (m_NMEA0183.Dbt.DepthFathoms != 999.)
+                                    depth = m_NMEA0183.Dbt.DepthFathoms * 1.82880;
+                              SendSentenceToAllInstruments(OCPN_DBP_STC_DPT, depth, _T("m"));
                         }
                   }
             }
@@ -659,8 +665,8 @@ void dashboard_pi::SetNMEASentence(wxString &sentence)
                               if (mPriDateTime >= 3)
                               {
                                     mPriDateTime = 3;
-                                    wxString dt = m_NMEA0183.Rmc.UTCTime;
-                                    dt.Append(m_NMEA0183.Rmc.Date);
+                                    wxString dt = m_NMEA0183.Rmc.Date;
+                                    dt.Append(m_NMEA0183.Rmc.UTCTime);
                                     mUTCDateTime.ParseFormat(dt.c_str(), _T("%d%m%y%H%M%S"));
                               }
                         }
@@ -821,9 +827,9 @@ void dashboard_pi::SetPositionFix(PlugIn_Position_Fix &pfix)
             mVar = pfix.Var;
             SendSentenceToAllInstruments(OCPN_DBP_STC_HMV, pfix.Var, _T("Deg"));
       }
-      if (mPriDateTime >= 1)
+      if (mPriDateTime >= 6) //We prefer the GPS datetime
       {
-            mPriDateTime = 1;
+            mPriDateTime = 6;
             mUTCDateTime.Set(pfix.FixTime);
       }
       mSatsInView = pfix.nSats;

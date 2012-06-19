@@ -6,7 +6,6 @@
  *
  ***************************************************************************
  *   Copyright (C) 2010 by David S. Register   *
- *   bdbcat@yahoo.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,24 +20,8 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
- *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.         *
  ***************************************************************************
- *
- * $Log: wificlient.h,v $
- * Revision 1.7  2010/04/27 01:45:49  bdbcat
- * Build 426
- *
- * Revision 1.6  2008/01/02 21:06:12  bdbcat
- * Update for Version 1.2.2
- *
- * Revision 1.5  2007/06/10 02:37:18  bdbcat
- * Cleanup
- *
- * Revision 1.4  2007/02/06 02:12:08  dsr
- * Cleanup
- *
- * Revision 1.3  2006/12/03 21:19:07  dsr
- * Redefine some ID constants from global enum list
  *
  */
 

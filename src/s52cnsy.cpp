@@ -6,7 +6,6 @@
  *
  ***************************************************************************
  *   Copyright (C) 2010 by David S. Register   *
- *   bdbcat@yahoo.com   *
  *
  *   Copyright (C) 2000-2001  Sylvain Duclos
  *   sylvain_duclos@yahoo.com
@@ -26,98 +25,6 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,  USA.             *
  ***************************************************************************
- *
- * $Log: s52cnsy.cpp,v $
- * Revision 1.25  2010/04/27 01:43:31  bdbcat
- * Build 426
- *
- * Revision 1.24  2010/01/02 02:00:58  bdbcat
- * Add LNDARE01 as point symbol for OBSTRN
- *
- * Revision 1.23  2009/12/26 21:15:52  bdbcat
- * UWTROC
- *
- * Revision 1.22  2009/12/10 20:58:44  bdbcat
- * Beta 1210
- *
- * Revision 1.21  2009/11/18 01:25:31  bdbcat
- * 1.3.5 Beta 1117
- *
- * Revision 1.20  2009/07/29 00:54:17  bdbcat
- * Update for gcc 4.2.4
- *
- * Revision 1.19  2009/07/08 01:46:55  bdbcat
- * Correct Green sector light logic.
- *
- * Revision 1.18  2009/06/25 02:32:03  bdbcat
- * Symbolize lights of undefined color as magenta.
- *
- * Revision 1.17  2009/05/05 15:02:25  bdbcat
- * Fix Unicode config bugs
- *
- * Revision 1.16  2009/05/05 03:59:59  bdbcat
- * Add light descriptions
- *
- * Revision 1.15  2009/04/18 03:30:47  bdbcat
- * Correct math on soundings
- *
- * Revision 1.14  2009/03/26 22:30:38  bdbcat
- * Opencpn 1.3.0 Update
- *
- * Revision 1.13  2008/12/19 01:37:06  bdbcat
- * Add selectable depth unit conversion
- *
- * Revision 1.12  2008/12/09 03:53:47  bdbcat
- * Cleanup Comments
- *
- * Revision 1.11  2008/08/29 04:58:05  bdbcat
- * Correct sector light math
- *
- * Revision 1.10  2008/08/26 19:01:06  bdbcat
- * Correct Colour for Red/Green Sector light
- *
- * Revision 1.9  2008/08/26 13:49:15  bdbcat
- * Better color scheme support
- *
- * Revision 1.8  2008/08/09 23:58:40  bdbcat
- * Numerous revampings....
- *
- * Revision 1.7  2008/03/30 22:15:45  bdbcat
- * Add missing symbology OBSTRN, etc.
- *
- * Revision 1.6  2008/01/12 06:21:06  bdbcat
- * Update for Mac OSX/Unicode
- *
- * Revision 1.5  2008/01/10 03:37:31  bdbcat
- * Update for Mac OSX
- *
- * Revision 1.4  2007/05/03 13:23:56  dsr
- * Major refactor for 1.2.0
- *
- * Revision 1.3  2007/03/02 01:59:50  dsr
- * Implement SOUNDG02 Method
- *
- * Revision 1.2  2006/09/21 01:37:36  dsr
- * Major refactor/cleanup
- *
- * Revision 1.1.1.1  2006/08/21 05:52:19  dsr
- * Initial import as opencpn, GNU Automake compliant.
- *
- * Revision 1.5  2006/08/04 11:42:02  dsr
- * no message
- *
- * Revision 1.4  2006/06/15 02:44:15  dsr
- * Implement more CS
- *
- * Revision 1.3  2006/06/02 02:12:32  dsr
- * More CS
- *
- * Revision 1.2  2006/05/19 19:11:06  dsr
- * Implement some additional rules
- *
- * Revision 1.1.1.1  2006/04/19 03:23:28  dsr
- * Rename/Import to OpenCPN
- *
  *
  */
 
@@ -1284,12 +1191,6 @@ static void *LIGHTS05 (void *param)
 
     wxString orientstr;
 
-// Debug Hook
-//      if(obj->Index == 1318)
-//            int tty = 5;
-
-
-
     if ( strlen(catlitstr))
     {
         _parseList(catlitstr, catlit, sizeof(colist));
@@ -1539,27 +1440,44 @@ static void *LIGHTS05 (void *param)
 
 l05_end:
 
-    if(ps52plib->m_bShowLdisText)
-    {
-          wxString litdsn01 = _LITDSN01(obj);
-          if (litdsn01.Len())
-          {
-               lights05.Append(_T(";TX('"));
-               lights05.Append(litdsn01);
+      if( ps52plib->m_bShowLdisText )
+      {
+            // Only show Light in certain position once. Otherwise there will be clutter.
+            static double lastLat, lastLon;
+            static wxString lastDescription;
+            bool isFirstSector = true;
 
-               if (flare_at_45)
-                    lights05.Append(_T("',3,3,3,'15110',2,-1,CHBLK,23)" ));
-               else
-                    lights05.Append(_T("',3,2,3,'15110',2,0,CHBLK,23)" ));
-          }
-    }
+            if( lastLat == obj->m_lat && lastLon == obj->m_lon ) isFirstSector = false;
+            lastLat = obj->m_lat;
+            lastLon = obj->m_lon;
 
-    lights05.Append('\037');
+            wxString litdsn01 = _LITDSN01( obj );
 
-    char *r = (char *)malloc(lights05.Len() + 1);
-    strcpy(r, lights05.mb_str());
+            if( litdsn01.Len() && isFirstSector ) {
+                  lastDescription = litdsn01;
+                  lights05.Append( _T(";TX('") );
+                  lights05.Append( litdsn01 );
 
-    return r;
+                  if( flare_at_45 )
+                        lights05.Append( _T("',3,3,3,'15110',2,-1,CHBLK,23)" ) );
+                  else
+                        lights05.Append( _T("',3,2,3,'15110',2,0,CHBLK,23)" ) );
+            }
+
+            if( !isFirstSector && lastDescription != litdsn01 ) {
+                  lastDescription = litdsn01;
+                  lights05.Append( _T(";TX('") );
+                  lights05.Append( litdsn01 );
+                  lights05.Append( _T("',3,2,3,'15110',2,1,CHBLK,23)" ) );
+            }
+      }
+
+      lights05.Append( '\037' );
+
+      char *r = (char *) malloc( lights05.Len() + 1 );
+      strcpy( r, lights05.mb_str() );
+
+      return r;
 }
 
 
@@ -3280,12 +3198,12 @@ static wxString _LITDSN01(S57Obj *obj)
 // This procedure is provided as a C function which has as input, the above
 // listed attribute values and as output, the light description.
 {
-    // CATLIT, LITCHR, COLOUR, HEIGHT, LITCHR, SIGGRP, SIGPER, STATUS, VALNMR
+      // CATLIT, LITCHR, COLOUR, HEIGHT, LITCHR, SIGGRP, SIGPER, STATUS, VALNMR
 
       char colist[20];
       wxString return_value;
 
-    // CATLIT
+      // CATLIT
       int catlit = -9;
       GetIntAttr(obj, "CATLIT", catlit);
 
@@ -3430,40 +3348,33 @@ static wxString _LITDSN01(S57Obj *obj)
             }
       }
 
-    // COLOUR,
+      // COLOUR,
       char col_str[20];
-      GetStringAttr(obj, "COLOUR", col_str, 19);
 
-      int n_cols = 0;
-      if (strlen(col_str))
-            n_cols = _parseList(col_str, colist, sizeof(colist));
+      // Don't show for sectored lights since we are only showing one of the sectors.
+      double sectrTest;
+      bool hasSectors = GetDoubleAttr( obj, "SECTR1", sectrTest );
 
-/*
-      int colour = colist[0];
-      if(-9 != colour)
-      {
-            switch (colour)
+      if( ! hasSectors ) {
+            GetStringAttr(obj, "COLOUR", col_str, 19);
+
+            int n_cols = 0;
+            if (strlen(col_str))
+                  n_cols = _parseList(col_str, colist, sizeof(colist));
+
+            if(n_cols)
+                  return_value.Append(_T(" "));
+
+            for(int i=0 ; i < n_cols ; i++)
             {
-                  case 1:  return_value.Append(_T(" W")); break;
-                  case 3:  return_value.Append(_T(" R")); break;
-                  case 4:  return_value.Append(_T(" G")); break;
-                  case 6:  return_value.Append(_T(" Y")); break;
-                  default:  break;
-            }
-      }
-*/
-      if(n_cols)
-            return_value.Append(_T(" "));
-
-      for(int i=0 ; i < n_cols ; i++)
-      {
-            switch (colist[i])
-            {
-                  case 1:  return_value.Append(_T("W")); break;
-                  case 3:  return_value.Append(_T("R")); break;
-                  case 4:  return_value.Append(_T("G")); break;
-                  case 6:  return_value.Append(_T("Y")); break;
-                  default:  break;
+                  switch (colist[i])
+                  {
+                        case 1:  return_value.Append(_T("W")); break;
+                        case 3:  return_value.Append(_T("R")); break;
+                        case 4:  return_value.Append(_T("G")); break;
+                        case 6:  return_value.Append(_T("Y")); break;
+                        default:  break;
+                  }
             }
       }
 
@@ -3531,10 +3442,10 @@ static wxString _LITDSN01(S57Obj *obj)
       double   valnmr      = UNKNOWN;
       GetDoubleAttr(obj, "VALNMR", valnmr);
 
-      if(UNKNOWN != valnmr)
+      if( UNKNOWN != valnmr && ! hasSectors )
       {
             wxString s;
-            s.Printf(_T("%2.0fM"), valnmr);
+            s.Printf(_T("%2.0fNm"), valnmr);
             s.Trim(false);          // remove leading spaces
             s.Prepend(_T(" "));
             return_value.Append(s);

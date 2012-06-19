@@ -6,7 +6,6 @@
  *
  ***************************************************************************
  *   Copyright (C) 2010 by David S. Register   *
- *   bdbcat@yahoo.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -158,7 +157,9 @@ public:
       virtual ListOfObjRazRules *GetObjRuleListAtLatLon(float lat, float lon, float select_radius, ViewPort *VPoint);
       bool DoesLatLonSelectObject(float lat, float lon, float select_radius, S57Obj *obj);
       bool IsPointInObjArea(float lat, float lon, float select_radius, S57Obj *obj);
-      virtual S57ObjectDesc *CreateObjDescription(const ObjRazRules *rule);
+      wxString GetObjectAttributeValueAsString( S57Obj *obj, int iatt, wxString curAttrName );
+      static int CompareLights( const void** l1, const void** l2 );
+      wxString CreateObjDescriptions( ListOfObjRazRules* rule);
       wxString GetAttributeDecode(wxString& att, int ival);
 
       wxFileName GetSENCFileName(){ return m_SENCFileName; }
@@ -329,6 +330,13 @@ public:
       wxString    Attributes;
 };
 
+class S57Light {
+public:
+      wxArrayString attributeNames;
+      wxArrayString attributeValues;
+      wxString position;
+      bool hasSectors;
+};
 
 //------------------------------------------------------------------------
 //  s57RegistrarMgr Definition
