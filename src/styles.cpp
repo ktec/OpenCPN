@@ -84,11 +84,11 @@ wxBitmap MergeBitmaps( wxBitmap back, wxBitmap front, wxSize offset )
 
     // Do alpha blending, associative version of "over" operator.
 
-    for( int i = 0; i < back.GetWidth(); i++ ) {
-        for( int j = 0; j < back.GetHeight(); j++ ) {
+    for( int i = 0; i < back.GetHeight(); i++ ) {
+        for( int j = 0; j < back.GetWidth(); j++ ) {
 
-            int fX = i - offset.x;
-            int fY = j - offset.y;
+            int fX = j - offset.x;
+            int fY = i - offset.y;
 
             bool inFront = true;
             if( fX < 0 || fY < 0 ) inFront = false;
@@ -124,7 +124,45 @@ wxBitmap MergeBitmaps( wxBitmap back, wxBitmap front, wxSize offset )
     mdc.DrawBitmap( front, offset.x, offset.y, true );
     mdc.SelectObject( wxNullBitmap );
 #endif
+
     return merged;
+}
+
+// The purpouse of ConvertTo24Bit is to take an icon with 32 bit depth and alpha
+// channel and put it in a 24 bit deep bitmap with no alpha, that can be safely
+// drawn in the crappy wxWindows implementations.
+
+wxBitmap ConvertTo24Bit( wxColor bgColor, wxBitmap front ) {
+    if( front.GetDepth() == 24 ) return front;
+
+    wxBitmap result( front.GetWidth(), front.GetHeight(), 24 );
+    front.UseAlpha();
+
+    wxImage im_front = front.ConvertToImage();
+    wxImage im_result = result.ConvertToImage();
+
+    unsigned char *presult = im_result.GetData();
+    unsigned char *pfront = im_front.GetData();
+
+    unsigned char *afront = NULL;
+    if( im_front.HasAlpha() )
+    afront = im_front.GetAlpha();
+
+    for( int i = 0; i < result.GetWidth(); i++ ) {
+        for( int j = 0; j < result.GetHeight(); j++ ) {
+
+            double alphaF = (double) ( *afront++ ) / 256.0;
+            unsigned char r = *pfront++ * alphaF + bgColor.Red() * ( 1.0 - alphaF );
+            *presult++ = r;
+            unsigned char g = *pfront++ * alphaF + bgColor.Green() * ( 1.0 - alphaF );
+            *presult++ = g;
+            unsigned char b = *pfront++ * alphaF + bgColor.Blue() * ( 1.0 - alphaF );
+            *presult++ = b;
+        }
+    }
+
+    result = wxBitmap( im_result );
+    return result;
 }
 
 // Tools and Icons perform on-demand loading and dimming of bitmaps.
@@ -175,20 +213,22 @@ wxBitmap Style::GetToolIcon( wxString toolname, int iconType, bool rollover )
             if( size.x == 0 ) size = toolSize[currentOrientation];
             wxRect location( tool->iconLoc, size );
             if( rollover ) location = wxRect( tool->rolloverLoc, size );
+
+            if( currentOrientation ) {
+                location.x -= verticalIconOffset.x;
+                location.y -= verticalIconOffset.y;
+            }
+
             wxBitmap bm = graphics->GetSubBitmap( location );
             if( hasBackground ) {
-                if( currentOrientation ) bm = MergeBitmaps( GetNormalBG(), bm, verticalIconOffset );
-                else
-                    bm = MergeBitmaps( GetNormalBG(), bm, wxSize( 0, 0 ) );
+                bm = MergeBitmaps( GetNormalBG(), bm, wxSize( 0, 0 ) );
             } else {
                 wxBitmap bg( GetToolSize().x, GetToolSize().y );
                 wxMemoryDC mdc( bg );
                 mdc.SetBackground( wxBrush( GetGlobalColor( _T("GREY2") ), wxSOLID ) );
                 mdc.Clear();
                 mdc.SelectObject( wxNullBitmap );
-                if( currentOrientation ) bm = MergeBitmaps( bg, bm, verticalIconOffset );
-                else
-                    bm = MergeBitmaps( bg, bm, wxSize( 0, 0 ) );
+                bm = MergeBitmaps( bg, bm, wxSize( 0, 0 ) );
             }
             if( rollover ) {
                 tool->rollover = SetBitmapBrightness( bm );
@@ -213,7 +253,10 @@ wxBitmap Style::GetToolIcon( wxString toolname, int iconType, bool rollover )
                 offset = GetToggledToolSize() - GetToolSize();
                 offset /= 2;
             }
-            if( currentOrientation ) offset += verticalIconOffset;
+            if( currentOrientation ) {
+                location.x -= verticalIconOffset.x;
+                location.y -= verticalIconOffset.y;
+            }
             wxBitmap bm = MergeBitmaps( GetToggledBG(), graphics->GetSubBitmap( location ),
                     offset );
             if( rollover ) {
@@ -232,10 +275,12 @@ wxBitmap Style::GetToolIcon( wxString toolname, int iconType, bool rollover )
             if( size.x == 0 ) size = toolSize[currentOrientation];
             wxRect location( tool->disabledLoc, size );
             wxBitmap bm = graphics->GetSubBitmap( location );
+            if( currentOrientation ) {
+                location.x -= verticalIconOffset.x;
+                location.y -= verticalIconOffset.y;
+            }
             if( hasBackground ) {
-                if( currentOrientation ) bm = MergeBitmaps( GetNormalBG(), bm, verticalIconOffset );
-                else
-                    bm = MergeBitmaps( GetNormalBG(), bm, wxSize( 0, 0 ) );
+                bm = MergeBitmaps( GetNormalBG(), bm, wxSize( 0, 0 ) );
             }
             tool->disabled = SetBitmapBrightness( bm );
             tool->disabledLoaded = true;
@@ -359,6 +404,11 @@ void Style::SetOrientation( long orient )
     if( newOrient == currentOrientation ) return;
     currentOrientation = newOrient;
     Unload();
+}
+
+int Style::GetOrientation()
+{
+    return currentOrientation;
 }
 
 void Style::SetColorScheme( ColorScheme cs )

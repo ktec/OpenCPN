@@ -4249,11 +4249,17 @@ void ChartCanvas::OnRouteLegPopupTimerEvent( wxTimerEvent& event )
                     DistanceBearingMercator( segShow_point_b->m_lat, segShow_point_b->m_lon,
                             segShow_point_a->m_lat, segShow_point_a->m_lon, &brg, &dist );
 
+                    wxString totLen;
+                    totLen.Printf(_T("%5.1f"), pr->m_route_length);
+
                     s.Append( _("Route: ") );
                     if( pr->m_RouteNameString.IsEmpty() ) s.Append( _("(unnamed)") );
                     else
                         s.Append( pr->m_RouteNameString );
-                    s.Append( _("\n") );
+                    s.Append( _T("\n") );
+                    s.Append( _("Total Lenght: ") );
+                    s.Append( totLen );
+                    s.Append( _T("\n") );
                     s.Append( _("Leg: from ") );
                     s.Append( segShow_point_a->GetName() );
                     s.Append( _(" to ") );
@@ -7897,7 +7903,7 @@ void ChartCanvas::CanvasPopupMenu( int x, int y, int seltype )
 #endif
 
     if( seltype & SELTYPE_TRACKSEGMENT ) {
-        pdef_menu->Append( ID_TK_MENU_PROPERTIES, _( "Track Properties" ) );
+        pdef_menu->Append( ID_TK_MENU_PROPERTIES, _( "Track Properties..." ) );
         pdef_menu->Append( ID_TK_MENU_DELETE, _( "Delete Track" ) );
         pdef_menu->AppendSeparator();
 
@@ -7910,7 +7916,7 @@ void ChartCanvas::CanvasPopupMenu( int x, int y, int seltype )
         pdef_menu->Append( ID_RT_MENU_APPEND, _( "Append Waypoint" ) );
         pdef_menu->Append( ID_RT_MENU_DELETE, _( "Delete Route" ) );
         pdef_menu->Append( ID_RT_MENU_REVERSE, _( "Reverse Route" ) );
-        pdef_menu->Append( ID_RT_MENU_PROPERTIES, _( "Route Properties" ) );
+        pdef_menu->Append( ID_RT_MENU_PROPERTIES, _( "Route Properties..." ) );
 
         if( m_pSelectedRoute ) {
             pdef_menu->Enable( ID_RT_MENU_ACTIVATE, !m_pSelectedRoute->m_bRtIsActive );
@@ -8178,6 +8184,28 @@ void ChartCanvas::ShowObjectQueryWindow( int x, int y, float zlat, float zlon )
         delete rule_list;
 
         SetCursor( wxCURSOR_ARROW );
+    }
+}
+
+void ChartCanvas::RemovePointFromRoute( RoutePoint* point, Route* route ) {
+    //  Rebuild the route selectables
+    pSelect->DeleteAllSelectableRoutePoints( route );
+    pSelect->DeleteAllSelectableRouteSegments( route );
+
+    route->RemovePoint( point );
+
+    //  Check for 1 point routes
+    if( route->GetnPoints() <= 1 ) {
+        pConfig->DeleteConfigRoute( route );
+        g_pRouteMan->DeleteRoute( route );
+        route = NULL;
+    }
+    //  Add this point back into the selectables
+    pSelect->AddSelectableRoutePoint( point->m_lat, point->m_lon, point );
+
+    if( pRoutePropDialog && ( pRoutePropDialog->IsShown() ) ) {
+        pRoutePropDialog->SetRouteAndUpdate( route );
+        pRoutePropDialog->UpdateProperties();
     }
 }
 
@@ -8626,36 +8654,7 @@ void ChartCanvas::PopupMenuHandler( wxCommandEvent& event )
         case ID_RT_MENU_REMPOINT:
             if( m_pSelectedRoute ) {
                 if( m_pSelectedRoute->m_bIsInLayer ) break;
-
-                //  Rebuild the route selectables
-                pSelect->DeleteAllSelectableRoutePoints( m_pSelectedRoute );
-                pSelect->DeleteAllSelectableRouteSegments( m_pSelectedRoute );
-
-                m_pSelectedRoute->RemovePoint( m_pFoundRoutePoint );
-
-                //  Check for 1 point routes
-                if( m_pSelectedRoute->GetnPoints() > 1 ) {
-                    /*    All this is done by Route::RemovePoint()
-                     pSelect->AddAllSelectableRouteSegments ( m_pSelectedRoute );
-                     pSelect->AddAllSelectableRoutePoints ( m_pSelectedRoute );
-
-                     pConfig->UpdateRoute ( m_pSelectedRoute );
-                     m_pSelectedRoute->RebuildGUIDList();                  // ensure the GUID list is intact and good
-                     */
-                } else {
-                    pConfig->DeleteConfigRoute( m_pSelectedRoute );
-                    g_pRouteMan->DeleteRoute( m_pSelectedRoute );
-                    m_pSelectedRoute = NULL;
-                }
-                //  Add this point back into the selectables
-                pSelect->AddSelectableRoutePoint( m_pFoundRoutePoint->m_lat,
-                        m_pFoundRoutePoint->m_lon, m_pFoundRoutePoint );
-
-                if( pRoutePropDialog && ( pRoutePropDialog->IsShown() ) ) {
-                    pRoutePropDialog->SetRouteAndUpdate( m_pSelectedRoute );
-                    pRoutePropDialog->UpdateProperties();
-                }
-
+                RemovePointFromRoute( m_pFoundRoutePoint, m_pSelectedRoute );
             }
             break;
 

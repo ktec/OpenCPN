@@ -33,6 +33,10 @@ enum {
       SORT_ON_NAME
 };
 
+enum TrackContextMenu {
+      TRACK_MERGE  = 1,
+      TRACK_COPY_TEXT
+};
 
 class wxButton;
 class Route;
@@ -51,6 +55,8 @@ class RouteManagerDialog : public wxDialog {
             void UpdateWptListCtrl(RoutePoint *rp_select = NULL, bool b_retain_sort = false);
             void UpdateLayListCtrl();
             void OnTabSwitch(wxNotebookEvent& event);
+            static void RouteManagerDialog::WptShowPropertiesDialog( RoutePoint* wp, wxWindow* parent );
+
 
       private:
             void Create();
